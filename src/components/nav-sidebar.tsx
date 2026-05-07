@@ -12,13 +12,15 @@ interface NavItem {
 
 interface NavSidebarProps {
   pendingActions?: number;
+  pendingDeliveries?: number;
 }
 
-export function NavSidebar({ pendingActions = 0 }: NavSidebarProps) {
+export function NavSidebar({ pendingActions = 0, pendingDeliveries = 0 }: NavSidebarProps) {
   const pathname = usePathname();
 
   const items: NavItem[] = [
     { href: "/dashboard", label: "Dashboard", icon: "📊" },
+    { href: "/inbox", label: "Inbox", icon: "📥", badge: pendingDeliveries },
     { href: "/tickets", label: "Tickets", icon: "📋" },
     { href: "/public", label: "Public Board", icon: "🌐" },
     { href: "/projects", label: "Projects", icon: "🚀" },

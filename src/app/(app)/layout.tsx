@@ -7,18 +7,29 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const session = await auth();
 
   let pendingActions = 0;
+  let pendingDeliveries = 0;
   if (session?.user?.id) {
-    pendingActions = await prisma.agentAction.count({
-      where: {
-        status: "PENDING",
-        agentProxy: { ownerId: session.user.id },
-      },
-    });
+    [pendingActions, pendingDeliveries] = await Promise.all([
+      prisma.agentAction.count({
+        where: {
+          status: "PENDING",
+          agentProxy: { ownerId: session.user.id },
+        },
+      }),
+      prisma.smartDelivery.count({
+        where: {
+          userId: session.user.id,
+          deliveredAt: { not: null },
+          readAt: null,
+          scheduledFor: { lte: new Date() },
+        },
+      }),
+    ]);
   }
 
   return (
     <div className="flex min-h-screen bg-[hsl(var(--background))]">
-      <NavSidebar pendingActions={pendingActions} />
+      <NavSidebar pendingActions={pendingActions} pendingDeliveries={pendingDeliveries} />
       <div className="flex-1 flex flex-col">
         <header className="border-b border-[hsl(var(--border))] px-6 py-3 flex items-center justify-end">
           {session?.user && (

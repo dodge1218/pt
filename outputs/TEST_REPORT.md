@@ -97,6 +97,19 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - unauthenticated `POST /api/agent` approve returned `401`
   - unauthenticated `POST /api/agent` reject returned `401`
 
+## 2026-05-07 Inbox Follow-up
+
+- Added `/inbox` for delivered smart-delivery items.
+- Inbox items resolve links for tickets, responses, comments, agent approvals, matches, and friend requests where possible.
+- Added client-side mark-read behavior backed by `PATCH /api/kairos/queue`.
+- Sidebar now shows an unread inbox badge from delivered unread `SmartDelivery` rows.
+- Re-ran `npm run build`, `npx prisma validate`, and `npm audit --audit-level=moderate --omit=dev` after these changes.
+- Production smoke checks passed:
+  - `/` returned `200`
+  - `/inbox` returned `307` to `/login` when unauthenticated
+  - unauthenticated `GET /api/kairos/queue` returned `401`
+  - unauthenticated `PATCH /api/kairos/queue` returned `401`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.
