@@ -348,6 +348,21 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - terminal approval returned `200` and created a result ticket
   - terminal rejection returned `200` with `status: rejected`
 
+## 2026-05-07 Product Split Positioning Follow-up
+
+- Added `docs/MARKET-WEDGE.md`.
+- Added `docs/INTEROPERABILITY-ROADMAP.md`.
+- Updated `docs/PUBLIC-RELEASE-CHECKLIST.md` so the new private positioning docs are reviewed before any public release.
+- Documented the product boundary:
+  - Kairos remains the standalone ticket layer for agentic work.
+  - ContextClaw remains the standalone context/spend governance layer.
+  - CodeBurn-like spend observability and Caveman-like compression stay adjacent, not part of the Kairos install reason.
+  - Interoperability is delayed until both products are independently useful.
+- Verified:
+  - `npm run build` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

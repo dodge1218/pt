@@ -25,6 +25,8 @@ These are useful private planning docs, but should be reviewed, rewritten, moved
 - `docs/PRD-AI-COWORKING-CONTEXT-CONTROL-PLANE.md`
 - `docs/MARKET-AND-PORTFOLIO-NOTE.md`
 - `docs/ROADMAP-50K-STARS.md`
+- `docs/MARKET-WEDGE.md`
+- `docs/INTEROPERABILITY-ROADMAP.md`
 - `docs/ECOSYSTEM-ARCHITECTURE.md`
 - `docs/BUSINESS-PLAN.md`
 - `docs/GTM.md`
