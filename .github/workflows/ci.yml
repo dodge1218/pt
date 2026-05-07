@@ -38,6 +38,9 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
 
+      - name: Preflight
+        run: npm run preflight
+
       - name: Validate Prisma schema
         run: npx prisma validate
 

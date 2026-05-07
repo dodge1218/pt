@@ -59,6 +59,9 @@ Implemented:
 - idempotency keys for agent action creation
 - delivery queue wiring for tickets, responses, and pending agent actions
 - `/api/kairos/queue` for delivery polling/read/process behavior
+- delivery inbox and unread badge
+- control-plane audit log
+- CI for build, Prisma validation, and dependency audit
 
 Still early:
 
@@ -90,6 +93,8 @@ Required for GitHub OAuth:
 ```env
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="change-me"
+AUTH_URL="http://localhost:3000"
+AUTH_SECRET="change-me"
 GITHUB_CLIENT_ID="..."
 GITHUB_CLIENT_SECRET="..."
 ```
@@ -103,11 +108,14 @@ KAIROS_CRON_SECRET="..."
 ## Verification
 
 ```bash
+npm run preflight
 npx prisma validate
 npm run build
 ```
 
 The latest local verification report is in `outputs/TEST_REPORT.md`.
+
+Deployment notes are in `docs/DEPLOYMENT.md`.
 
 ## API Sketch
 

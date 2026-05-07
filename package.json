@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prebuild": "node scripts/preflight.mjs",
+    "preflight": "node scripts/preflight.mjs",
+    "preflight:production": "NODE_ENV=production node scripts/preflight.mjs --production",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",

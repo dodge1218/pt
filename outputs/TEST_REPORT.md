@@ -129,6 +129,22 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - unauthenticated `POST /api/agent` register returned `401`
   - unauthenticated `PATCH /api/kairos/queue` returned `401`
 
+## 2026-05-07 Deployment Preflight Follow-up
+
+- Added deployment documentation for Vercel + Supabase/Postgres.
+- Normalized `.env.example` around the env names the code actually reads.
+- Added `scripts/preflight.mjs` and npm scripts:
+  - `npm run preflight`
+  - `npm run preflight:production`
+  - `prebuild` hook for build-time checks
+- CI now runs `npm run preflight`.
+- Verified:
+  - `npm run preflight` exits `0` locally with warnings for placeholder local config
+  - `npm run preflight:production` exits `1` for placeholder/local production config
+  - `npm run build` passes with the new `prebuild` hook
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.
