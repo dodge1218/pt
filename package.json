@@ -15,7 +15,8 @@
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
-    "queue:process": "node scripts/process-delivery-queue.mjs"
+    "queue:process": "node scripts/process-delivery-queue.mjs",
+    "openclaw:ticket": "node scripts/create-openclaw-ticket.mjs"
   },
   "overrides": {
     "postcss": "8.5.14"

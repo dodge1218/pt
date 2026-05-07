@@ -34,6 +34,22 @@ ENABLE_DEMO_AUTH="false"
 `KAIROS_OPENCLAW_SECRET` protects `POST /api/webhooks/openclaw` for OpenClaw/Hermes ticket creation.
 `ENABLE_DEMO_AUTH` may be `true` for local demos, but production preflight rejects it.
 
+## OpenClaw/Hermes Sender
+
+Run this from a terminal manager or proceed loop when a pass should become a durable Kairos handoff:
+
+```bash
+npm run openclaw:ticket -- \
+  --url "$KAIROS_BASE_URL" \
+  --idempotency-key "$SESSION_ID:$PASS_ID:handoff" \
+  --actor-email "$KAIROS_ACTOR_EMAIL" \
+  --source hermes \
+  --title "Agent handoff" \
+  --content "$SUMMARY"
+```
+
+The command posts to `POST /api/webhooks/openclaw` using `KAIROS_OPENCLAW_SECRET`.
+
 ## Checks
 
 Run these before deployment:

@@ -187,6 +187,30 @@ Content-Type: application/json
 }
 ```
 
+OpenClaw/Hermes local sender:
+
+```bash
+npm run openclaw:ticket -- \
+  --idempotency-key session-123:pass-4:handoff \
+  --actor-email builder@example.com \
+  --source hermes \
+  --title "Agent pass blocked on migration risk" \
+  --content "The runtime stopped before modifying the migration." \
+  --type PROPOSAL \
+  --tags handoff,migration
+```
+
+For artifacts, pipe JSON on stdin:
+
+```bash
+echo '{"artifacts":[{"kind":"NOTE","title":"Terminal trace","summary":"Stopped before write."}]}' \
+  | npm run openclaw:ticket -- \
+    --idempotency-key session-123:pass-4:trace \
+    --actor-email builder@example.com \
+    --title "Terminal trace captured" \
+    --content "Trace is attached."
+```
+
 ## Design Principles
 
 - **Tickets over chat**: chat is good for conversation, bad for durable state.
@@ -203,7 +227,6 @@ Content-Type: application/json
 - agent action receipts
 - context manifests
 - MCP/A2A adapter
-- local CLI
 - Docker compose deployment
 - Postgres production profile
 - policy engine for auto-approval

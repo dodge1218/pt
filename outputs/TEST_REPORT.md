@@ -311,6 +311,26 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `npx prisma validate` passed
   - `npm audit --audit-level=moderate --omit=dev` passed
 
+## 2026-05-07 OpenClaw/Hermes Sender Follow-up
+
+- Added `scripts/create-openclaw-ticket.mjs`.
+- Added `npm run openclaw:ticket`.
+- Sender supports:
+  - flags for common terminal handoff fields
+  - JSON stdin for artifacts and metadata
+  - `KAIROS_BASE_URL`
+  - `KAIROS_OPENCLAW_SECRET`
+  - idempotent retries through the existing signed webhook
+- Documented sender usage in README and deployment notes.
+- Verified:
+  - `npm run openclaw:ticket -- --help` passed
+  - missing `KAIROS_OPENCLAW_SECRET` exits `1`
+  - `npm run build` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - sender created a ticket through local production server with JSON stdin artifact
+  - duplicate sender call returned `200` with `idempotent: true`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.
