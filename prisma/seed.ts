@@ -1,6 +1,12 @@
 import { PrismaClient } from "@prisma/client";
+import { createHash } from "crypto";
 
 const prisma = new PrismaClient();
+const demoAgentKey = "kairos_demo_conductor_do_not_use_in_production";
+
+function hashAgentApiKey(apiKey: string) {
+  return createHash("sha256").update(apiKey).digest("hex");
+}
 
 async function main() {
   console.log("🌱 Seeding database...");
@@ -37,33 +43,91 @@ async function main() {
 
   console.log("  ✅ Users created");
 
-  // Create a bridge
-  const bridge = await prisma.bridge.create({
-    data: {
-      name: "Ryan + Colin — Resume Agency",
-      members: {
-        create: [
-          { userId: ryan.id, role: "OWNER" },
-          { userId: colin.id, role: "MEMBER" },
-        ],
+  await prisma.friendship.upsert({
+    where: {
+      requesterId_receiverId: {
+        requesterId: ryan.id,
+        receiverId: colin.id,
       },
     },
+    update: { status: "ACCEPTED" },
+    create: {
+      requesterId: ryan.id,
+      receiverId: colin.id,
+      status: "ACCEPTED",
+    },
   });
+  console.log("  ✅ Friendship created");
+
+  // Create a bridge
+  let bridge = await prisma.bridge.findFirst({
+    where: {
+      name: "Ryan + Colin — Resume Agency",
+      members: { some: { userId: ryan.id } },
+    },
+  });
+  if (!bridge) {
+    bridge = await prisma.bridge.create({
+      data: {
+        name: "Ryan + Colin — Resume Agency",
+        members: {
+          create: [
+            { userId: ryan.id, role: "OWNER" },
+            { userId: colin.id, role: "MEMBER" },
+          ],
+        },
+      },
+    });
+  } else {
+    await prisma.bridgeMember.upsert({
+      where: { userId_bridgeId: { userId: ryan.id, bridgeId: bridge.id } },
+      update: { role: "OWNER" },
+      create: { userId: ryan.id, bridgeId: bridge.id, role: "OWNER" },
+    });
+    await prisma.bridgeMember.upsert({
+      where: { userId_bridgeId: { userId: colin.id, bridgeId: bridge.id } },
+      update: { role: "MEMBER" },
+      create: { userId: colin.id, bridgeId: bridge.id, role: "MEMBER" },
+    });
+  }
 
   console.log("  ✅ Bridge created");
 
   // Register an agent
-  const agent = await prisma.agentProxy.create({
-    data: {
-      name: "Conductor",
-      description: "Ryan's orchestration agent. Reads docs, drafts responses, handles logistics.",
+  const existingAgent = await prisma.agentProxy.findFirst({
+    where: {
       ownerId: ryan.id,
-      canCreateTickets: true,
-      canRespond: true,
-      canComment: true,
-      requiresApproval: true,
+      OR: [
+        { name: "Conductor" },
+        { apiKey: hashAgentApiKey(demoAgentKey) },
+      ],
     },
   });
+  const agent = existingAgent
+    ? await prisma.agentProxy.update({
+        where: { id: existingAgent.id },
+        data: {
+          name: "Conductor",
+          description: "Ryan's orchestration agent. Reads docs, drafts responses, handles logistics.",
+          apiKey: hashAgentApiKey(demoAgentKey),
+          canCreateTickets: true,
+          canRespond: true,
+          canComment: true,
+          requiresApproval: true,
+        },
+      })
+    : await prisma.agentProxy.create({
+        data: {
+          name: "Conductor",
+          description: "Ryan's orchestration agent. Reads docs, drafts responses, handles logistics.",
+          ownerId: ryan.id,
+          apiKey: hashAgentApiKey(demoAgentKey),
+          canCreateTickets: true,
+          canRespond: true,
+          canComment: true,
+          requiresApproval: true,
+        },
+      });
 
   console.log("  ✅ Agent registered");
 
@@ -193,8 +257,16 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
     },
   ];
 
+  const seededTickets = [];
   for (const ticketData of tickets) {
-    await prisma.ticket.create({ data: ticketData });
+    const existing = await prisma.ticket.findFirst({
+      where: {
+        title: ticketData.title,
+        authorId: ticketData.authorId,
+        deletedAt: null,
+      },
+    });
+    seededTickets.push(existing || await prisma.ticket.create({ data: ticketData }));
   }
 
   console.log(`  ✅ ${tickets.length} seed tickets created`);
@@ -205,9 +277,18 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
   });
 
   if (decisionTicket) {
-    await prisma.response.create({
-      data: {
-        content: `Agree — Next.js 15 is the move.
+    const existingResponse = await prisma.response.findFirst({
+      where: {
+        ticketId: decisionTicket.id,
+        authorId: colin.id,
+        deletedAt: null,
+      },
+    });
+
+    if (!existingResponse) {
+      await prisma.response.create({
+        data: {
+          content: `Agree — Next.js 15 is the move.
 
 The App Router has matured significantly. Server Components + Server Actions give us most of what made Remix's loaders/actions compelling, but within the ecosystem we already know.
 
@@ -219,28 +300,81 @@ Additional points:
 One thing to watch: the App Router caching behavior can be surprising. I'd suggest we set \`revalidate: 0\` on dynamic pages initially and optimize later.
 
 Let's go with Next.js 15. I can scaffold the Atomic component structure this weekend.`,
-        position: "AGREE",
-        authorId: colin.id,
-        ticketId: decisionTicket.id,
-      },
-    });
+          position: "AGREE",
+          authorId: colin.id,
+          ticketId: decisionTicket.id,
+        },
+      });
+    }
 
     console.log("  ✅ Response from Colin added");
   }
 
   // Add an agent-created action (pending approval)
-  await prisma.agentAction.create({
-    data: {
-      type: "CREATE_TICKET",
-      payload: JSON.stringify({
-        title: "[INFO] CI pipeline configured — GitHub Actions running on push",
-        content: "Set up the GitHub Actions workflow:\n\n- Lint (ESLint + Prettier)\n- Type check (tsc --noEmit)\n- Unit tests (Vitest)\n- Build check (next build)\n\nRuns on every push to main and all PRs. Free for public repos, 2K min/mo for private.\n\nWorkflow file: `.github/workflows/ci.yml`",
-        type: "INFO",
-        visibility: "PRIVATE",
-        tags: JSON.stringify(["ci", "github-actions", "devops"]),
-        bridgeId: bridge.id,
-      }),
+  const pendingPayload = {
+    title: "[INFO] CI pipeline configured — GitHub Actions running on push",
+    content: "Set up the GitHub Actions workflow:\n\n- Prisma client generation\n- Prisma schema validation\n- Production build\n- Production dependency audit\n\nRuns on every push to main and all PRs.\n\nWorkflow file: `.github/workflows/ci.yml`",
+    type: "INFO",
+    visibility: "PRIVATE",
+    tags: ["ci", "github-actions", "devops"],
+    bridgeId: bridge.id,
+    _kairos: { idempotencyKey: "seed-ci-pipeline-ticket" },
+  };
+  let pendingAction = await prisma.agentAction.findFirst({
+    where: {
       agentProxyId: agent.id,
+      type: "CREATE_TICKET",
+      payload: { contains: "seed-ci-pipeline-ticket" },
+    },
+  });
+  if (!pendingAction) {
+    pendingAction = await prisma.agentAction.create({
+      data: {
+        type: "CREATE_TICKET",
+        payload: JSON.stringify(pendingPayload),
+        agentProxyId: agent.id,
+      },
+    });
+  }
+
+  await prisma.smartDelivery.upsert({
+    where: { id: `seed-delivery-${pendingAction.id}` },
+    update: {
+      deliveredAt: new Date(),
+      readAt: null,
+      preview: "Conductor wants approval for the CI pipeline status ticket.",
+    },
+    create: {
+      id: `seed-delivery-${pendingAction.id}`,
+      type: "AGENT_ACTION_PENDING",
+      contentId: pendingAction.id,
+      preview: "Conductor wants approval for the CI pipeline status ticket.",
+      userId: ryan.id,
+      scheduledFor: new Date(),
+      deliveredAt: new Date(),
+    },
+  });
+
+  await prisma.auditLog.upsert({
+    where: { id: "seed-demo-audit" },
+    update: {
+      actorUserId: ryan.id,
+      metadata: JSON.stringify({
+        tickets: seededTickets.length,
+        bridgeId: bridge.id,
+        agentProxyId: agent.id,
+      }),
+    },
+    create: {
+      id: "seed-demo-audit",
+      actorUserId: ryan.id,
+      action: "seed.demo",
+      entityType: "seed",
+      metadata: JSON.stringify({
+        tickets: seededTickets.length,
+        bridgeId: bridge.id,
+        agentProxyId: agent.id,
+      }),
     },
   });
 
@@ -248,7 +382,7 @@ Let's go with Next.js 15. I can scaffold the Atomic component structure this wee
   console.log("\n🎉 Seed complete!");
   console.log(`   Users: ${ryan.name}, ${colin.name}`);
   console.log(`   Bridge: ${bridge.name}`);
-  console.log(`   Agent: ${agent.name} (API key: ${agent.apiKey})`);
+  console.log(`   Agent: ${agent.name} (demo API key: ${demoAgentKey})`);
   console.log(`   Tickets: ${tickets.length}`);
   console.log(`   Pending actions: 1`);
 }

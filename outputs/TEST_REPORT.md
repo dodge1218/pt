@@ -145,6 +145,19 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `npx prisma validate` passed
   - `npm audit --audit-level=moderate --omit=dev` passed
 
+## 2026-05-07 Seed Data Follow-up
+
+- Made `prisma/seed.ts` rerunnable without duplicating the core demo bridge, Conductor agent, seed tickets, pending seed action, seed delivery, or seed audit row.
+- Added accepted friendship seed data so bridge membership behavior matches the app's accepted-friends rule.
+- Switched the demo agent to a hashed deterministic API key while still printing the raw demo key for local testing.
+- Added a delivered inbox item and audit seed event so the inbox/audit features have demo state.
+- Verified:
+  - `npm run db:seed` passed twice consecutively
+  - seed counts after repeated runs: 6 tickets, 1 demo bridge, 1 Conductor, 1 pending seed action, 1 seed delivery, 1 seed audit row
+  - `npm run build` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.
