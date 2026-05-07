@@ -41,6 +41,20 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `POST` processes due delivery rows for an authenticated local caller or a cron caller with `KAIROS_CRON_SECRET`
 - Re-ran `npm run build`, `npx prisma validate`, CSS artifact checks, production smoke checks, and screenshot capture after these changes.
 
+## 2026-05-07 Follow-up
+
+- Added response comment creation:
+  - `POST /api/responses/:id/comments`
+  - ticket/bridge visibility checks match response access rules
+  - comments queue `NEW_COMMENT` delivery rows for response/ticket/bridge recipients, excluding the commenter
+  - ticket detail page now renders a comment form under each response
+- Replaced the inline ticket-detail response script with the existing React `ResponseForm` component.
+- Re-ran `npm run build`, `npx prisma validate`, and `npm audit --omit=dev` after these changes.
+- Production smoke checks passed:
+  - `/` returned `200`
+  - `/api/tickets?visibility=PUBLIC&limit=1` returned `200`
+  - unauthenticated `POST /api/responses/does-not-matter/comments` returned `401`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

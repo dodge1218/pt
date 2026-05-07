@@ -97,6 +97,37 @@ export async function queueResponseCreatedDeliveries(params: {
   });
 }
 
+export async function queueCommentCreatedDeliveries(params: {
+  commentId: string;
+  commenterId: string;
+  responseAuthorId: string;
+  ticketTitle: string;
+  ticketAuthorId: string;
+  bridgeId?: string | null;
+  content: string;
+}) {
+  const recipients: DeliveryRecipient[] = [
+    { userId: params.responseAuthorId },
+    { userId: params.ticketAuthorId },
+  ];
+
+  if (params.bridgeId) {
+    const bridgeMembers = await prisma.bridgeMember.findMany({
+      where: { bridgeId: params.bridgeId },
+      select: { userId: true },
+    });
+    recipients.push(...bridgeMembers);
+  }
+
+  return queueForRecipients({
+    recipients,
+    excludeUserId: params.commenterId,
+    type: "NEW_COMMENT",
+    contentId: params.commentId,
+    preview: previewFrom(params.ticketTitle, params.content),
+  });
+}
+
 export async function queueAgentActionPendingDelivery(params: {
   actionId: string;
   ownerId: string;

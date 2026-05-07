@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { CommentForm } from "@/components/comment-form";
+import { ResponseForm } from "@/components/response-form";
 
 const positionLabels: Record<string, { icon: string; label: string; color: string }> = {
   AGREE: { icon: "✅", label: "Agrees", color: "text-green-400" },
@@ -174,6 +176,8 @@ export default async function TicketDetailPage({
                         ))}
                       </div>
                     )}
+
+                    {session?.user && <CommentForm responseId={response.id} />}
                   </div>
                 );
               })}
@@ -185,68 +189,7 @@ export default async function TicketDetailPage({
         {session?.user && (
           <div className="border-t border-[hsl(var(--border))] pt-6">
             <h3 className="text-sm font-semibold mb-3">Your Response</h3>
-            <form id="response-form" className="space-y-4">
-              <div className="flex gap-2">
-                {Object.entries(positionLabels).map(([value, { icon, label }]) => (
-                  <label key={value} className="cursor-pointer">
-                    <input type="radio" name="position" value={value} className="peer hidden" defaultChecked={value === "NEUTRAL"} />
-                    <div className="px-3 py-1.5 rounded-md border border-[hsl(var(--border))] text-xs peer-checked:border-[hsl(var(--primary))] peer-checked:bg-[hsl(var(--primary))]/10 transition">
-                      {icon} {label}
-                    </div>
-                  </label>
-                ))}
-              </div>
-              <textarea
-                name="content"
-                required
-                rows={4}
-                placeholder="Share your position..."
-                className="w-full px-4 py-2 rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-sm focus:border-[hsl(var(--primary))] focus:outline-none transition resize-y"
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 rounded-md bg-[hsl(var(--primary))] text-white text-sm font-medium hover:opacity-90 transition"
-              >
-                Submit Response
-              </button>
-            </form>
-
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  document.getElementById('response-form').addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const form = e.target;
-                    const data = {
-                      content: form.content.value,
-                      position: form.querySelector('input[name="position"]:checked')?.value || 'NEUTRAL',
-                    };
-                    const btn = form.querySelector('button[type="submit"]');
-                    btn.disabled = true;
-                    btn.textContent = 'Submitting...';
-                    try {
-                      const res = await fetch('/api/tickets/${id}/responses', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data),
-                      });
-                      if (res.ok) {
-                        window.location.reload();
-                      } else {
-                        const err = await res.json();
-                        alert(err.error || 'Failed to submit');
-                        btn.disabled = false;
-                        btn.textContent = 'Submit Response';
-                      }
-                    } catch (e) {
-                      alert('Network error');
-                      btn.disabled = false;
-                      btn.textContent = 'Submit Response';
-                    }
-                  });
-                `,
-              }}
-            />
+            <ResponseForm ticketId={id} />
           </div>
         )}
       </main>
