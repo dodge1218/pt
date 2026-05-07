@@ -33,14 +33,14 @@ const baseUrl =
   process.env.AUTH_URL ||
   process.env.NEXTAUTH_URL ||
   "http://localhost:3000";
-const secret = args.secret || process.env.KAIROS_OPENCLAW_SECRET;
+const secret = args.secret || process.env.KAIROS_AGENT_ACTION_SECRET || process.env.KAIROS_OPENCLAW_SECRET;
 const actorEmail = args.actorEmail || process.env.KAIROS_ACTOR_EMAIL;
 const actorUserId = args.actorUserId || process.env.KAIROS_ACTOR_USER_ID;
 const status = args.status || "PENDING";
 const limit = args.limit || "20";
 
 if (!secret) {
-  console.error("KAIROS_OPENCLAW_SECRET is required to list agent actions.");
+  console.error("KAIROS_AGENT_ACTION_SECRET or KAIROS_OPENCLAW_SECRET is required to list agent actions.");
   process.exit(1);
 }
 if (!actorEmail && !actorUserId) {
@@ -137,6 +137,9 @@ Usage:
   npm run kairos:actions -- --actor-email builder@example.com --json
 
 Required env:
+  KAIROS_AGENT_ACTION_SECRET=<shared-secret>
+
+Fallback env:
   KAIROS_OPENCLAW_SECRET=<shared-secret>
 
 Optional env:

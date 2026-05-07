@@ -196,9 +196,23 @@ echo '{"artifacts":[{"kind":"NOTE","title":"Evidence summary","summary":"The mig
 List pending agent actions from a terminal:
 
 ```bash
-export KAIROS_OPENCLAW_SECRET="..."
+export KAIROS_AGENT_ACTION_SECRET="..."
 
 npm run kairos:actions -- \
+  --actor-email builder@example.com
+```
+
+Approve or reject an action from a terminal:
+
+```bash
+npm run kairos:action -- \
+  --decision approve \
+  --action-id <agent-action-id> \
+  --actor-email builder@example.com
+
+npm run kairos:action -- \
+  --decision reject \
+  --action-id <agent-action-id> \
   --actor-email builder@example.com
 ```
 
@@ -252,7 +266,7 @@ echo '{"artifacts":[{"kind":"NOTE","title":"Terminal trace","summary":"Stopped b
     --content "Trace is attached."
 ```
 
-OpenClaw/Hermes agent action approval:
+OpenClaw/Hermes agent action approval also works through the compatibility alias:
 
 ```bash
 npm run openclaw:action -- \

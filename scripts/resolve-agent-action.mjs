@@ -21,6 +21,7 @@ for (const file of [".env", ".env.local"]) {
 }
 
 const args = parseArgs(process.argv.slice(2));
+const commandName = process.env.npm_lifecycle_event === "kairos:action" ? "kairos:action" : "openclaw:action";
 
 if (args.help) {
   printHelp();
@@ -33,10 +34,9 @@ const baseUrl =
   process.env.AUTH_URL ||
   process.env.NEXTAUTH_URL ||
   "http://localhost:3000";
-const secret = args.secret || process.env.KAIROS_OPENCLAW_SECRET;
-
+const secret = args.secret || process.env.KAIROS_AGENT_ACTION_SECRET || process.env.KAIROS_OPENCLAW_SECRET;
 if (!secret) {
-  console.error("KAIROS_OPENCLAW_SECRET is required to resolve an agent action.");
+  console.error("KAIROS_AGENT_ACTION_SECRET or KAIROS_OPENCLAW_SECRET is required to resolve an agent action.");
   process.exit(1);
 }
 
@@ -148,14 +148,20 @@ function compact(value) {
 }
 
 function printHelp() {
-  console.log(`Approve or reject a pending Kairos agent action through the signed OpenClaw/Hermes endpoint.
+  console.log(`Approve or reject a pending Kairos agent action through the signed terminal endpoint.
 
 Usage:
-  npm run openclaw:action -- --decision approve --action-id <id> --actor-email builder@example.com
-  npm run openclaw:action -- --decision reject --action-id <id> --actor-email builder@example.com
+  npm run ${commandName} -- --decision approve --action-id <id> --actor-email builder@example.com
+  npm run ${commandName} -- --decision reject --action-id <id> --actor-email builder@example.com
 
 Revised approval payload can be supplied on stdin:
   echo '{"payload":{"title":"Revised","content":"...","type":"INFO"}}' \\
-    | npm run openclaw:action -- --decision approve --action-id <id> --actor-email builder@example.com
+    | npm run ${commandName} -- --decision approve --action-id <id> --actor-email builder@example.com
+
+Required env:
+  KAIROS_AGENT_ACTION_SECRET=<shared-secret>
+
+Fallback env:
+  KAIROS_OPENCLAW_SECRET=<shared-secret>
 `);
 }

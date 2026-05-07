@@ -409,6 +409,25 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - local production server returned pending action `cmouvxxam000otwuzkpgbu719` through compact CLI output
   - local production server returned approved/rejected action history through `--json`
 
+## 2026-05-07 Kairos-Native Agent Action Approval Follow-up
+
+- Added `npm run kairos:action` as the Kairos-native terminal approve/reject command.
+- Kept `npm run openclaw:action` as a backward-compatible alias.
+- Added `KAIROS_AGENT_ACTION_SECRET` as the preferred secret for terminal action list/approval.
+- Kept `KAIROS_OPENCLAW_SECRET` as a fallback for compatibility.
+- Updated README and deployment docs with the Kairos-native terminal workflow.
+- Verified:
+  - initial `npm run kairos:action -- --help` caught a help-path initialization bug; fixed before ship
+  - `npm run kairos:action -- --help` passed after the fix
+  - missing `KAIROS_AGENT_ACTION_SECRET` and `KAIROS_OPENCLAW_SECRET` exits `1`
+  - `npm run build` passed
+  - `npm run db:seed` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - local production server accepted `KAIROS_AGENT_ACTION_SECRET` for `kairos:actions --json`
+  - local production server accepted `KAIROS_AGENT_ACTION_SECRET` for `kairos:action --decision approve`
+  - terminal approval returned result ticket `cmow074az0001tw11rr75a977`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

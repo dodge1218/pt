@@ -70,7 +70,7 @@ export async function GET(req: NextRequest) {
   });
   if (rateLimit) return rateLimit;
 
-  const webhookSecret = process.env.KAIROS_OPENCLAW_SECRET;
+  const webhookSecret = getAgentActionSecret();
   const authHeader = req.headers.get("authorization");
   if (!webhookSecret || authHeader !== `Bearer ${webhookSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
   });
   if (rateLimit) return rateLimit;
 
-  const webhookSecret = process.env.KAIROS_OPENCLAW_SECRET;
+  const webhookSecret = getAgentActionSecret();
   const authHeader = req.headers.get("authorization");
   if (!webhookSecret || authHeader !== `Bearer ${webhookSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -491,4 +491,8 @@ function normalizeTags(tags: unknown) {
     }
   }
   return "[]";
+}
+
+function getAgentActionSecret() {
+  return process.env.KAIROS_AGENT_ACTION_SECRET || process.env.KAIROS_OPENCLAW_SECRET;
 }
