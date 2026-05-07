@@ -88,6 +88,21 @@ Health check after the server starts:
 npm run health
 ```
 
+Five-minute local workflow:
+
+```bash
+bash examples/five-minute-demo/print-demo-commands.sh
+```
+
+Agent ticket submission example:
+
+```bash
+cat examples/five-minute-demo/agent-ticket-with-evidence.json \
+  | npm run kairos:agent -- --type CREATE_TICKET --idempotency-key demo:agent:evidence:001
+```
+
+Full walkthrough: `examples/five-minute-demo/README.md`.
+
 Default local database:
 
 ```env

@@ -471,6 +471,33 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `npx prisma validate` passed
   - `npm audit --audit-level=moderate --omit=dev` passed
 
+## 2026-05-07 Next Tickets + Five-Minute Demo Follow-up
+
+- Added `NEXT_TICKETS.md` with the next 10 build tickets:
+  - public-safe five-minute demo
+  - Docker Compose Postgres
+  - agent registration CLI
+  - agent action receipts
+  - secret redaction
+  - OpenAPI reference
+  - GitHub event ingestion MVP
+  - MCP adapter MVP
+  - exportable evidence bundle
+  - hosted alpha prep
+- Added `examples/five-minute-demo/README.md`.
+- Added `examples/five-minute-demo/print-demo-commands.sh`.
+- Added `examples/five-minute-demo/agent-ticket-with-evidence.json`.
+- Updated README to point at the five-minute demo.
+- Verified:
+  - demo JSON parses cleanly
+  - demo command printer runs and includes the health, submit, list, and approve commands
+  - `npm run build` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - local production server health check returned `database=ok`
+  - demo payload submitted through `npm run kairos:agent` and returned pending action `cmow3jmkn0001twaex8s3nmvg`
+  - `npm run kairos:actions` listed pending action `cmow3jmkn0001twaex8s3nmvg` with title `Review migration risk before merge`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

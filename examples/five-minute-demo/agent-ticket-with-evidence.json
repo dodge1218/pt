@@ -1,0 +1,18 @@
+{
+  "title": "Review migration risk before merge",
+  "content": "The agent found a risky migration path and is asking for human review before any code is merged.",
+  "ticketType": "PROPOSAL",
+  "visibility": "PRIVATE",
+  "tags": ["agent-demo", "review", "migration"],
+  "artifacts": [
+    {
+      "kind": "NOTE",
+      "title": "Evidence summary",
+      "summary": "Migration changes a high-risk table and should be reviewed before merge.",
+      "metadata": {
+        "source": "five-minute-demo",
+        "risk": "schema-change"
+      }
+    }
+  ]
+}

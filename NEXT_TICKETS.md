@@ -1,0 +1,210 @@
+# Kairos Next Tickets
+
+Status: active private build plan.
+
+## Current Baseline
+
+Kairos now has:
+
+- local setup command,
+- health endpoint,
+- CI build/Prisma/audit checks,
+- ticket/detail/response flows,
+- bridge/project scoping,
+- first-class ticket artifacts,
+- ContextClaw receipt ingestion/display,
+- OpenClaw/Hermes ticket webhook,
+- generic agent action CLI,
+- terminal list/approve/reject commands,
+- delivery queue worker.
+
+The next work should make the project more runnable, more demoable, and more credible to professional devtools users.
+
+## Ticket 1: Public-Safe Five-Minute Demo
+
+Goal: make the core workflow understandable without reading the whole repo.
+
+Build:
+
+- `examples/five-minute-demo/README.md`
+- a small shell script that prints the exact local demo commands
+- a sample JSON payload for an agent ticket with evidence
+- a sample approval command
+- references to `setup:local`, `kairos:agent`, `kairos:actions`, `kairos:action`, and `health`
+
+Acceptance:
+
+- no private names, emails, local paths, or strategy
+- demo uses generic actors and placeholder secrets
+- demo can be followed from fresh clone after `npm install`
+- `npm run build`, `npx prisma validate`, and audit pass
+
+## Ticket 2: Docker Compose Postgres
+
+Goal: make local setup closer to production without requiring Supabase.
+
+Build:
+
+- `docker-compose.yml` with Postgres
+- `.env.postgres.example`
+- docs for SQLite quickstart vs Postgres local
+- update setup docs without removing SQLite support
+
+Acceptance:
+
+- `docker compose up -d` starts Postgres
+- `DATABASE_URL` example works with Prisma
+- no existing SQLite workflow breaks
+
+## Ticket 3: Agent Registration CLI
+
+Goal: remove the remaining browser-only setup step for agent demos.
+
+Build:
+
+- signed or demo-safe terminal registration flow
+- `npm run kairos:agent-register`
+- prints one-time API key
+- documents that production registration remains authenticated
+
+Acceptance:
+
+- generated key is hashed at rest
+- existing browser registration still works
+- terminal demo can register a fresh local agent without manual DB edits
+
+## Ticket 4: Agent Action Receipts
+
+Goal: make every agent action inspectable as a durable receipt.
+
+Build:
+
+- receipt JSON shape for pending/resolved actions
+- terminal command to inspect one action by id
+- UI display for payload, result id, approver, timestamps, agent, scope
+- optional artifact link to resulting ticket
+
+Acceptance:
+
+- action receipt explains who/what/when/result
+- approval/rejection history remains available after resolution
+- no raw secrets displayed in receipt
+
+## Ticket 5: Secret Redaction
+
+Goal: reduce accidental leakage in tickets/artifacts before broader demos.
+
+Build:
+
+- shared redaction helper
+- apply to terminal-submitted ticket content/artifact summaries
+- apply to webhook-created content where feasible
+- tests or smoke fixtures for common API keys/tokens
+
+Acceptance:
+
+- obvious secrets are masked before storage
+- metadata still preserves enough context for audit
+- no destructive mutation of existing rows
+
+## Ticket 6: OpenAPI Reference
+
+Goal: make Kairos usable by agents and developers without reading source.
+
+Build:
+
+- `docs/API.md`
+- request/response examples for:
+  - health
+  - agent create action
+  - terminal list/approve/reject
+  - OpenClaw/Hermes ticket webhook
+  - ContextClaw receipt/manifest ingest
+  - ticket artifacts
+
+Acceptance:
+
+- examples match current routes
+- auth/secret requirements are explicit
+- docs avoid claims about features not built
+
+## Ticket 7: GitHub Event Ingestion MVP
+
+Goal: make Kairos sit next to real developer work.
+
+Build:
+
+- signed GitHub webhook endpoint
+- minimal payload support for check failure, PR opened, branch pushed
+- creates Kairos STATUS or PROPOSAL ticket with repo/branch/PR artifacts
+
+Acceptance:
+
+- webhook secret required
+- idempotency prevents duplicate event tickets
+- no GitHub write operations yet
+
+## Ticket 8: MCP Adapter MVP
+
+Goal: expose the existing API as tools for agent runtimes.
+
+Build:
+
+- local MCP server wrapper
+- tools:
+  - create ticket/action
+  - list pending actions
+  - approve/reject action
+  - attach artifact
+
+Acceptance:
+
+- wrapper is thin over existing API
+- no direct DB writes
+- works with local server URL and secrets
+
+## Ticket 9: Exportable Evidence Bundle
+
+Goal: support professional review and audit trails.
+
+Build:
+
+- export ticket with responses, comments, artifacts, audit entries, agent actions
+- JSON and markdown output
+- terminal script for local export
+
+Acceptance:
+
+- export is deterministic
+- redaction applied
+- bundle links result ticket/action ids
+
+## Ticket 10: Hosted Alpha Prep
+
+Goal: make deployment credible after local proof.
+
+Build:
+
+- Postgres migration deploy docs
+- invite-only access mode
+- export/delete controls plan
+- production env checklist refinement
+
+Acceptance:
+
+- no public launch claims
+- deployment path is documented
+- private repo guardrails remain clear
+
+## Build Rule
+
+Ship one ticket at a time. For each ticket:
+
+1. implement the smallest useful slice,
+2. update docs,
+3. update `outputs/TEST_REPORT.md`,
+4. run build, Prisma validate, and audit,
+5. commit,
+6. push,
+7. wait for CI.
+
