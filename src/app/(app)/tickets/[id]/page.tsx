@@ -1,0 +1,255 @@
+import { parseJsonArray } from "@/lib/utils";
+export const dynamic = "force-dynamic";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+
+const positionLabels: Record<string, { icon: string; label: string; color: string }> = {
+  AGREE: { icon: "✅", label: "Agrees", color: "text-green-400" },
+  DISAGREE: { icon: "❌", label: "Disagrees", color: "text-red-400" },
+  COUNTER_PROPOSAL: { icon: "🔄", label: "Counter-proposal", color: "text-yellow-400" },
+  NEUTRAL: { icon: "➖", label: "Neutral", color: "text-gray-400" },
+  QUESTION: { icon: "❓", label: "Question", color: "text-blue-400" },
+};
+
+const typeIcons: Record<string, string> = {
+  DECISION: "🔀", INFO: "ℹ️", PROPOSAL: "📋", STATUS: "📊", PUBLIC: "🌐",
+};
+
+export default async function TicketDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const session = await auth();
+
+  const ticket = await prisma.ticket.findUnique({
+    where: { id, deletedAt: null },
+    include: {
+      author: { select: { id: true, name: true, image: true, github: true, headline: true } },
+      responses: {
+        where: { deletedAt: null },
+        include: {
+          author: { select: { id: true, name: true, image: true, github: true } },
+          comments: {
+            where: { deletedAt: null },
+            include: { author: { select: { id: true, name: true, image: true, github: true } } },
+            orderBy: { createdAt: "asc" },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      },
+      bridge: { select: { id: true, name: true } },
+    },
+  });
+
+  if (!ticket) notFound();
+
+  // Check visibility
+  if (ticket.visibility !== "PUBLIC" && session?.user?.id !== ticket.authorId) {
+    if (!session?.user?.id) notFound();
+    if (ticket.bridgeId) {
+      const membership = await prisma.bridgeMember.findUnique({
+        where: { userId_bridgeId: { userId: session.user.id, bridgeId: ticket.bridgeId } },
+      });
+      if (!membership) notFound();
+    } else {
+      notFound();
+    }
+  }
+
+  const isOwner = session?.user?.id === ticket.authorId;
+
+  return (
+    <div className="min-h-screen bg-[hsl(var(--background))]">
+      <header className="border-b border-[hsl(var(--border))] px-6 py-3 flex items-center gap-6">
+        <Link href="/dashboard" className="text-lg font-bold tracking-tight">coordinate</Link>
+        <span className="text-sm text-[hsl(var(--muted-foreground))]">/ Ticket</span>
+      </header>
+
+      <main className="max-w-3xl mx-auto px-6 py-8">
+        {/* Ticket header */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-2 text-sm text-[hsl(var(--muted-foreground))]">
+            <span>{typeIcons[ticket.type]}</span>
+            <span className="uppercase text-xs font-medium">{ticket.type}</span>
+            <span>·</span>
+            <span className={ticket.status === "OPEN" ? "text-green-400" : "text-gray-400"}>
+              {ticket.status.replace("_", " ")}
+            </span>
+            {ticket.visibility === "PUBLIC" && (
+              <>
+                <span>·</span>
+                <span className="text-blue-400">Public</span>
+              </>
+            )}
+            {ticket.createdByAgent && (
+              <>
+                <span>·</span>
+                <span className="text-purple-400">🤖 Agent-created</span>
+              </>
+            )}
+          </div>
+
+          <h1 className="text-2xl font-bold">{ticket.title}</h1>
+
+          <div className="flex items-center gap-3 mt-3">
+            {ticket.author.image && (
+              <img src={ticket.author.image} alt="" className="w-6 h-6 rounded-full" />
+            )}
+            <span className="text-sm">
+              {ticket.author.name || ticket.author.github}
+            </span>
+            <span className="text-xs text-[hsl(var(--muted-foreground))]">
+              {new Date(ticket.createdAt).toLocaleDateString("en-US", {
+                month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit",
+              })}
+            </span>
+          </div>
+
+          {parseJsonArray(ticket.tags).length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-3">
+              {parseJsonArray(ticket.tags).map((tag) => (
+                <span key={tag} className="px-2 py-0.5 rounded-full bg-[hsl(var(--secondary))] text-xs text-[hsl(var(--muted-foreground))]">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Ticket content */}
+        <div className="prose prose-invert max-w-none mb-8 p-6 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))]">
+          <div className="whitespace-pre-wrap text-sm">{ticket.content}</div>
+        </div>
+
+        {/* Responses */}
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold mb-4">
+            Responses ({ticket.responses.length})
+          </h2>
+
+          {ticket.responses.length === 0 ? (
+            <p className="text-sm text-[hsl(var(--muted-foreground))] py-8 text-center border border-dashed border-[hsl(var(--border))] rounded-lg">
+              No responses yet. Be the first to weigh in.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {ticket.responses.map((response) => {
+                const pos = positionLabels[response.position];
+                return (
+                  <div key={response.id} className="p-4 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))]">
+                    <div className="flex items-center gap-2 mb-2">
+                      {response.author.image && (
+                        <img src={response.author.image} alt="" className="w-5 h-5 rounded-full" />
+                      )}
+                      <span className="text-sm font-medium">{response.author.name || response.author.github}</span>
+                      {pos && (
+                        <span className={`text-xs ${pos.color}`}>
+                          {pos.icon} {pos.label}
+                        </span>
+                      )}
+                      {response.createdByAgent && (
+                        <span className="text-xs text-purple-400">🤖</span>
+                      )}
+                      <span className="text-xs text-[hsl(var(--muted-foreground))] ml-auto">
+                        {new Date(response.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <div className="whitespace-pre-wrap text-sm">{response.content}</div>
+
+                    {/* Comments */}
+                    {response.comments.length > 0 && (
+                      <div className="mt-3 pl-4 border-l-2 border-[hsl(var(--border))] space-y-2">
+                        {response.comments.map((comment) => (
+                          <div key={comment.id} className="text-sm">
+                            <span className="font-medium text-xs">{comment.author.name || comment.author.github}</span>
+                            <span className="text-xs text-[hsl(var(--muted-foreground))] ml-2">
+                              {new Date(comment.createdAt).toLocaleDateString()}
+                            </span>
+                            <p className="text-[hsl(var(--muted-foreground))] mt-0.5">{comment.content}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Respond form */}
+        {session?.user && (
+          <div className="border-t border-[hsl(var(--border))] pt-6">
+            <h3 className="text-sm font-semibold mb-3">Your Response</h3>
+            <form id="response-form" className="space-y-4">
+              <div className="flex gap-2">
+                {Object.entries(positionLabels).map(([value, { icon, label }]) => (
+                  <label key={value} className="cursor-pointer">
+                    <input type="radio" name="position" value={value} className="peer hidden" defaultChecked={value === "NEUTRAL"} />
+                    <div className="px-3 py-1.5 rounded-md border border-[hsl(var(--border))] text-xs peer-checked:border-[hsl(var(--primary))] peer-checked:bg-[hsl(var(--primary))]/10 transition">
+                      {icon} {label}
+                    </div>
+                  </label>
+                ))}
+              </div>
+              <textarea
+                name="content"
+                required
+                rows={4}
+                placeholder="Share your position..."
+                className="w-full px-4 py-2 rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-sm focus:border-[hsl(var(--primary))] focus:outline-none transition resize-y"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 rounded-md bg-[hsl(var(--primary))] text-white text-sm font-medium hover:opacity-90 transition"
+              >
+                Submit Response
+              </button>
+            </form>
+
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  document.getElementById('response-form').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const form = e.target;
+                    const data = {
+                      content: form.content.value,
+                      position: form.querySelector('input[name="position"]:checked')?.value || 'NEUTRAL',
+                    };
+                    const btn = form.querySelector('button[type="submit"]');
+                    btn.disabled = true;
+                    btn.textContent = 'Submitting...';
+                    try {
+                      const res = await fetch('/api/tickets/${id}/responses', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data),
+                      });
+                      if (res.ok) {
+                        window.location.reload();
+                      } else {
+                        const err = await res.json();
+                        alert(err.error || 'Failed to submit');
+                        btn.disabled = false;
+                        btn.textContent = 'Submit Response';
+                      }
+                    } catch (e) {
+                      alert('Network error');
+                      btn.disabled = false;
+                      btn.textContent = 'Submit Response';
+                    }
+                  });
+                `,
+              }}
+            />
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}

@@ -1,0 +1,67 @@
+@import "tailwindcss";
+@source "../**/*.{ts,tsx}";
+
+:root {
+  --background: 220 18% 7%;
+  --foreground: 210 20% 96%;
+  --card: 220 16% 10%;
+  --card-foreground: 210 20% 96%;
+  --popover: 220 16% 10%;
+  --popover-foreground: 210 20% 96%;
+  --primary: 214 84% 56%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 12% 15%;
+  --secondary-foreground: 210 20% 96%;
+  --muted: 220 12% 15%;
+  --muted-foreground: 215 12% 68%;
+  --accent: 164 70% 42%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 74% 58%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 12% 19%;
+  --input: 220 12% 19%;
+  --ring: 214 84% 56%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    background: hsl(var(--background));
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  p,
+  h1,
+  h2,
+  h3 {
+    overflow-wrap: break-word;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    outline-color: hsl(var(--ring));
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.35);
+  }
+}
