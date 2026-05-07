@@ -62,6 +62,66 @@ const commentPayloadSchema = z.object({
 
 type ExecutableAgentActionType = "CREATE_TICKET" | "CREATE_RESPONSE" | "CREATE_COMMENT";
 
+export async function GET(req: NextRequest) {
+  const rateLimit = checkRateLimit(req, {
+    bucket: "api:webhooks:openclaw:agent-actions:list",
+    limit: 120,
+    windowMs: 60_000,
+  });
+  if (rateLimit) return rateLimit;
+
+  const webhookSecret = process.env.KAIROS_OPENCLAW_SECRET;
+  const authHeader = req.headers.get("authorization");
+  if (!webhookSecret || authHeader !== `Bearer ${webhookSecret}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const actor = await resolveActor(
+    req.nextUrl.searchParams.get("actorUserId") || undefined,
+    req.nextUrl.searchParams.get("actorEmail") || undefined
+  );
+  if (!actor) {
+    return NextResponse.json(
+      { error: "actorUserId or actorEmail must identify an existing user" },
+      { status: 400 }
+    );
+  }
+
+  const rawStatus = req.nextUrl.searchParams.get("status") || "PENDING";
+  const status = rawStatus.toUpperCase();
+  if (!["PENDING", "APPROVED", "REJECTED", "ALL"].includes(status)) {
+    return NextResponse.json({ error: "status must be PENDING, APPROVED, REJECTED, or ALL" }, { status: 400 });
+  }
+
+  const rawLimit = Number(req.nextUrl.searchParams.get("limit") || 20);
+  const limit = Number.isFinite(rawLimit) ? Math.max(1, Math.min(100, Math.trunc(rawLimit))) : 20;
+
+  const actions = await prisma.agentAction.findMany({
+    where: {
+      ...(status === "ALL" ? {} : { status: status as "PENDING" | "APPROVED" | "REJECTED" }),
+      agentProxy: { ownerId: actor.id },
+    },
+    include: {
+      agentProxy: { select: { id: true, name: true, description: true } },
+    },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+
+  return NextResponse.json({
+    actions: actions.map((action) => ({
+      id: action.id,
+      type: action.type,
+      status: action.status,
+      payload: parsePayloadForResponse(action.payload),
+      resultId: action.resultId,
+      createdAt: action.createdAt.toISOString(),
+      resolvedAt: action.resolvedAt?.toISOString() || null,
+      agentProxy: action.agentProxy,
+    })),
+  });
+}
+
 export async function POST(req: NextRequest) {
   const rateLimit = checkRateLimit(req, {
     bucket: "api:webhooks:openclaw:agent-actions",
@@ -412,6 +472,12 @@ function stripKairosMeta(payload: unknown) {
   const { _kairos, ...rest } = payload;
   void _kairos;
   return rest;
+}
+
+function parsePayloadForResponse(payload: string) {
+  const parsed = parsePayload(payload);
+  if (!parsed.ok) return { raw: payload };
+  return parsed.value;
 }
 
 function normalizeTags(tags: unknown) {

@@ -17,6 +17,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "queue:process": "node scripts/process-delivery-queue.mjs",
     "kairos:agent": "node scripts/create-agent-action.mjs",
+    "kairos:actions": "node scripts/list-agent-actions.mjs",
     "openclaw:ticket": "node scripts/create-openclaw-ticket.mjs",
     "openclaw:action": "node scripts/resolve-agent-action.mjs"
   },

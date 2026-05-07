@@ -193,6 +193,15 @@ echo '{"artifacts":[{"kind":"NOTE","title":"Evidence summary","summary":"The mig
     --content "Evidence is attached for human approval."
 ```
 
+List pending agent actions from a terminal:
+
+```bash
+export KAIROS_OPENCLAW_SECRET="..."
+
+npm run kairos:actions -- \
+  --actor-email builder@example.com
+```
+
 Delivery queue:
 
 ```http

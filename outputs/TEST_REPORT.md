@@ -388,6 +388,27 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - signed terminal approval returned `200` with result ticket `cmovz8swn0006twjak8yu3n1b`
   - local DB smoke confirmed the result ticket was agent-created and has one attached `NOTE` artifact titled `Smoke evidence`
 
+## 2026-05-07 Terminal Agent Action List Follow-up
+
+- Added signed terminal listing support to `GET /api/webhooks/openclaw/agent-actions`.
+- Added `scripts/list-agent-actions.mjs`.
+- Added `npm run kairos:actions`.
+- Listing supports:
+  - `KAIROS_OPENCLAW_SECRET`
+  - `KAIROS_ACTOR_EMAIL` / `KAIROS_ACTOR_USER_ID`
+  - `--status PENDING|APPROVED|REJECTED|ALL`
+  - `--limit`
+  - compact terminal output or `--json`
+- Verified:
+  - `npm run kairos:actions -- --help` passed
+  - missing `KAIROS_OPENCLAW_SECRET` exits `1`
+  - `npm run build` passed
+  - `npm run db:seed` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - local production server returned pending action `cmouvxxam000otwuzkpgbu719` through compact CLI output
+  - local production server returned approved/rejected action history through `--json`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.
