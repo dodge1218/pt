@@ -189,6 +189,23 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `npx prisma validate` passed
   - `npm audit --audit-level=moderate --omit=dev` passed
 
+## 2026-05-07 Ticket Edit/Delete Follow-up
+
+- Added owner-only ticket edit controls on the ticket detail page.
+- Owners can update title, content, type, status, visibility, and tags from the UI.
+- Owners can archive tickets through the existing soft-delete API behavior.
+- Added rate limiting to `PATCH /api/tickets/:id` and `DELETE /api/tickets/:id`.
+- Added audit log writes for ticket update and ticket soft-delete events.
+- Verified:
+  - `npm run build` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - public ticket list API returned `200`
+  - public ticket detail page returned `200`
+  - unauthenticated `/tickets` returned `307` to `/login`
+  - unauthenticated `PATCH /api/tickets/does-not-matter` returned `401`
+  - unauthenticated `DELETE /api/tickets/does-not-matter` returned `401`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { CommentForm } from "@/components/comment-form";
 import { ResponseForm } from "@/components/response-form";
 import { AgentAttribution } from "@/components/agent-attribution";
+import { TicketActions } from "@/components/ticket-actions";
 
 const positionLabels: Record<string, { icon: string; label: string; color: string }> = {
   AGREE: { icon: "✅", label: "Agrees", color: "text-green-400" },
@@ -64,6 +65,7 @@ export default async function TicketDetailPage({
   }
 
   const isOwner = session?.user?.id === ticket.authorId;
+  const tags = parseJsonArray(ticket.tags);
   const agentProxyIds = Array.from(
     new Set(
       [
@@ -118,6 +120,20 @@ export default async function TicketDetailPage({
 
           <h1 className="text-2xl font-bold">{ticket.title}</h1>
 
+          {isOwner && (
+            <TicketActions
+              ticket={{
+                id: ticket.id,
+                title: ticket.title,
+                content: ticket.content,
+                type: ticket.type,
+                status: ticket.status,
+                visibility: ticket.visibility,
+              }}
+              initialTags={tags}
+            />
+          )}
+
           <div className="flex items-center gap-3 mt-3">
             {ticket.author.image && (
               <img src={ticket.author.image} alt="" className="w-6 h-6 rounded-full" />
@@ -132,9 +148,9 @@ export default async function TicketDetailPage({
             </span>
           </div>
 
-          {parseJsonArray(ticket.tags).length > 0 && (
+          {tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-3">
-              {parseJsonArray(ticket.tags).map((tag) => (
+              {tags.map((tag) => (
                 <span key={tag} className="px-2 py-0.5 rounded-full bg-[hsl(var(--secondary))] text-xs text-[hsl(var(--muted-foreground))]">
                   {tag}
                 </span>

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { writeAuditLog } from "@/lib/audit";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 // ============================================
@@ -85,6 +87,7 @@ const updateTicketSchema = z.object({
   content: z.string().min(1).max(10000).optional(),
   status: z.enum(["OPEN", "IN_PROGRESS", "IN_MEDIATION", "RESOLVED", "ARCHIVED"]).optional(),
   type: z.enum(["DECISION", "INFO", "PROPOSAL", "STATUS", "PUBLIC"]).optional(),
+  visibility: z.enum(["PRIVATE", "FRIENDS", "PUBLIC"]).optional(),
   tags: z.array(z.string()).optional(),
 });
 
@@ -106,13 +109,25 @@ export async function PATCH(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const rateLimit = checkRateLimit(req, {
+    bucket: "api:tickets:update",
+    identifier: session.user.id,
+    limit: 60,
+    windowMs: 60_000,
+  });
+  if (rateLimit) return rateLimit;
+
   try {
     const body = await req.json();
     const data = updateTicketSchema.parse(body);
 
+    const nextType = data.type ?? ticket.type;
+    const nextVisibility = nextType === "PUBLIC" ? "PUBLIC" : data.visibility;
+
     // Convert tags array to JSON string for SQLite
     const dbData = {
       ...data,
+      visibility: nextVisibility,
       tags: data.tags ? JSON.stringify(data.tags) : undefined,
     };
 
@@ -124,6 +139,15 @@ export async function PATCH(
           select: { id: true, name: true, image: true, github: true },
         },
       },
+    });
+
+    await writeAuditLog({
+      actorUserId: session.user.id,
+      action: "ticket.update",
+      entityType: "ticket",
+      entityId: id,
+      metadata: { changedFields: Object.keys(data) },
+      req,
     });
 
     return NextResponse.json(updated);
@@ -157,9 +181,26 @@ export async function DELETE(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const rateLimit = checkRateLimit(req, {
+    bucket: "api:tickets:delete",
+    identifier: session.user.id,
+    limit: 20,
+    windowMs: 60_000,
+  });
+  if (rateLimit) return rateLimit;
+
   await prisma.ticket.update({
     where: { id },
     data: { deletedAt: new Date() },
+  });
+
+  await writeAuditLog({
+    actorUserId: session.user.id,
+    action: "ticket.delete",
+    entityType: "ticket",
+    entityId: id,
+    metadata: { softDelete: true },
+    req,
   });
 
   return NextResponse.json({ deleted: true });
