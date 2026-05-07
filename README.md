@@ -105,6 +105,12 @@ Optional for delivery cron:
 KAIROS_CRON_SECRET="..."
 ```
 
+Optional for ContextClaw ingestion:
+
+```env
+KAIROS_CONTEXTCLAW_SECRET="..."
+```
+
 Optional for local demos:
 
 ```env

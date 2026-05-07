@@ -22,10 +22,12 @@ GITHUB_CLIENT_SECRET="..."
 GROQ_API_KEY="..."
 GEMINI_API_KEY="..."
 KAIROS_CRON_SECRET="long-random-token-for-delivery-processing"
+KAIROS_CONTEXTCLAW_SECRET="long-random-token-for-contextclaw-ingest"
 ENABLE_DEMO_AUTH="false"
 ```
 
 `KAIROS_CRON_SECRET` protects `POST /api/kairos/queue` when called by a scheduled worker.
+`KAIROS_CONTEXTCLAW_SECRET` protects machine-to-machine ContextClaw ingestion at `POST /api/contextclaw/receipts`, `POST /api/contextclaw/manifests`, and `POST /api/webhooks/contextclaw`.
 `ENABLE_DEMO_AUTH` may be `true` for local demos, but production preflight rejects it.
 
 ## Checks

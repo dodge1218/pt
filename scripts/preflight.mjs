@@ -33,6 +33,7 @@ const optional = [
   "GROQ_API_KEY",
   "GEMINI_API_KEY",
   "KAIROS_CRON_SECRET",
+  "KAIROS_CONTEXTCLAW_SECRET",
 ];
 
 const placeholderValues = new Set([

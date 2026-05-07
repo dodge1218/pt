@@ -225,6 +225,24 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - unauthenticated `POST /api/tickets/does-not-matter/artifacts` returned `401`
   - unauthenticated `/tickets` returned `307` to `/login`
 
+## 2026-05-07 ContextClaw Ingest Follow-up
+
+- Added direct ContextClaw ingestion endpoints:
+  - `POST /api/contextclaw/receipts`
+  - `POST /api/contextclaw/manifests`
+- Added `POST /api/webhooks/contextclaw` for typed `receipt` and `manifest` webhook payloads.
+- Added `KAIROS_CONTEXTCLAW_SECRET` for local machine-to-machine ingestion.
+- ContextClaw bearer calls must identify an existing user with `actorUserId` or `actorEmail`; session-authenticated calls use the signed-in user.
+- Ingested receipts and manifests are stored as `TicketArtifact` rows and audit-logged.
+- Verified:
+  - `npm run build` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - unauthenticated `POST /api/contextclaw/receipts` returned `401`
+  - bearer-authenticated receipt ingest returned `201`
+  - bearer-authenticated ContextClaw webhook manifest ingest returned `201`
+  - smoke artifacts were visible in the local dev database
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.
