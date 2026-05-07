@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { writeAuditLog } from "@/lib/audit";
 import {
   queueAgentActionPendingDelivery,
   queueResponseCreatedDeliveries,
@@ -138,6 +139,21 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    await writeAuditLog({
+      actorUserId: session.user.id,
+      action: "agent.register",
+      entityType: "agent_proxy",
+      entityId: agent.id,
+      metadata: {
+        name: agent.name,
+        canCreateTickets: agent.canCreateTickets,
+        canRespond: agent.canRespond,
+        canComment: agent.canComment,
+        requiresApproval: agent.requiresApproval,
+      },
+      req,
+    });
+
     return NextResponse.json({
       id: agent.id,
       name: agent.name,
@@ -228,6 +244,19 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    await writeAuditLog({
+      actorUserId: agent.ownerId,
+      action: "agent.action.create",
+      entityType: "agent_action",
+      entityId: action.id,
+      metadata: {
+        agentProxyId: agent.id,
+        type: action.type,
+        requiresApproval: agent.requiresApproval,
+      },
+      req,
+    });
+
     return NextResponse.json({
       id: action.id,
       status: agent.requiresApproval ? "PENDING" : "APPROVED",
@@ -265,6 +294,7 @@ export async function POST(req: NextRequest) {
     }
 
     try {
+      let revisedPayload = false;
       if (data.payload !== undefined) {
         if (!isExecutableAgentActionType(agentAction.type)) {
           return NextResponse.json({ error: "This action type does not support revised approval yet" }, { status: 400 });
@@ -292,9 +322,23 @@ export async function POST(req: NextRequest) {
           where: { id: data.actionId },
           data: { payload: JSON.stringify({ ...validation.payload, ...originalMeta }) },
         });
+        revisedPayload = true;
       }
 
       const result = await executeAgentAction(data.actionId, session.user.id);
+      await writeAuditLog({
+        actorUserId: session.user.id,
+        action: "agent.action.approve",
+        entityType: "agent_action",
+        entityId: data.actionId,
+        metadata: {
+          agentProxyId: agentAction.agentProxyId,
+          type: agentAction.type,
+          revisedPayload,
+          resultId: result.resultId,
+        },
+        req,
+      });
       return NextResponse.json(result);
     } catch (e) {
       return NextResponse.json({ error: e instanceof Error ? e.message : "Failed to execute action" }, { status: 400 });
@@ -325,6 +369,18 @@ export async function POST(req: NextRequest) {
     await prisma.agentAction.update({
       where: { id: data.actionId },
       data: { status: "REJECTED", resolvedAt: new Date() },
+    });
+
+    await writeAuditLog({
+      actorUserId: session.user.id,
+      action: "agent.action.reject",
+      entityType: "agent_action",
+      entityId: data.actionId,
+      metadata: {
+        agentProxyId: agentAction.agentProxyId,
+        type: agentAction.type,
+      },
+      req,
     });
 
     return NextResponse.json({ status: "rejected" });

@@ -110,6 +110,25 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - unauthenticated `GET /api/kairos/queue` returned `401`
   - unauthenticated `PATCH /api/kairos/queue` returned `401`
 
+## 2026-05-07 Audit Follow-up
+
+- Added `AuditLog` persistence for enterprise-grade control-plane traceability.
+- Added `/audit` for recent authenticated-user audit events.
+- Added audit writes for:
+  - agent registration
+  - agent action creation
+  - agent action approval, including revised-payload approvals
+  - agent action rejection
+  - bridge creation
+  - bridge member add/remove
+  - delivery mark-read and queue processing
+- Re-ran `npx prisma db push`, `npm run build`, `npx prisma validate`, and `npm audit --audit-level=moderate --omit=dev` after these changes.
+- Production smoke checks passed:
+  - `/audit` returned `307` to `/login` when unauthenticated
+  - unauthenticated `POST /api/bridges` returned `401`
+  - unauthenticated `POST /api/agent` register returned `401`
+  - unauthenticated `PATCH /api/kairos/queue` returned `401`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

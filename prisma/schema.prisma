@@ -624,6 +624,28 @@ enum SmartDeliveryType {
 }
 
 // ============================================
+// AUDIT LOG
+// ============================================
+
+model AuditLog {
+  id String @id @default(cuid())
+
+  actorUserId String?
+  action      String
+  entityType  String
+  entityId    String?
+  metadata    String  @default("{}")
+  ipAddress   String?
+  userAgent   String?
+
+  createdAt DateTime @default(now())
+
+  @@index([actorUserId, createdAt])
+  @@index([entityType, entityId])
+  @@index([action])
+}
+
+// ============================================
 // PROJECTS (Kickstarter-style collaboration)
 // ============================================
 

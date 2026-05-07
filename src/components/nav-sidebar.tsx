@@ -28,6 +28,7 @@ export function NavSidebar({ pendingActions = 0, pendingDeliveries = 0 }: NavSid
     { href: "/friends", label: "Friends", icon: "👥" },
     { href: "/matches", label: "Matches", icon: "🧠" },
     { href: "/agent/queue", label: "Agent Queue", icon: "🤖", badge: pendingActions },
+    { href: "/audit", label: "Audit Log", icon: "🧾" },
     { href: "/settings", label: "Settings", icon: "⚙️" },
   ];
 

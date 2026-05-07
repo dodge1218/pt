@@ -6,7 +6,7 @@ export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Protected routes
-  const protectedPaths = ["/dashboard", "/tickets/new", "/agent", "/settings", "/friends", "/matches", "/bridges", "/inbox"];
+  const protectedPaths = ["/dashboard", "/tickets/new", "/agent", "/settings", "/friends", "/matches", "/bridges", "/inbox", "/audit"];
   const isProtected = protectedPaths.some((p) => pathname.startsWith(p));
 
   if (isProtected && !isLoggedIn) {

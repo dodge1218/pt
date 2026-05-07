@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { writeAuditLog } from "@/lib/audit";
 import { z } from "zod";
 
 // GET /api/bridges — List user's bridges
@@ -78,6 +79,15 @@ export async function POST(req: NextRequest) {
       include: {
         members: true,
       },
+    });
+
+    await writeAuditLog({
+      actorUserId: session.user.id,
+      action: "bridge.create",
+      entityType: "bridge",
+      entityId: bridge.id,
+      metadata: { name: bridge.name, invitedMembers: data.memberIds.length },
+      req,
     });
 
     return NextResponse.json(bridge, { status: 201 });

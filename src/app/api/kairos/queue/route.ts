@@ -5,6 +5,7 @@ import {
   markDeliveryRead,
   processDeliveryQueue,
 } from "@/lib/smart-delivery";
+import { writeAuditLog } from "@/lib/audit";
 import { z } from "zod";
 
 export async function GET() {
@@ -31,6 +32,14 @@ export async function PATCH(req: NextRequest) {
   try {
     const data = patchSchema.parse(await req.json());
     const result = await markDeliveryRead(data.deliveryId, session.user.id);
+    await writeAuditLog({
+      actorUserId: session.user.id,
+      action: "delivery.mark_read",
+      entityType: "smart_delivery",
+      entityId: data.deliveryId,
+      metadata: { updated: result.count },
+      req,
+    });
     return NextResponse.json({ updated: result.count });
   } catch (e) {
     if (e instanceof z.ZodError) {
@@ -47,13 +56,22 @@ export async function POST(req: NextRequest) {
     cronSecret && authHeader === `Bearer ${cronSecret}`
   );
 
+  let actorUserId: string | null = null;
   if (!hasCronAuth) {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    actorUserId = session.user.id;
   }
 
   const result = await processDeliveryQueue();
+  await writeAuditLog({
+    actorUserId,
+    action: "delivery.process_queue",
+    entityType: "smart_delivery",
+    metadata: { ...result, source: hasCronAuth ? "cron" : "user" },
+    req,
+  });
   return NextResponse.json(result);
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { writeAuditLog } from "@/lib/audit";
 import { z } from "zod";
 
 const addMemberSchema = z.object({
@@ -73,6 +74,15 @@ export async function POST(
       },
     });
 
+    await writeAuditLog({
+      actorUserId: session.user.id,
+      action: "bridge.member.add",
+      entityType: "bridge",
+      entityId: bridgeId,
+      metadata: { memberUserId: data.userId, role: data.role },
+      req,
+    });
+
     return NextResponse.json(member, { status: 201 });
   } catch (e) {
     if (e instanceof z.ZodError) {
@@ -121,6 +131,15 @@ export async function DELETE(
       where: {
         userId_bridgeId: { userId: data.userId, bridgeId },
       },
+    });
+
+    await writeAuditLog({
+      actorUserId: session.user.id,
+      action: "bridge.member.remove",
+      entityType: "bridge",
+      entityId: bridgeId,
+      metadata: { memberUserId: data.userId, role: member.role },
+      req,
     });
 
     return NextResponse.json({ removed: true });
