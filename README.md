@@ -211,6 +211,20 @@ echo '{"artifacts":[{"kind":"NOTE","title":"Terminal trace","summary":"Stopped b
     --content "Trace is attached."
 ```
 
+OpenClaw/Hermes agent action approval:
+
+```bash
+npm run openclaw:action -- \
+  --decision approve \
+  --action-id <agent-action-id> \
+  --actor-email builder@example.com
+
+npm run openclaw:action -- \
+  --decision reject \
+  --action-id <agent-action-id> \
+  --actor-email builder@example.com
+```
+
 ## Design Principles
 
 - **Tickets over chat**: chat is good for conversation, bad for durable state.

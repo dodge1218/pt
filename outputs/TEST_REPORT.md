@@ -331,6 +331,23 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - sender created a ticket through local production server with JSON stdin artifact
   - duplicate sender call returned `200` with `idempotent: true`
 
+## 2026-05-07 Terminal Agent Action Follow-up
+
+- Added signed terminal approval endpoint:
+  - `POST /api/webhooks/openclaw/agent-actions`
+- Added `scripts/resolve-agent-action.mjs`.
+- Added `npm run openclaw:action`.
+- Terminal approvals/rejections require `KAIROS_OPENCLAW_SECRET` and an owning actor identified by `actorUserId` or `actorEmail`.
+- Approve supports optional revised payload via JSON stdin.
+- Verified:
+  - `npm run openclaw:action -- --help` passed
+  - missing `KAIROS_OPENCLAW_SECRET` exits `1`
+  - `npm run build` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - terminal approval returned `200` and created a result ticket
+  - terminal rejection returned `200` with `status: rejected`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

@@ -50,6 +50,18 @@ npm run openclaw:ticket -- \
 
 The command posts to `POST /api/webhooks/openclaw` using `KAIROS_OPENCLAW_SECRET`.
 
+Terminal approve/reject uses the same secret:
+
+```bash
+npm run openclaw:action -- \
+  --url "$KAIROS_BASE_URL" \
+  --decision approve \
+  --action-id "$ACTION_ID" \
+  --actor-email "$KAIROS_ACTOR_EMAIL"
+```
+
+The command posts to `POST /api/webhooks/openclaw/agent-actions`.
+
 ## Checks
 
 Run these before deployment:
