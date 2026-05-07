@@ -103,6 +103,7 @@ Optional for delivery cron:
 
 ```env
 KAIROS_CRON_SECRET="..."
+KAIROS_BASE_URL="http://localhost:3000"
 ```
 
 Optional for ContextClaw ingestion:

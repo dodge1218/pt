@@ -34,6 +34,7 @@ const optional = [
   "GEMINI_API_KEY",
   "KAIROS_CRON_SECRET",
   "KAIROS_CONTEXTCLAW_SECRET",
+  "KAIROS_BASE_URL",
 ];
 
 const placeholderValues = new Set([

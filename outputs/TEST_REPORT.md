@@ -243,6 +243,19 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - bearer-authenticated ContextClaw webhook manifest ingest returned `201`
   - smoke artifacts were visible in the local dev database
 
+## 2026-05-07 Delivery Cron Follow-up
+
+- Added `scripts/process-delivery-queue.mjs` for shell/cron processing of due delivery rows.
+- Added `npm run queue:process`.
+- Added `KAIROS_BASE_URL` env support so cron can target local, preview, or deployed Kairos.
+- Documented cron env in README and deployment notes.
+- Verified:
+  - missing `KAIROS_CRON_SECRET` exits `1`
+  - `npm run build` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - `KAIROS_CRON_SECRET=test-cron-secret KAIROS_BASE_URL=http://localhost:3001 npm run queue:process` returned `200` with `{ "processed": 0 }`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.
