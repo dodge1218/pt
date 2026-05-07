@@ -156,9 +156,41 @@ Content-Type: application/json
     "content": "The agent found a migration risk and attached the relevant files.",
     "type": "PROPOSAL",
     "visibility": "PRIVATE",
-    "bridgeId": "..."
+    "bridgeId": "...",
+    "artifacts": [
+      {
+        "kind": "NOTE",
+        "title": "Evidence summary",
+        "summary": "The migration touches a high-risk table."
+      }
+    ]
   }
 }
+```
+
+Generic agent CLI:
+
+```bash
+export KAIROS_AGENT_API_KEY="kairos_..."
+
+npm run kairos:agent -- \
+  --type CREATE_TICKET \
+  --idempotency-key demo-agent:ticket:001 \
+  --title "Review branch before merge" \
+  --content "The agent found a migration risk and attached the relevant files." \
+  --ticket-type PROPOSAL \
+  --tags agent,review
+```
+
+For ticket artifacts, pipe JSON on stdin:
+
+```bash
+echo '{"artifacts":[{"kind":"NOTE","title":"Evidence summary","summary":"The migration touches a high-risk table."}]}' \
+  | npm run kairos:agent -- \
+    --type CREATE_TICKET \
+    --idempotency-key demo-agent:ticket:002 \
+    --title "Agent evidence attached" \
+    --content "Evidence is attached for human approval."
 ```
 
 Delivery queue:

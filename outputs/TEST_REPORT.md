@@ -363,6 +363,31 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `npx prisma validate` passed
   - `npm audit --audit-level=moderate --omit=dev` passed
 
+## 2026-05-07 Generic Agent CLI + Artifact Follow-up
+
+- Added `scripts/create-agent-action.mjs`.
+- Added `npm run kairos:agent`.
+- Generic agent CLI supports:
+  - `CREATE_TICKET`
+  - `CREATE_RESPONSE`
+  - `CREATE_COMMENT`
+  - `KAIROS_AGENT_API_KEY`
+  - JSON stdin payloads
+  - ticket artifacts on agent-created tickets
+  - idempotency keys
+- Extended generic agent-created tickets so approved `CREATE_TICKET` payloads can attach up to 20 artifacts.
+- Kept OpenClaw/Hermes approval compatibility by adding the same artifact-aware ticket execution path to the signed terminal approval endpoint.
+- Verified:
+  - `npm run kairos:agent -- --help` passed
+  - missing `KAIROS_AGENT_API_KEY` exits `1`
+  - `npm run build` passed
+  - `npm run db:seed` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - generic CLI created pending action `cmovz8oh20001twja4h1gzuxa`
+  - signed terminal approval returned `200` with result ticket `cmovz8swn0006twjak8yu3n1b`
+  - local DB smoke confirmed the result ticket was agent-created and has one attached `NOTE` artifact titled `Smoke evidence`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

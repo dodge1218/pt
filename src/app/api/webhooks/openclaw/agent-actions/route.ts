@@ -34,6 +34,19 @@ const ticketPayloadSchema = z.object({
   tags: z.union([z.array(z.string()), z.string()]).optional(),
   bridgeId: z.string().optional(),
   projectId: z.string().optional(),
+  artifacts: z.array(z.object({
+    kind: z.enum(["LINK", "FILE", "NOTE", "CONTEXTCLAW_MANIFEST", "CONTEXTCLAW_RECEIPT"]).default("NOTE"),
+    title: z.string().min(1).max(200),
+    uri: z.string().max(2000).optional(),
+    summary: z.string().max(2000).optional(),
+    metadata: z.record(z.unknown()).optional(),
+    provider: z.string().max(80).optional(),
+    model: z.string().max(120).optional(),
+    inputTokens: z.coerce.number().int().nonnegative().optional(),
+    outputTokens: z.coerce.number().int().nonnegative().optional(),
+    contextSavedTokens: z.coerce.number().int().nonnegative().optional(),
+    costUsd: z.coerce.number().nonnegative().optional(),
+  })).max(20).optional(),
 });
 
 const responsePayloadSchema = z.object({
@@ -206,6 +219,30 @@ async function executeAgentAction(actionId: string, approverId: string) {
           authorId: action.agentProxy.ownerId,
         },
       });
+      if (ticketPayload.artifacts?.length) {
+        await prisma.ticketArtifact.createMany({
+          data: ticketPayload.artifacts.map((artifact) => ({
+            kind: artifact.kind,
+            title: artifact.title,
+            uri: artifact.uri || null,
+            summary: artifact.summary || null,
+            metadata: JSON.stringify({
+              ...artifact.metadata,
+              source: artifact.metadata?.source || "agent_action",
+              agentActionId: action.id,
+              agentProxyId: action.agentProxyId,
+            }),
+            provider: artifact.provider || null,
+            model: artifact.model || null,
+            inputTokens: artifact.inputTokens,
+            outputTokens: artifact.outputTokens,
+            contextSavedTokens: artifact.contextSavedTokens,
+            costUsd: artifact.costUsd,
+            ticketId: ticket.id,
+            createdById: action.agentProxy.ownerId,
+          })),
+        });
+      }
       resultId = ticket.id;
       await queueTicketCreatedDeliveries({
         ticketId: ticket.id,
