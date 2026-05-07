@@ -49,7 +49,7 @@ export async function GET() {
 // POST /api/bridges — Create bridge
 const createBridgeSchema = z.object({
   name: z.string().min(1).max(200),
-  memberIds: z.array(z.string()).min(1),
+  memberIds: z.array(z.string()).default([]),
 });
 
 export async function POST(req: NextRequest) {

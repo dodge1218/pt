@@ -55,6 +55,21 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `/api/tickets?visibility=PUBLIC&limit=1` returned `200`
   - unauthenticated `POST /api/responses/does-not-matter/comments` returned `401`
 
+## 2026-05-07 Bridge Follow-up
+
+- Added private bridge management:
+  - `/bridges` page lists bridges, members, ticket counts, and owner state
+  - bridge owners can add accepted friends to a bridge
+  - bridge owners can remove non-self bridge members
+  - solo owner bridges can now be created before inviting members
+- Added `POST` and `DELETE` handlers at `/api/bridges/:id/members` with owner-only authorization.
+- Re-ran `npm run build`, `npx prisma validate`, and `npm audit --audit-level=moderate --omit=dev` after these changes.
+- Production smoke checks passed:
+  - `/` returned `200`
+  - `/bridges` returned `307` to `/login` when unauthenticated
+  - unauthenticated `GET /api/bridges` returned `401`
+  - unauthenticated `POST /api/bridges/does-not-matter/members` returned `401`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

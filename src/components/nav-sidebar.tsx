@@ -22,6 +22,7 @@ export function NavSidebar({ pendingActions = 0 }: NavSidebarProps) {
     { href: "/tickets", label: "Tickets", icon: "📋" },
     { href: "/public", label: "Public Board", icon: "🌐" },
     { href: "/projects", label: "Projects", icon: "🚀" },
+    { href: "/bridges", label: "Bridges", icon: "🔗" },
     { href: "/friends", label: "Friends", icon: "👥" },
     { href: "/matches", label: "Matches", icon: "🧠" },
     { href: "/agent/queue", label: "Agent Queue", icon: "🤖", badge: pendingActions },
