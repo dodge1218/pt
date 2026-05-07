@@ -79,6 +79,10 @@ if (production && (read("AUTH_URL") || read("NEXTAUTH_URL")).includes("localhost
   failures.push("AUTH_URL/NEXTAUTH_URL must not point at localhost in production");
 }
 
+if (production && read("ENABLE_DEMO_AUTH") === "true") {
+  failures.push("ENABLE_DEMO_AUTH must be disabled in production");
+}
+
 if (failures.length > 0) {
   const prefix = production ? "Preflight failed" : "Preflight warnings";
   console.warn(`${prefix}:\n- ${failures.join("\n- ")}`);

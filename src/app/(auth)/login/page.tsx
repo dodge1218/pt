@@ -2,6 +2,8 @@ import { signIn } from "@/lib/auth";
 import Link from "next/link";
 
 export default function LoginPage() {
+  const demoAuthEnabled = process.env.ENABLE_DEMO_AUTH === "true";
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[hsl(var(--background))]">
       <div className="w-full max-w-sm mx-auto p-8">
@@ -38,6 +40,23 @@ export default function LoginPage() {
             Sign in with GitHub
           </button>
         </form>
+
+        {demoAuthEnabled && (
+          <form
+            className="mt-3"
+            action={async () => {
+              "use server";
+              await signIn("demo", { redirectTo: "/dashboard" });
+            }}
+          >
+            <button
+              type="submit"
+              className="w-full rounded-lg border border-[hsl(var(--border))] px-4 py-3 text-sm font-medium text-[hsl(var(--foreground))] transition hover:bg-[hsl(var(--secondary))]"
+            >
+              Continue as demo user
+            </button>
+          </form>
+        )}
 
         <p className="text-center text-xs text-[hsl(var(--muted-foreground))] mt-6">
           Free. No credit card. Takes 5 seconds.

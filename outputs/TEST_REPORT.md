@@ -175,6 +175,20 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - unauthenticated `POST /api/bridges` returned `401`
   - malformed `POST /api/agent` returned `400`
 
+## 2026-05-07 Demo Auth Follow-up
+
+- Added optional local demo auth through a NextAuth Credentials provider.
+- `ENABLE_DEMO_AUTH=true` shows a "Continue as demo user" login action that creates/reuses the seeded Ryan demo user.
+- Production preflight rejects `ENABLE_DEMO_AUTH=true`.
+- Verified:
+  - `ENABLE_DEMO_AUTH=true npm run build` passed
+  - demo-mode `/login` rendered both "Sign in with GitHub" and "Continue as demo user"
+  - unauthenticated `/dashboard` still returned `307` to `/login`
+  - `npm run build` passed without demo auth
+  - production preflight with otherwise valid env and `ENABLE_DEMO_AUTH=true` exited `1`
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

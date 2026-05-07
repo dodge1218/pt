@@ -1,7 +1,10 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
+import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
+
+const demoAuthEnabled = process.env.ENABLE_DEMO_AUTH === "true";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -19,6 +22,38 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         };
       },
     }),
+    ...(demoAuthEnabled
+      ? [
+          Credentials({
+            id: "demo",
+            name: "Demo",
+            credentials: {},
+            async authorize() {
+              const user = await prisma.user.upsert({
+                where: { email: "ryan@dreamsitebuilders.com" },
+                update: {},
+                create: {
+                  name: "Ryan",
+                  email: "ryan@dreamsitebuilders.com",
+                  github: "dodge1218",
+                  headline: "Building 6 things at once",
+                  bio: "Full-stack dev. Running DreamSiteBuilders. Building tools for builders who use AI as core workflow.",
+                  timezone: "America/New_York",
+                  activeStart: "14:30",
+                  activeEnd: "03:00",
+                },
+              });
+
+              return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                image: user.image,
+              };
+            },
+          }),
+        ]
+      : []),
   ],
   callbacks: {
     async session({ session, user }) {

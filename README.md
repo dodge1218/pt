@@ -105,6 +105,14 @@ Optional for delivery cron:
 KAIROS_CRON_SECRET="..."
 ```
 
+Optional for local demos:
+
+```env
+ENABLE_DEMO_AUTH="true"
+```
+
+Demo auth is for local demos and is rejected by production preflight.
+
 ## Verification
 
 ```bash

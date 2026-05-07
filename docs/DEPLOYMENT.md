@@ -22,9 +22,11 @@ GITHUB_CLIENT_SECRET="..."
 GROQ_API_KEY="..."
 GEMINI_API_KEY="..."
 KAIROS_CRON_SECRET="long-random-token-for-delivery-processing"
+ENABLE_DEMO_AUTH="false"
 ```
 
 `KAIROS_CRON_SECRET` protects `POST /api/kairos/queue` when called by a scheduled worker.
+`ENABLE_DEMO_AUTH` may be `true` for local demos, but production preflight rejects it.
 
 ## Checks
 
