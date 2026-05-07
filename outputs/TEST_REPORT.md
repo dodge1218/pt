@@ -273,6 +273,25 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - duplicate signed webhook call returned `200` with `idempotent: true`
   - smoke-created ticket persisted one artifact and `createdByAgent: true`
 
+## 2026-05-07 Dashboard Metrics Follow-up
+
+- Added dashboard control-plane metrics for:
+  - tracked ContextClaw spend
+  - context saved tokens
+  - active and visible ticket counts
+  - decision resolution rate
+  - pending agent actions and agent-created tickets
+  - input/output token ledger
+  - recent decision tickets
+- Metrics are scoped to tickets authored by the current user or visible through bridge membership.
+- Verified:
+  - first `npm run build` caught nullable receipt accumulator typing; fixed with an explicit numeric accumulator
+  - `npm run build` passed after the fix
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - unauthenticated `/dashboard` returned `307` to `/login`
+  - `/` returned `200`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.
