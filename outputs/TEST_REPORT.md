@@ -428,6 +428,27 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - local production server accepted `KAIROS_AGENT_ACTION_SECRET` for `kairos:action --decision approve`
   - terminal approval returned result ticket `cmow074az0001tw11rr75a977`
 
+## 2026-05-07 Health Endpoint Follow-up
+
+- Added `GET /api/health`.
+- Added `scripts/check-health.mjs`.
+- Added `npm run health`.
+- Health response includes:
+  - `ok`
+  - `service`
+  - `database`
+  - `checkedAt`
+  - `latencyMs`
+- The endpoint returns `503` if the database check fails.
+- Verified:
+  - `npm run health -- --help` passed
+  - `npm run build` passed and included `/api/health`
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - local production server returned `Kairos health ok: database=ok`
+  - `npm run health -- --json` returned `200` with `ok: true`
+  - direct `curl http://localhost:3030/api/health` returned `ok: true` and `database: ok`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

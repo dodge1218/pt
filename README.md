@@ -82,6 +82,12 @@ npm run db:seed
 npm run dev
 ```
 
+Health check after the server starts:
+
+```bash
+npm run health
+```
+
 Default local database:
 
 ```env
@@ -219,6 +225,7 @@ npm run kairos:action -- \
 Delivery queue:
 
 ```http
+GET /api/health
 GET /api/kairos/queue
 PATCH /api/kairos/queue
 POST /api/kairos/queue

@@ -83,6 +83,14 @@ npm audit --audit-level=moderate --omit=dev
 
 The normal `npm run build` runs a non-blocking preflight locally. In production, preflight fails on missing GitHub OAuth, missing Auth.js secret/url, placeholder secrets, localhost URLs, or SQLite.
 
+After the server starts, verify runtime health:
+
+```bash
+npm run health -- --url "$KAIROS_BASE_URL"
+```
+
+The command checks `GET /api/health`, including database connectivity.
+
 ## Database
 
 For the current prototype:
