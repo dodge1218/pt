@@ -150,6 +150,8 @@ POST /api/kairos/queue
 
 ## Roadmap
 
+- [Ecosystem architecture](docs/ECOSYSTEM-ARCHITECTURE.md)
+- [Roadmap to a serious open source project](docs/ROADMAP-50K-STARS.md)
 - GitHub issue/PR ingestion
 - signed webhooks for external agents
 - scoped bridge tokens
