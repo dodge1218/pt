@@ -61,13 +61,13 @@ Implemented:
 - `/api/kairos/queue` for delivery polling/read/process behavior
 - delivery inbox and unread badge
 - control-plane audit log
+- signed OpenClaw/Hermes webhook ingestion
 - CI for build, Prisma validation, and dependency audit
 
 Still early:
 
 - no hosted multi-tenant deployment yet
 - no production RBAC model yet
-- no signed webhook ingestion yet
 - no GitHub issue/PR bridge yet
 - no MCP/A2A protocol adapter yet
 - no billing, orgs, or enterprise admin controls yet
@@ -110,6 +110,12 @@ Optional for ContextClaw ingestion:
 
 ```env
 KAIROS_CONTEXTCLAW_SECRET="..."
+```
+
+Optional for OpenClaw/Hermes ticket ingestion:
+
+```env
+KAIROS_OPENCLAW_SECRET="..."
 ```
 
 Optional for local demos:
@@ -163,6 +169,24 @@ PATCH /api/kairos/queue
 POST /api/kairos/queue
 ```
 
+OpenClaw/Hermes ticket webhook:
+
+```http
+POST /api/webhooks/openclaw
+Authorization: Bearer <KAIROS_OPENCLAW_SECRET>
+Content-Type: application/json
+
+{
+  "source": "hermes",
+  "idempotencyKey": "session-123:pass-4:handoff",
+  "actorEmail": "builder@example.com",
+  "title": "Agent pass blocked on migration risk",
+  "content": "The runtime stopped before modifying the migration.",
+  "type": "PROPOSAL",
+  "tags": ["handoff", "migration"]
+}
+```
+
 ## Design Principles
 
 - **Tickets over chat**: chat is good for conversation, bad for durable state.
@@ -174,7 +198,6 @@ POST /api/kairos/queue
 ## Roadmap
 
 - GitHub issue/PR ingestion
-- signed webhooks for external agents
 - scoped bridge tokens
 - org/team model
 - agent action receipts

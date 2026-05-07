@@ -35,6 +35,7 @@ const optional = [
   "KAIROS_CRON_SECRET",
   "KAIROS_CONTEXTCLAW_SECRET",
   "KAIROS_BASE_URL",
+  "KAIROS_OPENCLAW_SECRET",
 ];
 
 const placeholderValues = new Set([

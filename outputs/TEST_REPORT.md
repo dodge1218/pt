@@ -256,6 +256,23 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `npm audit --audit-level=moderate --omit=dev` passed
   - `KAIROS_CRON_SECRET=test-cron-secret KAIROS_BASE_URL=http://localhost:3001 npm run queue:process` returned `200` with `{ "processed": 0 }`
 
+## 2026-05-07 OpenClaw/Hermes Webhook Follow-up
+
+- Added `POST /api/webhooks/openclaw` for signed OpenClaw/Hermes ticket creation.
+- Added `KAIROS_OPENCLAW_SECRET`.
+- Webhook payloads require an `idempotencyKey` and an existing `actorUserId` or `actorEmail`.
+- Webhook-created tickets can include bridge/project scope, tags, mission/pass metadata, and up to 20 artifacts.
+- Duplicate idempotency keys return the original ticket instead of creating another ticket.
+- Webhook-created tickets are audit-logged and queued through smart delivery.
+- Verified:
+  - `npm run build` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - unsigned webhook call returned `401`
+  - signed webhook ticket creation returned `201`
+  - duplicate signed webhook call returned `200` with `idempotent: true`
+  - smoke-created ticket persisted one artifact and `createdByAgent: true`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

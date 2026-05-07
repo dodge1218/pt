@@ -24,12 +24,14 @@ GEMINI_API_KEY="..."
 KAIROS_CRON_SECRET="long-random-token-for-delivery-processing"
 KAIROS_CONTEXTCLAW_SECRET="long-random-token-for-contextclaw-ingest"
 KAIROS_BASE_URL="https://your-domain.example"
+KAIROS_OPENCLAW_SECRET="long-random-token-for-openclaw-hermes-webhooks"
 ENABLE_DEMO_AUTH="false"
 ```
 
 `KAIROS_CRON_SECRET` protects `POST /api/kairos/queue` when called by a scheduled worker.
 `KAIROS_BASE_URL` is used by `npm run queue:process` when cron runs from a shell.
 `KAIROS_CONTEXTCLAW_SECRET` protects machine-to-machine ContextClaw ingestion at `POST /api/contextclaw/receipts`, `POST /api/contextclaw/manifests`, and `POST /api/webhooks/contextclaw`.
+`KAIROS_OPENCLAW_SECRET` protects `POST /api/webhooks/openclaw` for OpenClaw/Hermes ticket creation.
 `ENABLE_DEMO_AUTH` may be `true` for local demos, but production preflight rejects it.
 
 ## Checks
