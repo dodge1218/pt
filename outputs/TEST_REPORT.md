@@ -449,6 +449,28 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `npm run health -- --json` returned `200` with `ok: true`
   - direct `curl http://localhost:3030/api/health` returned `ok: true` and `database: ok`
 
+## 2026-05-07 Local Setup Command Follow-up
+
+- Added `scripts/setup-local.mjs`.
+- Added `npm run setup:local`.
+- Updated `.env.example` with `KAIROS_AGENT_ACTION_SECRET`.
+- Updated README and deployment docs to use `npm run setup:local` for local setup.
+- Setup behavior:
+  - creates `.env` from `.env.example` only if `.env` is missing
+  - leaves existing `.env` unchanged
+  - runs Prisma generate
+  - runs Prisma db push
+  - runs seed unless `--skip-seed` is passed
+  - runs local preflight
+- Verified:
+  - `npm run setup:local -- --help` passed
+  - `npm run setup:local -- --skip-seed` passed
+  - setup reported `.env already exists; leaving it unchanged`
+  - `npm run build` passed
+  - `npm run db:seed` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

@@ -91,6 +91,18 @@ npm run health -- --url "$KAIROS_BASE_URL"
 
 The command checks `GET /api/health`, including database connectivity.
 
+## Local Setup
+
+For local development:
+
+```bash
+npm install
+npm run setup:local
+npm run dev
+```
+
+`setup:local` creates `.env` from `.env.example` only if `.env` does not exist. It does not overwrite local secrets.
+
 ## Database
 
 For the current prototype:

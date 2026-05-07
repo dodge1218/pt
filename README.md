@@ -76,11 +76,11 @@ Still early:
 
 ```bash
 npm install
-cp .env.example .env
-npx prisma db push
-npm run db:seed
+npm run setup:local
 npm run dev
 ```
+
+`setup:local` creates `.env` from `.env.example` only when `.env` is missing, then runs Prisma generate, DB push, seed, and preflight.
 
 Health check after the server starts:
 
@@ -122,6 +122,12 @@ Optional for OpenClaw/Hermes ticket ingestion:
 
 ```env
 KAIROS_OPENCLAW_SECRET="..."
+```
+
+Optional for terminal agent-action list/approval:
+
+```env
+KAIROS_AGENT_ACTION_SECRET="..."
 ```
 
 Optional for local demos:
