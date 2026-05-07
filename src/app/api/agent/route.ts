@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { writeAuditLog } from "@/lib/audit";
+import { checkRateLimit } from "@/lib/rate-limit";
 import {
   queueAgentActionPendingDelivery,
   queueResponseCreatedDeliveries,
@@ -101,6 +102,13 @@ function isExecutableAgentActionType(type: string): type is ExecutableAgentActio
 }
 
 export async function POST(req: NextRequest) {
+  const rateLimit = checkRateLimit(req, {
+    bucket: "api:agent:post",
+    limit: 60,
+    windowMs: 60_000,
+  });
+  if (rateLimit) return rateLimit;
+
   let body: unknown;
   try {
     body = await req.json();

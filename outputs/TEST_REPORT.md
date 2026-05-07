@@ -158,6 +158,23 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `npx prisma validate` passed
   - `npm audit --audit-level=moderate --omit=dev` passed
 
+## 2026-05-07 Rate Limit Follow-up
+
+- Added baseline in-memory rate limiting for mutation endpoints:
+  - `POST /api/agent`
+  - `POST /api/tickets`
+  - `POST /api/tickets/:id/responses`
+  - `POST /api/responses/:id/comments`
+  - `POST /api/bridges`
+  - `POST` and `DELETE /api/bridges/:id/members`
+- Rate-limit responses return `429`, `Retry-After`, and rate-limit headers.
+- Re-ran `npm run build`, `npx prisma validate`, and `npm audit --audit-level=moderate --omit=dev` after these changes.
+- Production smoke checks passed:
+  - unauthenticated `POST /api/tickets` returned `401`
+  - unauthenticated `POST /api/responses/does-not-matter/comments` returned `401`
+  - unauthenticated `POST /api/bridges` returned `401`
+  - malformed `POST /api/agent` returned `400`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

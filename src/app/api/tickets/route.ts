@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { queueTicketCreatedDeliveries } from "@/lib/ticket-delivery";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 // ============================================
@@ -91,6 +92,14 @@ export async function POST(req: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rateLimit = checkRateLimit(req, {
+    bucket: "api:tickets:create",
+    identifier: session.user.id,
+    limit: 30,
+    windowMs: 60_000,
+  });
+  if (rateLimit) return rateLimit;
 
   try {
     const body = await req.json();

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { queueCommentCreatedDeliveries } from "@/lib/ticket-delivery";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const createCommentSchema = z.object({
@@ -18,6 +19,14 @@ export async function POST(
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rateLimit = checkRateLimit(req, {
+    bucket: "api:comments:create",
+    identifier: session.user.id,
+    limit: 90,
+    windowMs: 60_000,
+  });
+  if (rateLimit) return rateLimit;
 
   const response = await prisma.response.findUnique({
     where: { id: responseId, deletedAt: null },

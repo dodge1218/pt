@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { writeAuditLog } from "@/lib/audit";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const addMemberSchema = z.object({
@@ -30,6 +31,14 @@ export async function POST(
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rateLimit = checkRateLimit(req, {
+    bucket: "api:bridge-members:add",
+    identifier: session.user.id,
+    limit: 30,
+    windowMs: 60_000,
+  });
+  if (rateLimit) return rateLimit;
 
   if (!(await requireBridgeOwner(bridgeId, session.user.id))) {
     return NextResponse.json({ error: "Only bridge owners can add members" }, { status: 403 });
@@ -101,6 +110,14 @@ export async function DELETE(
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rateLimit = checkRateLimit(req, {
+    bucket: "api:bridge-members:remove",
+    identifier: session.user.id,
+    limit: 30,
+    windowMs: 60_000,
+  });
+  if (rateLimit) return rateLimit;
 
   if (!(await requireBridgeOwner(bridgeId, session.user.id))) {
     return NextResponse.json({ error: "Only bridge owners can remove members" }, { status: 403 });
