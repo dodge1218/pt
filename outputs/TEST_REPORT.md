@@ -292,6 +292,25 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - unauthenticated `/dashboard` returned `307` to `/login`
   - `/` returned `200`
 
+## 2026-05-07 Demo Artifact/Receipt Seed Follow-up
+
+- Added deterministic seed artifacts for the demo dashboard:
+  - ContextClaw manifest for the framework decision ticket
+  - ContextClaw receipt for the framework decision ticket
+  - OpenClaw handoff link for the resume-parser branch ticket
+  - ContextClaw receipt for the weekly job scan ticket
+- Seed artifacts include mission/pass metadata, budget decisions, included/excluded artifact IDs, model/provider fields, spend, and context-saved token counts.
+- Verified:
+  - `npm run db:seed` passed twice consecutively
+  - deterministic seed artifact count: 4
+  - deterministic seed receipt count: 2
+  - deterministic seed manifest count: 1
+  - deterministic seed context saved: 72,600 tokens
+  - deterministic seed artifact spend field total: `$0.0472`
+  - `npm run build` passed
+  - `npx prisma validate` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

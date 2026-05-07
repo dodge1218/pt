@@ -271,6 +271,198 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
 
   console.log(`  ✅ ${tickets.length} seed tickets created`);
 
+  const dashboardDecisionTicket = seededTickets.find((ticket) =>
+    ticket.title.includes("Next.js or Remix")
+  );
+  const branchReviewTicket = seededTickets.find((ticket) =>
+    ticket.title.includes("resume-parser")
+  );
+  const weeklyJobsTicket = seededTickets.find((ticket) =>
+    ticket.title.includes("weekly job matches")
+  );
+
+  if (dashboardDecisionTicket) {
+    await prisma.ticketArtifact.upsert({
+      where: { id: "seed-artifact-contextclaw-dashboard-manifest" },
+      update: {
+        ticketId: dashboardDecisionTicket.id,
+        createdById: ryan.id,
+        title: "ContextClaw manifest — dashboard framework decision",
+        summary: "Selected the minimum context for the Next.js vs Remix decision: requirements, deployment constraints, prior framework familiarity, and Colin's response.",
+        metadata: JSON.stringify({
+          missionId: "seed-mission-dashboard-framework",
+          passId: "pass-001",
+          contextManifestId: "manifest-dashboard-framework-001",
+          includedArtifactIds: ["ticket:framework-options", "response:colin-agree"],
+          excludedArtifactIds: ["full-chat-history", "unrelated-cofounder-notes"],
+          budgetDecision: "send-summary-only",
+          qualityRiskNote: "Low risk: decision criteria are explicit in ticket body.",
+        }),
+        inputTokens: 4200,
+        outputTokens: 900,
+        costUsd: 0.021,
+      },
+      create: {
+        id: "seed-artifact-contextclaw-dashboard-manifest",
+        kind: "CONTEXTCLAW_MANIFEST",
+        title: "ContextClaw manifest — dashboard framework decision",
+        summary: "Selected the minimum context for the Next.js vs Remix decision: requirements, deployment constraints, prior framework familiarity, and Colin's response.",
+        metadata: JSON.stringify({
+          missionId: "seed-mission-dashboard-framework",
+          passId: "pass-001",
+          contextManifestId: "manifest-dashboard-framework-001",
+          includedArtifactIds: ["ticket:framework-options", "response:colin-agree"],
+          excludedArtifactIds: ["full-chat-history", "unrelated-cofounder-notes"],
+          budgetDecision: "send-summary-only",
+          qualityRiskNote: "Low risk: decision criteria are explicit in ticket body.",
+        }),
+        inputTokens: 4200,
+        outputTokens: 900,
+        costUsd: 0.021,
+        ticketId: dashboardDecisionTicket.id,
+        createdById: ryan.id,
+      },
+    });
+
+    await prisma.ticketArtifact.upsert({
+      where: { id: "seed-artifact-contextclaw-dashboard-receipt" },
+      update: {
+        ticketId: dashboardDecisionTicket.id,
+        createdById: ryan.id,
+        title: "ContextClaw receipt — dashboard framework decision",
+        summary: "Model pass reviewed the framework decision using the manifest instead of replaying the full project chat.",
+        metadata: JSON.stringify({
+          missionId: "seed-mission-dashboard-framework",
+          passId: "pass-001",
+          receiptId: "receipt-dashboard-framework-001",
+          estimatedInputTokens: 4500,
+          estimatedOutputTokens: 1000,
+          estimatedCostUsd: 0.024,
+          priceSnapshot: { provider: "openai", model: "gpt-demo", capturedAt: "2026-05-07" },
+          budgetDecision: "approved",
+          qualityRiskNote: "Matched ticket evidence; no raw transcript required.",
+        }),
+        provider: "openai",
+        model: "gpt-demo",
+        inputTokens: 4380,
+        outputTokens: 812,
+        contextSavedTokens: 28500,
+        costUsd: 0.0224,
+      },
+      create: {
+        id: "seed-artifact-contextclaw-dashboard-receipt",
+        kind: "CONTEXTCLAW_RECEIPT",
+        title: "ContextClaw receipt — dashboard framework decision",
+        summary: "Model pass reviewed the framework decision using the manifest instead of replaying the full project chat.",
+        metadata: JSON.stringify({
+          missionId: "seed-mission-dashboard-framework",
+          passId: "pass-001",
+          receiptId: "receipt-dashboard-framework-001",
+          estimatedInputTokens: 4500,
+          estimatedOutputTokens: 1000,
+          estimatedCostUsd: 0.024,
+          priceSnapshot: { provider: "openai", model: "gpt-demo", capturedAt: "2026-05-07" },
+          budgetDecision: "approved",
+          qualityRiskNote: "Matched ticket evidence; no raw transcript required.",
+        }),
+        provider: "openai",
+        model: "gpt-demo",
+        inputTokens: 4380,
+        outputTokens: 812,
+        contextSavedTokens: 28500,
+        costUsd: 0.0224,
+        ticketId: dashboardDecisionTicket.id,
+        createdById: ryan.id,
+      },
+    });
+  }
+
+  if (branchReviewTicket) {
+    await prisma.ticketArtifact.upsert({
+      where: { id: "seed-artifact-openclaw-branch-handoff" },
+      update: {
+        ticketId: branchReviewTicket.id,
+        createdById: colin.id,
+        title: "OpenClaw handoff — resume parser review",
+        uri: "artifact://openclaw/session/resume-parser/pass-002",
+        summary: "Terminal manager captured the branch, files touched, test result, and requested review state.",
+        metadata: JSON.stringify({
+          source: "openclaw",
+          missionId: "seed-mission-resume-parser",
+          passId: "pass-002",
+          terminalSessionId: "terminal-resume-parser-002",
+          files: ["src/components/resume-parser", "tests/resume-parser.test.ts"],
+        }),
+      },
+      create: {
+        id: "seed-artifact-openclaw-branch-handoff",
+        kind: "LINK",
+        title: "OpenClaw handoff — resume parser review",
+        uri: "artifact://openclaw/session/resume-parser/pass-002",
+        summary: "Terminal manager captured the branch, files touched, test result, and requested review state.",
+        metadata: JSON.stringify({
+          source: "openclaw",
+          missionId: "seed-mission-resume-parser",
+          passId: "pass-002",
+          terminalSessionId: "terminal-resume-parser-002",
+          files: ["src/components/resume-parser", "tests/resume-parser.test.ts"],
+        }),
+        ticketId: branchReviewTicket.id,
+        createdById: colin.id,
+      },
+    });
+  }
+
+  if (weeklyJobsTicket) {
+    await prisma.ticketArtifact.upsert({
+      where: { id: "seed-artifact-contextclaw-job-scan-receipt" },
+      update: {
+        ticketId: weeklyJobsTicket.id,
+        createdById: ryan.id,
+        title: "ContextClaw receipt — weekly job scan",
+        summary: "Routed a cheap extraction pass over job listings and saved the larger raw listing set as external artifact context.",
+        metadata: JSON.stringify({
+          missionId: "seed-mission-weekly-job-scan",
+          passId: "pass-003",
+          receiptId: "receipt-weekly-job-scan-003",
+          budgetDecision: "approved-cheap-route",
+          includedArtifactIds: ["artifact:job-listing-summary"],
+          excludedArtifactIds: ["raw-listing-html", "duplicated-linkedin-cache"],
+        }),
+        provider: "groq",
+        model: "llama-demo-fast",
+        inputTokens: 6200,
+        outputTokens: 740,
+        contextSavedTokens: 44100,
+        costUsd: 0.0038,
+      },
+      create: {
+        id: "seed-artifact-contextclaw-job-scan-receipt",
+        kind: "CONTEXTCLAW_RECEIPT",
+        title: "ContextClaw receipt — weekly job scan",
+        summary: "Routed a cheap extraction pass over job listings and saved the larger raw listing set as external artifact context.",
+        metadata: JSON.stringify({
+          missionId: "seed-mission-weekly-job-scan",
+          passId: "pass-003",
+          receiptId: "receipt-weekly-job-scan-003",
+          budgetDecision: "approved-cheap-route",
+          includedArtifactIds: ["artifact:job-listing-summary"],
+          excludedArtifactIds: ["raw-listing-html", "duplicated-linkedin-cache"],
+        }),
+        provider: "groq",
+        model: "llama-demo-fast",
+        inputTokens: 6200,
+        outputTokens: 740,
+        contextSavedTokens: 44100,
+        costUsd: 0.0038,
+        ticketId: weeklyJobsTicket.id,
+        createdById: ryan.id,
+      },
+    });
+  }
+
+  console.log("  ✅ ContextClaw/OpenClaw demo artifacts created");
+
   // Add a response from Colin
   const decisionTicket = await prisma.ticket.findFirst({
     where: { title: { contains: "Next.js or Remix" } },
@@ -363,6 +555,12 @@ Let's go with Next.js 15. I can scaffold the Atomic component structure this wee
         tickets: seededTickets.length,
         bridgeId: bridge.id,
         agentProxyId: agent.id,
+        artifactIds: [
+          "seed-artifact-contextclaw-dashboard-manifest",
+          "seed-artifact-contextclaw-dashboard-receipt",
+          "seed-artifact-openclaw-branch-handoff",
+          "seed-artifact-contextclaw-job-scan-receipt",
+        ],
       }),
     },
     create: {
@@ -374,6 +572,12 @@ Let's go with Next.js 15. I can scaffold the Atomic component structure this wee
         tickets: seededTickets.length,
         bridgeId: bridge.id,
         agentProxyId: agent.id,
+        artifactIds: [
+          "seed-artifact-contextclaw-dashboard-manifest",
+          "seed-artifact-contextclaw-dashboard-receipt",
+          "seed-artifact-openclaw-branch-handoff",
+          "seed-artifact-contextclaw-job-scan-receipt",
+        ],
       }),
     },
   });
