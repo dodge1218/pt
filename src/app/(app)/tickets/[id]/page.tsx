@@ -1,4 +1,4 @@
-import { parseJsonArray } from "@/lib/utils";
+import { parseJsonArray, parseJsonObject } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
@@ -8,6 +8,7 @@ import { CommentForm } from "@/components/comment-form";
 import { ResponseForm } from "@/components/response-form";
 import { AgentAttribution } from "@/components/agent-attribution";
 import { TicketActions } from "@/components/ticket-actions";
+import { ArtifactForm } from "@/components/artifact-form";
 
 const positionLabels: Record<string, { icon: string; label: string; color: string }> = {
   AGREE: { icon: "✅", label: "Agrees", color: "text-green-400" },
@@ -46,6 +47,12 @@ export default async function TicketDetailPage({
         orderBy: { createdAt: "asc" },
       },
       bridge: { select: { id: true, name: true } },
+      artifacts: {
+        include: {
+          createdBy: { select: { id: true, name: true, github: true, image: true } },
+        },
+        orderBy: { createdAt: "desc" },
+      },
     },
   });
 
@@ -66,6 +73,27 @@ export default async function TicketDetailPage({
 
   const isOwner = session?.user?.id === ticket.authorId;
   const tags = parseJsonArray(ticket.tags);
+  const canAttachArtifact = Boolean(
+    session?.user?.id &&
+      (isOwner ||
+        (ticket.bridgeId &&
+          (await prisma.bridgeMember.findUnique({
+            where: { userId_bridgeId: { userId: session.user.id, bridgeId: ticket.bridgeId } },
+            select: { id: true },
+          }))))
+  );
+  const receiptArtifacts = ticket.artifacts.filter(
+    (artifact) => artifact.kind === "CONTEXTCLAW_RECEIPT"
+  );
+  const receiptTotals = receiptArtifacts.reduce(
+    (totals, artifact) => ({
+      costUsd: totals.costUsd + (artifact.costUsd || 0),
+      inputTokens: totals.inputTokens + (artifact.inputTokens || 0),
+      outputTokens: totals.outputTokens + (artifact.outputTokens || 0),
+      contextSavedTokens: totals.contextSavedTokens + (artifact.contextSavedTokens || 0),
+    }),
+    { costUsd: 0, inputTokens: 0, outputTokens: 0, contextSavedTokens: 0 }
+  );
   const agentProxyIds = Array.from(
     new Set(
       [
@@ -162,6 +190,101 @@ export default async function TicketDetailPage({
         {/* Ticket content */}
         <div className="prose prose-invert max-w-none mb-8 p-6 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))]">
           <div className="whitespace-pre-wrap text-sm">{ticket.content}</div>
+        </div>
+
+        {/* Artifacts */}
+        <div className="mb-8">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">
+              Artifacts ({ticket.artifacts.length})
+            </h2>
+            {canAttachArtifact && <ArtifactForm ticketId={ticket.id} />}
+          </div>
+
+          {receiptArtifacts.length > 0 && (
+            <div className="mb-4 grid gap-3 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 sm:grid-cols-4">
+              <div>
+                <div className="text-xs text-[hsl(var(--muted-foreground))]">Spend</div>
+                <div className="text-sm font-semibold">${receiptTotals.costUsd.toFixed(4)}</div>
+              </div>
+              <div>
+                <div className="text-xs text-[hsl(var(--muted-foreground))]">Input tokens</div>
+                <div className="text-sm font-semibold">{receiptTotals.inputTokens.toLocaleString()}</div>
+              </div>
+              <div>
+                <div className="text-xs text-[hsl(var(--muted-foreground))]">Output tokens</div>
+                <div className="text-sm font-semibold">{receiptTotals.outputTokens.toLocaleString()}</div>
+              </div>
+              <div>
+                <div className="text-xs text-[hsl(var(--muted-foreground))]">Context saved</div>
+                <div className="text-sm font-semibold">{receiptTotals.contextSavedTokens.toLocaleString()}</div>
+              </div>
+            </div>
+          )}
+
+          {ticket.artifacts.length === 0 ? (
+            <p className="rounded-lg border border-dashed border-[hsl(var(--border))] py-6 text-center text-sm text-[hsl(var(--muted-foreground))]">
+              No artifacts attached yet.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {ticket.artifacts.map((artifact) => {
+                const metadata = parseJsonObject(artifact.metadata);
+                const metadataEntries = Object.entries(metadata).slice(0, 4);
+                return (
+                  <div key={artifact.id} className="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <div className="text-xs font-medium text-[hsl(var(--muted-foreground))]">
+                          {artifact.kind.replaceAll("_", " ")}
+                        </div>
+                        <h3 className="text-sm font-semibold">{artifact.title}</h3>
+                      </div>
+                      <span className="text-xs text-[hsl(var(--muted-foreground))]">
+                        {new Date(artifact.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    {artifact.uri && (
+                      <a
+                        href={artifact.uri.startsWith("http") ? artifact.uri : undefined}
+                        className="mt-2 block break-all font-mono text-xs text-blue-300"
+                      >
+                        {artifact.uri}
+                      </a>
+                    )}
+
+                    {artifact.summary && (
+                      <p className="mt-2 whitespace-pre-wrap text-sm text-[hsl(var(--muted-foreground))]">
+                        {artifact.summary}
+                      </p>
+                    )}
+
+                    {(artifact.provider || artifact.model || artifact.costUsd || artifact.inputTokens || artifact.outputTokens || artifact.contextSavedTokens) && (
+                      <div className="mt-3 flex flex-wrap gap-2 text-xs text-[hsl(var(--muted-foreground))]">
+                        {artifact.provider && <span>provider: {artifact.provider}</span>}
+                        {artifact.model && <span>model: {artifact.model}</span>}
+                        {artifact.inputTokens != null && <span>in: {artifact.inputTokens.toLocaleString()}</span>}
+                        {artifact.outputTokens != null && <span>out: {artifact.outputTokens.toLocaleString()}</span>}
+                        {artifact.contextSavedTokens != null && <span>saved: {artifact.contextSavedTokens.toLocaleString()}</span>}
+                        {artifact.costUsd != null && <span>cost: ${artifact.costUsd.toFixed(4)}</span>}
+                      </div>
+                    )}
+
+                    {metadataEntries.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {metadataEntries.map(([key, value]) => (
+                          <span key={key} className="rounded bg-[hsl(var(--secondary))] px-2 py-1 font-mono text-[10px] text-[hsl(var(--muted-foreground))]">
+                            {key}: {String(value)}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Responses */}

@@ -206,6 +206,25 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - unauthenticated `PATCH /api/tickets/does-not-matter` returned `401`
   - unauthenticated `DELETE /api/tickets/does-not-matter` returned `401`
 
+## 2026-05-07 Artifact/Receipt Follow-up
+
+- Added durable `TicketArtifact` storage for links, files, notes, ContextClaw manifests, and ContextClaw receipts.
+- Added `GET` and `POST /api/tickets/:id/artifacts`.
+- Added owner/bridge-member artifact attachment controls on ticket detail pages.
+- Ticket detail pages now render artifact cards and aggregate ContextClaw receipt totals for spend, input tokens, output tokens, and context saved.
+- Added rate limiting and audit logging for artifact creation.
+- Verified:
+  - `npx prisma format` passed
+  - `npx prisma validate` passed
+  - `npx prisma db push` passed and generated Prisma Client
+  - `npm run build` passed
+  - `npm audit --audit-level=moderate --omit=dev` passed
+  - public ticket list API returned `200`
+  - public artifact list API returned `200`
+  - public ticket detail page returned `200`
+  - unauthenticated `POST /api/tickets/does-not-matter/artifacts` returned `401`
+  - unauthenticated `/tickets` returned `307` to `/login`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

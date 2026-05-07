@@ -75,6 +75,7 @@ model User {
   tickets   Ticket[]
   responses Response[]
   comments  Comment[]
+  artifacts TicketArtifact[]
 
   // Social
   sentFriendRequests     Friendship[] @relation("FriendRequester")
@@ -142,6 +143,7 @@ model Ticket {
   bridge   Bridge? @relation(fields: [bridgeId], references: [id])
 
   responses Response[]
+  artifacts TicketArtifact[]
 
   // Project link
   projectId String?
@@ -182,6 +184,45 @@ enum TicketVisibility {
   PRIVATE // Only bridge members
   FRIENDS // Visible to friends
   PUBLIC // Visible to everyone
+}
+
+model TicketArtifact {
+  id      String       @id @default(cuid())
+  kind    ArtifactKind @default(LINK)
+  title   String
+  uri     String?
+  summary String?
+
+  // JSON metadata for manifests, receipts, file hashes, paths, and external IDs.
+  metadata String @default("{}")
+
+  // Optional ContextClaw receipt fields for ticket-level spend/context display.
+  provider           String?
+  model              String?
+  inputTokens        Int?
+  outputTokens       Int?
+  contextSavedTokens Int?
+  costUsd            Float?
+
+  ticketId String
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+  @@index([kind])
+  @@index([createdById])
+}
+
+enum ArtifactKind {
+  LINK
+  FILE
+  NOTE
+  CONTEXTCLAW_MANIFEST
+  CONTEXTCLAW_RECEIPT
 }
 
 enum BusinessValue {

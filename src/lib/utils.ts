@@ -20,3 +20,13 @@ export function parseJsonArray(value: string | string[] | null | undefined): str
     return [];
   }
 }
+
+export function parseJsonObject(value: string | null | undefined): Record<string, unknown> {
+  if (!value) return {};
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
