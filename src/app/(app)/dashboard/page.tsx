@@ -2,6 +2,8 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { signOut } from "@/lib/auth";
 import Link from "next/link";
+import { TicketCard } from "@/components/ticket-card";
+import { AgentAttribution } from "@/components/agent-attribution";
 
 export const dynamic = "force-dynamic";
 
@@ -33,21 +35,18 @@ export default async function DashboardPage() {
     }),
   ]);
 
-  const typeIcons: Record<string, string> = {
-    DECISION: "🔀",
-    INFO: "ℹ️",
-    PROPOSAL: "📋",
-    STATUS: "📊",
-    PUBLIC: "🌐",
-  };
-
-  const statusColors: Record<string, string> = {
-    OPEN: "text-green-400",
-    IN_PROGRESS: "text-yellow-400",
-    IN_MEDIATION: "text-orange-400",
-    RESOLVED: "text-blue-400",
-    ARCHIVED: "text-gray-400",
-  };
+  const agentProxyIds = Array.from(
+    new Set(
+      [...myTickets, ...recentPublic]
+        .map((ticket) => ticket.agentProxyId)
+        .filter((agentProxyId): agentProxyId is string => Boolean(agentProxyId))
+    )
+  );
+  const agentProxies = await prisma.agentProxy.findMany({
+    where: { id: { in: agentProxyIds } },
+    select: { id: true, name: true },
+  });
+  const agentNameById = new Map(agentProxies.map((agent) => [agent.id, agent.name]));
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
@@ -106,35 +105,13 @@ export default async function DashboardPage() {
             ) : (
               <div className="space-y-3">
                 {myTickets.map((ticket) => (
-                  <Link
+                  <TicketCard
                     key={ticket.id}
-                    href={`/tickets/${ticket.id}`}
-                    className="block p-4 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] hover:border-[hsl(var(--primary))] transition"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
-                        <span>{typeIcons[ticket.type] || "📋"}</span>
-                        <h3 className="font-medium text-sm">{ticket.title}</h3>
-                      </div>
-                      <span className={`text-xs ${statusColors[ticket.status]}`}>
-                        {ticket.status.replace("_", " ")}
-                      </span>
-                    </div>
-                    <p className="text-xs text-[hsl(var(--muted-foreground))] mt-1 line-clamp-2">
-                      {ticket.content.slice(0, 150)}
-                    </p>
-                    <div className="flex items-center gap-3 mt-2 text-xs text-[hsl(var(--muted-foreground))]">
-                      <span>{ticket._count.responses} responses</span>
-                      <span>·</span>
-                      <span>{new Date(ticket.createdAt).toLocaleDateString()}</span>
-                      {ticket.createdByAgent && (
-                        <>
-                          <span>·</span>
-                          <span className="text-purple-400">🤖 Agent</span>
-                        </>
-                      )}
-                    </div>
-                  </Link>
+                    ticket={{
+                      ...ticket,
+                      agentName: ticket.agentProxyId ? agentNameById.get(ticket.agentProxyId) : null,
+                    }}
+                  />
                 ))}
               </div>
             )}
@@ -172,6 +149,14 @@ export default async function DashboardPage() {
                     <span className="text-xs text-[hsl(var(--muted-foreground))]">
                       {ticket.author.name || ticket.author.github}
                     </span>
+                    {ticket.createdByAgent && (
+                      <AgentAttribution
+                        compact
+                        createdByAgent={ticket.createdByAgent}
+                        agentName={ticket.agentProxyId ? agentNameById.get(ticket.agentProxyId) : null}
+                        approvedAt={ticket.approvedAt}
+                      />
+                    )}
                   </div>
                   <h3 className="font-medium text-sm">{ticket.title}</h3>
                   <span className="text-xs text-[hsl(var(--muted-foreground))]">

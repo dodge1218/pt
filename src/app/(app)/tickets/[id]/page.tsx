@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { CommentForm } from "@/components/comment-form";
 import { ResponseForm } from "@/components/response-form";
+import { AgentAttribution } from "@/components/agent-attribution";
 
 const positionLabels: Record<string, { icon: string; label: string; color: string }> = {
   AGREE: { icon: "✅", label: "Agrees", color: "text-green-400" },
@@ -63,6 +64,22 @@ export default async function TicketDetailPage({
   }
 
   const isOwner = session?.user?.id === ticket.authorId;
+  const agentProxyIds = Array.from(
+    new Set(
+      [
+        ticket.agentProxyId,
+        ...ticket.responses.map((response) => response.agentProxyId),
+        ...ticket.responses.flatMap((response) =>
+          response.comments.map((comment) => comment.agentProxyId)
+        ),
+      ].filter((agentProxyId): agentProxyId is string => Boolean(agentProxyId))
+    )
+  );
+  const agentProxies = await prisma.agentProxy.findMany({
+    where: { id: { in: agentProxyIds } },
+    select: { id: true, name: true },
+  });
+  const agentNameById = new Map(agentProxies.map((agent) => [agent.id, agent.name]));
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
@@ -90,7 +107,11 @@ export default async function TicketDetailPage({
             {ticket.createdByAgent && (
               <>
                 <span>·</span>
-                <span className="text-purple-400">🤖 Agent-created</span>
+                <AgentAttribution
+                  createdByAgent={ticket.createdByAgent}
+                  agentName={ticket.agentProxyId ? agentNameById.get(ticket.agentProxyId) : null}
+                  approvedAt={ticket.approvedAt}
+                />
               </>
             )}
           </div>
@@ -154,7 +175,12 @@ export default async function TicketDetailPage({
                         </span>
                       )}
                       {response.createdByAgent && (
-                        <span className="text-xs text-purple-400">🤖</span>
+                        <AgentAttribution
+                          compact
+                          createdByAgent={response.createdByAgent}
+                          agentName={response.agentProxyId ? agentNameById.get(response.agentProxyId) : null}
+                          approvedAt={response.approvedAt}
+                        />
                       )}
                       <span className="text-xs text-[hsl(var(--muted-foreground))] ml-auto">
                         {new Date(response.createdAt).toLocaleDateString()}
@@ -171,6 +197,16 @@ export default async function TicketDetailPage({
                             <span className="text-xs text-[hsl(var(--muted-foreground))] ml-2">
                               {new Date(comment.createdAt).toLocaleDateString()}
                             </span>
+                            {comment.createdByAgent && (
+                              <span className="ml-2">
+                                <AgentAttribution
+                                  compact
+                                  createdByAgent={comment.createdByAgent}
+                                  agentName={comment.agentProxyId ? agentNameById.get(comment.agentProxyId) : null}
+                                  approvedAt={comment.approvedAt}
+                                />
+                              </span>
+                            )}
                             <p className="text-[hsl(var(--muted-foreground))] mt-0.5">{comment.content}</p>
                           </div>
                         ))}

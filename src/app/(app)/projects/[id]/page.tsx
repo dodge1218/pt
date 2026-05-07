@@ -35,6 +35,18 @@ export default async function ProjectDetailPage({
     where: { id: { in: contributorIds } },
     select: { id: true, name: true, image: true, github: true, headline: true },
   });
+  const agentProxyIds = Array.from(
+    new Set(
+      project.tickets
+        .map((ticket) => ticket.agentProxyId)
+        .filter((agentProxyId): agentProxyId is string => Boolean(agentProxyId))
+    )
+  );
+  const agentProxies = await prisma.agentProxy.findMany({
+    where: { id: { in: agentProxyIds } },
+    select: { id: true, name: true },
+  });
+  const agentNameById = new Map(agentProxies.map((agent) => [agent.id, agent.name]));
 
   const statusColors: Record<string, string> = {
     ACTIVE: "text-green-400",
@@ -88,7 +100,14 @@ export default async function ProjectDetailPage({
           ) : (
             <div className="space-y-3">
               {project.tickets.map((ticket) => (
-                <TicketCard key={ticket.id} ticket={ticket} showAuthor />
+                <TicketCard
+                  key={ticket.id}
+                  ticket={{
+                    ...ticket,
+                    agentName: ticket.agentProxyId ? agentNameById.get(ticket.agentProxyId) : null,
+                  }}
+                  showAuthor
+                />
               ))}
             </div>
           )}

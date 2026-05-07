@@ -70,6 +70,18 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - unauthenticated `GET /api/bridges` returned `401`
   - unauthenticated `POST /api/bridges/does-not-matter/members` returned `401`
 
+## 2026-05-07 Attribution Follow-up
+
+- Added persistent agent attribution fields to comments so agent-created comments are not flattened into human-authored comments.
+- Agent-created tickets, responses, and comments now surface the agent proxy name where it can be resolved.
+- Agent action execution now stamps agent-created comments with `createdByAgent`, `agentProxyId`, `approvedBy`, and `approvedAt`.
+- Re-ran `npx prisma db push`, `npm run build`, `npx prisma validate`, and `npm audit --audit-level=moderate --omit=dev` after these changes.
+- Production smoke checks passed:
+  - `/` returned `200`
+  - `/public` returned `200`
+  - `/tickets` returned `307` to `/login` when unauthenticated
+  - unauthenticated `POST /api/responses/does-not-matter/comments` returned `401`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

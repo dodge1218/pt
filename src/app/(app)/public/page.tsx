@@ -1,6 +1,7 @@
 import { parseJsonArray } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { AgentAttribution } from "@/components/agent-attribution";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,18 @@ export default async function PublicBoardPage() {
       _count: { select: { responses: true } },
     },
   });
+  const agentProxyIds = Array.from(
+    new Set(
+      tickets
+        .map((ticket) => ticket.agentProxyId)
+        .filter((agentProxyId): agentProxyId is string => Boolean(agentProxyId))
+    )
+  );
+  const agentProxies = await prisma.agentProxy.findMany({
+    where: { id: { in: agentProxyIds } },
+    select: { id: true, name: true },
+  });
+  const agentNameById = new Map(agentProxies.map((agent) => [agent.id, agent.name]));
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
@@ -60,7 +73,12 @@ export default async function PublicBoardPage() {
                     · {new Date(ticket.createdAt).toLocaleDateString()}
                   </span>
                   {ticket.createdByAgent && (
-                    <span className="text-xs text-purple-400">🤖</span>
+                    <AgentAttribution
+                      compact
+                      createdByAgent={ticket.createdByAgent}
+                      agentName={ticket.agentProxyId ? agentNameById.get(ticket.agentProxyId) : null}
+                      approvedAt={ticket.approvedAt}
+                    />
                   )}
                 </div>
 

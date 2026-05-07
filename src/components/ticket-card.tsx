@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { parseJsonArray } from "@/lib/utils";
+import { AgentAttribution } from "@/components/agent-attribution";
 
 const typeIcons: Record<string, string> = {
   DECISION: "🔀",
@@ -26,6 +27,8 @@ interface TicketCardProps {
     status: string;
     tags: string;
     createdByAgent: boolean;
+    agentName?: string | null;
+    approvedAt?: Date | null;
     createdAt: Date;
     author?: { name: string | null; image: string | null; github: string | null };
     _count?: { responses: number };
@@ -68,7 +71,12 @@ export function TicketCard({ ticket, showAuthor = false }: TicketCardProps) {
         {ticket.createdByAgent && (
           <>
             <span>·</span>
-            <span className="text-purple-400">🤖 Agent</span>
+            <AgentAttribution
+              compact
+              createdByAgent={ticket.createdByAgent}
+              agentName={ticket.agentName}
+              approvedAt={ticket.approvedAt}
+            />
           </>
         )}
       </div>

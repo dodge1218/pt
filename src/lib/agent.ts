@@ -146,6 +146,8 @@ export async function executeAgentAction(actionId: string) {
           content: payload.content,
           responseId: payload.responseId,
           authorId: action.agentProxy.ownerId,
+          createdByAgent: true,
+          agentProxyId: action.agentProxyId,
         },
       });
       resultId = comment.id;

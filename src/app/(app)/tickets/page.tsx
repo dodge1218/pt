@@ -34,6 +34,18 @@ export default async function TicketsPage({
       _count: { select: { responses: true } },
     },
   });
+  const agentProxyIds = Array.from(
+    new Set(
+      tickets
+        .map((ticket) => ticket.agentProxyId)
+        .filter((agentProxyId): agentProxyId is string => Boolean(agentProxyId))
+    )
+  );
+  const agentProxies = await prisma.agentProxy.findMany({
+    where: { id: { in: agentProxyIds } },
+    select: { id: true, name: true },
+  });
+  const agentNameById = new Map(agentProxies.map((agent) => [agent.id, agent.name]));
 
   const types = ["DECISION", "INFO", "PROPOSAL", "STATUS", "PUBLIC"];
   const statuses = ["OPEN", "IN_PROGRESS", "RESOLVED", "ARCHIVED"];
@@ -98,7 +110,14 @@ export default async function TicketsPage({
       ) : (
         <div className="space-y-3">
           {tickets.map((ticket) => (
-            <TicketCard key={ticket.id} ticket={ticket} showAuthor />
+            <TicketCard
+              key={ticket.id}
+              ticket={{
+                ...ticket,
+                agentName: ticket.agentProxyId ? agentNameById.get(ticket.agentProxyId) : null,
+              }}
+              showAuthor
+            />
           ))}
         </div>
       )}

@@ -382,6 +382,10 @@ async function executeAgentAction(actionId: string, approverId: string) {
           content: commentPayload.content,
           responseId: commentPayload.responseId,
           authorId: action.agentProxy.ownerId,
+          createdByAgent: true,
+          agentProxyId: action.agentProxyId,
+          approvedBy: approverId,
+          approvedAt: new Date(),
         },
       });
       resultId = comment.id;
