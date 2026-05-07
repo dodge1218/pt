@@ -82,6 +82,21 @@ CSS baseline is fixed and production build/smoke/screenshot verification passes.
   - `/tickets` returned `307` to `/login` when unauthenticated
   - unauthenticated `POST /api/responses/does-not-matter/comments` returned `401`
 
+## 2026-05-07 Approval Queue Follow-up
+
+- Replaced blind agent queue approval controls with a client review flow:
+  - pending actions show a full editable JSON payload
+  - humans can approve the revised payload, reset it, or reject the action
+  - revised payloads are revalidated server-side before execution
+  - history shows result links for ticket/response actions when resolvable
+- Added an API guard so revised approval only applies to currently executable create action types.
+- Re-ran `npm run build`, `npx prisma validate`, and `npm audit --audit-level=moderate --omit=dev` after these changes.
+- Production smoke checks passed:
+  - `/agent/queue` returned `307` to `/login` when unauthenticated
+  - unauthenticated `GET /api/agent` returned `401`
+  - unauthenticated `POST /api/agent` approve returned `401`
+  - unauthenticated `POST /api/agent` reject returned `401`
+
 ## Notes
 
 - `NEXT_TICKET.md` was not present inside `kairos`; `BUILD-TICKET.md` was used as the local active ticket equivalent.

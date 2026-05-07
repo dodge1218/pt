@@ -62,6 +62,7 @@ const createActionSchema = z.object({
 const approveActionSchema = z.object({
   action: z.literal("approve"),
   actionId: z.string(),
+  payload: z.union([z.string(), z.record(z.unknown())]).optional(),
 });
 
 const rejectActionSchema = z.object({
@@ -91,6 +92,12 @@ const commentPayloadSchema = z.object({
   responseId: z.string().min(1),
   content: z.string().min(1).max(5000),
 });
+
+type ExecutableAgentActionType = "CREATE_TICKET" | "CREATE_RESPONSE" | "CREATE_COMMENT";
+
+function isExecutableAgentActionType(type: string): type is ExecutableAgentActionType {
+  return type === "CREATE_TICKET" || type === "CREATE_RESPONSE" || type === "CREATE_COMMENT";
+}
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -258,6 +265,35 @@ export async function POST(req: NextRequest) {
     }
 
     try {
+      if (data.payload !== undefined) {
+        if (!isExecutableAgentActionType(agentAction.type)) {
+          return NextResponse.json({ error: "This action type does not support revised approval yet" }, { status: 400 });
+        }
+
+        const payload = parsePayload(data.payload);
+        if (!payload.ok) {
+          return NextResponse.json({ error: payload.error }, { status: 400 });
+        }
+
+        const validation = await validateAgentPayload({
+          ownerId: session.user.id,
+          type: agentAction.type,
+          payload: payload.value,
+        });
+        if (!validation.ok) {
+          return NextResponse.json({ error: validation.error }, { status: validation.status });
+        }
+
+        const originalPayload = parsePayload(agentAction.payload);
+        const originalMeta = originalPayload.ok && isRecord(originalPayload.value._kairos)
+          ? { _kairos: originalPayload.value._kairos }
+          : {};
+        await prisma.agentAction.update({
+          where: { id: data.actionId },
+          data: { payload: JSON.stringify({ ...validation.payload, ...originalMeta }) },
+        });
+      }
+
       const result = await executeAgentAction(data.actionId, session.user.id);
       return NextResponse.json(result);
     } catch (e) {
