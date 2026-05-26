@@ -41,19 +41,23 @@ Acceptance:
 
 ## Ticket 2: Docker Compose Postgres
 
+Status: shipped in local Postgres slice.
+
 Goal: make local setup closer to production without requiring Supabase.
 
 Build:
 
-- `docker-compose.yml` with Postgres
-- `.env.postgres.example`
-- docs for SQLite quickstart vs Postgres local
-- update setup docs without removing SQLite support
+- [x] `docker-compose.yml` with Postgres
+- [x] `.env.postgres.example`
+- [x] `prisma/schema.postgres.prisma`
+- [x] `npm run setup:postgres`
+- [x] docs for SQLite quickstart vs Postgres local
+- [x] update setup docs without removing SQLite support
 
 Acceptance:
 
-- `docker compose up -d` starts Postgres
-- `DATABASE_URL` example works with Prisma
+- `docker compose up -d postgres` starts Postgres
+- `DATABASE_URL` example works with Prisma through `prisma/schema.postgres.prisma`
 - no existing SQLite workflow breaks
 
 ## Ticket 3: Agent Registration CLI
@@ -207,4 +211,3 @@ Ship one ticket at a time. For each ticket:
 5. commit,
 6. push,
 7. wait for CI.
-

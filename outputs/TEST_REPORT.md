@@ -34,6 +34,14 @@ Updated: 2026-05-26
 - Updated README positioning and command references around proof-of-work receipts and evidence bundles.
 - Ran `npm audit fix`, which updated Next.js from `15.5.16` to `15.5.18` and cleared the high Next.js advisory.
 
+## Local Postgres Slice
+
+- Added `docker-compose.yml` for a local Postgres 16 database.
+- Added `.env.postgres.example` and ignored `.env.postgres.local` through the existing `.env.*.local` rule.
+- Added `prisma/schema.postgres.prisma` because Prisma database providers are schema-level, not only `DATABASE_URL`-level.
+- Added `npm run setup:postgres` for Postgres generate/db-push/seed/preflight.
+- Updated README, deployment notes, public-release checklist, and next-ticket status with SQLite vs Postgres setup.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
@@ -46,6 +54,12 @@ Updated: 2026-05-26
 - `npm run proofticket:evidence` exported JSON and Markdown evidence for ticket `cmpmuirju0006twnpvuzztnpm`.
 - `npm run github:webhook:demo` created GitHub PR ticket `cmpmukfke000btwnp3x8pfrua`.
 - `npx prisma validate` passed.
+- `DATABASE_URL=postgresql://... npx prisma validate --schema prisma/schema.postgres.prisma` passed.
+- `docker compose config` passed.
+- `docker compose up -d postgres` started a healthy local Postgres container.
+- `npm run setup:postgres -- --skip-seed` pushed the schema to local Postgres and ran preflight.
+- `docker compose stop postgres` stopped the local Postgres container after verification.
+- `npx prisma generate` regenerated the default SQLite Prisma client after Postgres verification.
 - `npm run preflight` passed with expected local placeholder warnings for GitHub OAuth/auth/API secrets.
 - `npm run build` passed with Next.js `15.5.18`.
 - `npm audit --audit-level=moderate --omit=dev` passed with `0 vulnerabilities`.

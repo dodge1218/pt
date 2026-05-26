@@ -54,7 +54,7 @@ Avoid:
 
 Before public release, add:
 
-- Docker Compose with Postgres.
+- Docker Compose with Postgres. Done for local development; verify on target machine before public release.
 - Local demo auth mode that does not require GitHub OAuth.
 - Generic seed users and projects.
 - A short terminal demo or GIF.

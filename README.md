@@ -81,6 +81,8 @@ Still early:
 
 ## Local Development
 
+SQLite quickstart:
+
 ```bash
 npm install
 npm run setup:local
@@ -88,6 +90,19 @@ npm run dev
 ```
 
 `setup:local` creates `.env` from `.env.example` only when `.env` is missing, then runs Prisma generate, DB push, seed, and preflight.
+
+Postgres local setup:
+
+```bash
+docker compose up -d postgres
+npm run setup:postgres
+set -a; . ./.env.postgres.local; set +a
+npm run dev
+```
+
+`setup:postgres` creates `.env.postgres.local` from `.env.postgres.example` only when missing, then runs Prisma generate and DB push with `prisma/schema.postgres.prisma`. The default SQLite workflow remains the fastest path for local demos.
+
+If you switch back from Postgres to SQLite, rerun `npm run setup:local -- --skip-seed` or `npx prisma generate` so the generated Prisma client matches the default schema again.
 
 Health check after the server starts:
 
@@ -126,6 +141,12 @@ Default local database:
 
 ```env
 DATABASE_URL="file:./dev.db"
+```
+
+Postgres local database:
+
+```env
+DATABASE_URL="postgresql://proofticket:proofticket_dev_password@localhost:5432/proofticket?schema=public"
 ```
 
 Required for GitHub OAuth:

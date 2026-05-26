@@ -1,0 +1,23 @@
+name: proofticket
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: proofticket-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: proofticket
+      POSTGRES_USER: proofticket
+      POSTGRES_PASSWORD: proofticket_dev_password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U proofticket -d proofticket"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - proofticket-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  proofticket-postgres-data:

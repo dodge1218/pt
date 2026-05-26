@@ -2,6 +2,17 @@
 
 ProofTicket is currently private and local-first, but the app is prepared for a standard Vercel + Supabase deployment.
 
+For a production-like local database without Supabase:
+
+```bash
+docker compose up -d postgres
+npm run setup:postgres
+set -a; . ./.env.postgres.local; set +a
+npm run dev
+```
+
+SQLite remains the default quickstart. Postgres local development uses `prisma/schema.postgres.prisma` because Prisma database providers are declared in the schema, not only in `DATABASE_URL`. When switching back to SQLite, rerun `npm run setup:local -- --skip-seed` or `npx prisma generate`.
+
 ## Required Production Env
 
 ```env
