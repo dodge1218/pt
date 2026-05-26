@@ -3,7 +3,7 @@
 ## Direct Competitors (None exact — adjacent players)
 
 ### Communication/Coordination
-| Product | What It Does | Strength | Gap Kairos Fills |
+| Product | What It Does | Strength | Gap ProofTicket Fills |
 |---------|-------------|----------|-----------------|
 | **Slack** | Team chat | Ubiquitous, integrations | Information overload. No structure. No agents. Everything drowns. |
 | **Discord** | Community chat | Free, dev-friendly | Same overload problem. Channels fragment context. |
@@ -12,7 +12,7 @@
 | **Twist (Doist)** | Async team communication | Thread-first, calm | Dead product energy. No agent support. Small team. |
 
 ### Social/Discovery
-| Product | What It Does | Strength | Gap Kairos Fills |
+| Product | What It Does | Strength | Gap ProofTicket Fills |
 |---------|-------------|----------|-----------------|
 | **Twitter/X** | Public broadcast | Reach, real-time | Too noisy. No depth. No collaboration path from post → project. |
 | **Hacker News** | Dev community | High signal | Read-only culture. No profiles. No matching. No ongoing coordination. |
@@ -21,7 +21,7 @@
 | **Polywork** | Professional profiles | "What you do" not "where you work" | Never got traction. No agent layer. No matching beyond skills. |
 
 ### Cofounder Matching
-| Product | What It Does | Strength | Gap Kairos Fills |
+| Product | What It Does | Strength | Gap ProofTicket Fills |
 |---------|-------------|----------|-----------------|
 | **YC Cofounder Matching** | Match founders | YC's dataset + reputation | Only for YC-track founders. Skills/industry matching only. |
 | **CoFoundersLab** | Match cofounders | Large database | Surface-level matching. No thinking-pattern analysis. |
@@ -40,18 +40,18 @@
 
 1. **Agent coordination is too new.** MCP launched Nov 2024, A2A April 2025. Product layers take 12-18 months after protocols stabilize. We're in the window.
 
-2. **"Dev social" has failed before.** Polywork, dev.to, Indie Hackers — all tried "LinkedIn for devs" or "Facebook for builders." They failed because they copied consumer social patterns. Kairos is different because the social layer is a BYPRODUCT of coordination, not the primary feature.
+2. **"Dev social" has failed before.** Polywork, dev.to, Indie Hackers — all tried "profile for devs" or "Facebook for builders." They failed because they copied consumer social patterns. ProofTicket is different because the social layer is a BYPRODUCT of coordination, not the primary feature.
 
-3. **Cofounder matching = hard without data.** Everyone matches on declared preferences (skills, industry). Kairos matches on revealed behavior (what you actually build, how you think, what patterns recur). This requires cognitive pattern analysis — which we've already built.
+3. **Cofounder matching = hard without data.** Everyone matches on declared preferences (skills, industry). ProofTicket matches on revealed behavior (what you actually build, how you think, what patterns recur). This requires cognitive pattern analysis — which we've already built.
 
 4. **Incumbents can't pivot.** Slack won't add agent-first features because their enterprise customers don't want agents posting in channels. Linear won't add social because they're a PM tool. Twitter won't add structure because they're optimizing for engagement, not signal.
 
-## Kairos Positioning Matrix
+## ProofTicket Positioning Matrix
 
 ```
                     Structured ←————————→ Unstructured
                          |                    |
-     Agent-Native  [  KAIROS  ]          [  nothing  ]
+     Agent-Native  [  PROOFTICKET  ]          [  nothing  ]
                          |                    |
      Human-Only    [ The Bridge ]     [ Slack/Discord ]
                    [ Linear     ]     [ Twitter/X     ]

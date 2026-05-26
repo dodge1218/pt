@@ -1,18 +1,18 @@
-# Kairos Market Wedge
+# ProofTicket Market Wedge
 
 Status: private positioning doc.
 
 ## One-Line Position
 
-Kairos is the ticket layer for agentic work: durable handoffs, scoped agent actions, human approvals, and evidence trails for teams already using coding agents.
+ProofTicket is the ticket layer for agentic work: durable handoffs, scoped agent actions, human approvals, and evidence trails for teams already using coding agents.
 
 ## Product Boundary
 
-Kairos should be sold and built as one product with one install reason:
+ProofTicket should be sold and built as one product with one install reason:
 
 > Coordinate asynchronous human/agent work without replaying chat transcripts or giving agents unbounded authority.
 
-Kairos owns:
+ProofTicket owns:
 
 - tickets,
 - responses,
@@ -24,7 +24,7 @@ Kairos owns:
 - audit trails,
 - webhook and API ingestion.
 
-Kairos does not own:
+ProofTicket does not own:
 
 - context compression,
 - model routing,
@@ -35,7 +35,7 @@ Kairos does not own:
 - social posting,
 - autonomous code execution.
 
-Those adjacent systems can create Kairos tickets or attach artifacts later. They should not be bundled into the Kairos pitch.
+Those adjacent systems can create ProofTicket tickets or attach artifacts later. They should not be bundled into the ProofTicket pitch.
 
 ## Primary User
 
@@ -61,19 +61,19 @@ Current agent workflows fail because:
 
 GitHub Issues is excellent for human-visible project work. It is not designed as an agent action queue.
 
-Kairos should sit beside GitHub, not replace it:
+ProofTicket should sit beside GitHub, not replace it:
 
-- agent creates Kairos ticket,
+- agent creates ProofTicket ticket,
 - human approves action,
 - agent opens branch or PR,
 - GitHub remains source and review substrate,
-- Kairos stores the decision that authorized the action.
+- ProofTicket stores the decision that authorized the action.
 
 ### Linear and Jira
 
 Linear and Jira are planning systems. They are strong for teams, roadmap, and assignment.
 
-Kairos is narrower:
+ProofTicket is narrower:
 
 - short-lived agent handoffs,
 - action approvals,
@@ -81,13 +81,13 @@ Kairos is narrower:
 - low-friction local-first usage,
 - devtool/webhook integration.
 
-Kairos should not compete on enterprise planning breadth.
+ProofTicket should not compete on enterprise planning breadth.
 
 ### Slack and Discord
 
 Slack and Discord are streams. Streams are useful for presence and quick discussion, but weak for durable work state.
 
-Kairos should compete on:
+ProofTicket should compete on:
 
 - typed work items,
 - durable decisions,
@@ -97,29 +97,29 @@ Kairos should compete on:
 
 ### MCP and A2A Protocols
 
-MCP and A2A are integration protocols. Kairos should use them as adapters, not claim to replace them.
+MCP and A2A are integration protocols. ProofTicket should use them as adapters, not claim to replace them.
 
-Kairos' value is the persisted work ledger behind those adapters.
+ProofTicket's value is the persisted work ledger behind those adapters.
 
 ### CodeBurn
 
 CodeBurn is a local observability tool for token and cost visibility. It helps users understand where usage happened.
 
-Kairos is not a spend dashboard. The connection is later:
+ProofTicket is not a spend dashboard. The connection is later:
 
-- CodeBurn-like receipts can be attached to Kairos tickets,
-- Kairos can show cost evidence for a specific agent action,
-- Kairos should not become the cost engine.
+- CodeBurn-like receipts can be attached to ProofTicket tickets,
+- ProofTicket can show cost evidence for a specific agent action,
+- ProofTicket should not become the cost engine.
 
 ### Caveman
 
 Caveman is a compression workflow. It reduces token usage through terse communication and context discipline.
 
-Kairos is not a compression layer. The connection is later:
+ProofTicket is not a compression layer. The connection is later:
 
 - compressed summaries can be attached to tickets,
-- Kairos can preserve the decision trail around compressed context,
-- Kairos should not pitch token reduction as its core value.
+- ProofTicket can preserve the decision trail around compressed context,
+- ProofTicket should not pitch token reduction as its core value.
 
 ### ContextClaw
 
@@ -128,12 +128,12 @@ ContextClaw is the context and spend governance product. It should remain separa
 The eventual relationship:
 
 - ContextClaw emits context manifests and spend receipts.
-- Kairos stores those receipts as ticket artifacts or references.
-- ContextClaw can request approval through Kairos when a call exceeds policy.
+- ProofTicket stores those receipts as ticket artifacts or references.
+- ContextClaw can request approval through ProofTicket when a call exceeds policy.
 
 The near-term rule:
 
-> Kairos must work without ContextClaw. ContextClaw must work without Kairos.
+> ProofTicket must work without ContextClaw. ContextClaw must work without ProofTicket.
 
 ## Professional README Claim
 
@@ -156,20 +156,20 @@ Avoid:
 
 ## Five-Minute Demo
 
-The public demo should show only Kairos:
+The public demo should show only ProofTicket:
 
-1. Start Kairos locally.
+1. Start ProofTicket locally.
 2. Register two agents or use two demo agents.
 3. Agent A files a ticket with evidence.
 4. Agent B proposes a follow-up action.
 5. Human approves or rejects.
-6. Kairos stores the final decision and artifact references.
+6. ProofTicket stores the final decision and artifact references.
 
 No ContextClaw dependency. No model spend dashboard dependency. No external hosted account requirement.
 
 ## Public Proof Standard
 
-Kairos can claim:
+ProofTicket can claim:
 
 - scoped agent API,
 - idempotent agent actions,
@@ -179,7 +179,7 @@ Kairos can claim:
 - artifact references,
 - local-first operation.
 
-Kairos should not claim:
+ProofTicket should not claim:
 
 - cost savings without measured receipts,
 - enterprise governance before RBAC exists,
@@ -196,4 +196,4 @@ Kairos should not claim:
 6. Add org/RBAC/audit hardening.
 7. Add optional ContextClaw receipt integration.
 
-This keeps the product easy to explain and useful before the wider OpenClaw ecosystem is connected.
+This keeps the product easy to explain and useful before wider integrations are connected.

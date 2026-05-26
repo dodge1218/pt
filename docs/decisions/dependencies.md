@@ -4,7 +4,7 @@ Date: 2026-05-06
 
 ## Approved Inputs
 
-- `BUILD-TICKET.md` defines the Kairos MVP stack: Next.js 15, TypeScript, Prisma, NextAuth v5, shadcn/Radix, Tailwind CSS 4, Groq SDK.
+- `BUILD-TICKET.md` defines the ProofTicket MVP stack: Next.js 15, TypeScript, Prisma, NextAuth v5, shadcn/Radix, Tailwind CSS 4, Groq SDK.
 - `DSB_APPROVED_LIBRARIES.md` was found in the workspace archive and BobLead project. It approves Next.js, TypeScript, React, Tailwind CSS, tailwind-merge, clsx, class-variance-authority, Radix/shadcn, Lucide, NextAuth, Prisma when already in use, Zod, Vitest, and Playwright.
 
 ## Decisions

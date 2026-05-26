@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { createHash } from "crypto";
 
 const prisma = new PrismaClient();
-const demoAgentKey = "kairos_demo_conductor_do_not_use_in_production";
+const demoAgentKey = "proofticket_demo_conductor_do_not_use_in_production";
 
 function hashAgentApiKey(apiKey: string) {
   return createHash("sha256").update(apiKey).digest("hex");
@@ -11,30 +11,30 @@ function hashAgentApiKey(apiKey: string) {
 async function main() {
   console.log("🌱 Seeding database...");
 
-  // Create demo user (Ryan)
-  const ryan = await prisma.user.upsert({
-    where: { email: "ryan@dreamsitebuilders.com" },
+  // Create demo user (Builder One)
+  const owner = await prisma.user.upsert({
+    where: { email: "builder@example.com" },
     update: {},
     create: {
-      name: "Ryan",
-      email: "ryan@dreamsitebuilders.com",
-      github: "dodge1218",
-      headline: "Building 6 things at once",
-      bio: "Full-stack dev. Running DreamSiteBuilders. Building tools for builders who use AI as core workflow.",
+      name: "Builder One",
+      email: "builder@example.com",
+      github: "builder-demo",
+      headline: "Coordinating async project work",
+      bio: "Demo builder using scoped agent approvals and durable project tickets.",
       timezone: "America/New_York",
       activeStart: "14:30",
       activeEnd: "03:00",
     },
   });
 
-  // Create demo user (Colin)
-  const colin = await prisma.user.upsert({
-    where: { email: "colin@example.com" },
+  // Create demo user (Reviewer Two)
+  const reviewer = await prisma.user.upsert({
+    where: { email: "reviewer@example.com" },
     update: {},
     create: {
-      name: "Colin",
-      email: "colin@example.com",
-      github: "c-birdwell",
+      name: "Reviewer Two",
+      email: "reviewer@example.com",
+      github: "reviewer-demo",
       headline: "Frontend architect. React 19 enthusiast.",
       bio: "Atomic design advocate. TypeScript purist. Builds accessible, maintainable UIs.",
       timezone: "America/New_York",
@@ -46,14 +46,14 @@ async function main() {
   await prisma.friendship.upsert({
     where: {
       requesterId_receiverId: {
-        requesterId: ryan.id,
-        receiverId: colin.id,
+        requesterId: owner.id,
+        receiverId: reviewer.id,
       },
     },
     update: { status: "ACCEPTED" },
     create: {
-      requesterId: ryan.id,
-      receiverId: colin.id,
+      requesterId: owner.id,
+      receiverId: reviewer.id,
       status: "ACCEPTED",
     },
   });
@@ -62,32 +62,32 @@ async function main() {
   // Create a bridge
   let bridge = await prisma.bridge.findFirst({
     where: {
-      name: "Ryan + Colin — Resume Agency",
-      members: { some: { userId: ryan.id } },
+      name: "Builder One + Reviewer Two — Demo Project",
+      members: { some: { userId: owner.id } },
     },
   });
   if (!bridge) {
     bridge = await prisma.bridge.create({
       data: {
-        name: "Ryan + Colin — Resume Agency",
+        name: "Builder One + Reviewer Two — Demo Project",
         members: {
           create: [
-            { userId: ryan.id, role: "OWNER" },
-            { userId: colin.id, role: "MEMBER" },
+            { userId: owner.id, role: "OWNER" },
+            { userId: reviewer.id, role: "MEMBER" },
           ],
         },
       },
     });
   } else {
     await prisma.bridgeMember.upsert({
-      where: { userId_bridgeId: { userId: ryan.id, bridgeId: bridge.id } },
+      where: { userId_bridgeId: { userId: owner.id, bridgeId: bridge.id } },
       update: { role: "OWNER" },
-      create: { userId: ryan.id, bridgeId: bridge.id, role: "OWNER" },
+      create: { userId: owner.id, bridgeId: bridge.id, role: "OWNER" },
     });
     await prisma.bridgeMember.upsert({
-      where: { userId_bridgeId: { userId: colin.id, bridgeId: bridge.id } },
+      where: { userId_bridgeId: { userId: reviewer.id, bridgeId: bridge.id } },
       update: { role: "MEMBER" },
-      create: { userId: colin.id, bridgeId: bridge.id, role: "MEMBER" },
+      create: { userId: reviewer.id, bridgeId: bridge.id, role: "MEMBER" },
     });
   }
 
@@ -96,7 +96,7 @@ async function main() {
   // Register an agent
   const existingAgent = await prisma.agentProxy.findFirst({
     where: {
-      ownerId: ryan.id,
+      ownerId: owner.id,
       OR: [
         { name: "Conductor" },
         { apiKey: hashAgentApiKey(demoAgentKey) },
@@ -108,7 +108,7 @@ async function main() {
         where: { id: existingAgent.id },
         data: {
           name: "Conductor",
-          description: "Ryan's orchestration agent. Reads docs, drafts responses, handles logistics.",
+          description: "Builder One's orchestration agent. Reads docs, drafts responses, handles logistics.",
           apiKey: hashAgentApiKey(demoAgentKey),
           canCreateTickets: true,
           canRespond: true,
@@ -119,8 +119,8 @@ async function main() {
     : await prisma.agentProxy.create({
         data: {
           name: "Conductor",
-          description: "Ryan's orchestration agent. Reads docs, drafts responses, handles logistics.",
-          ownerId: ryan.id,
+          description: "Builder One's orchestration agent. Reads docs, drafts responses, handles logistics.",
+          ownerId: owner.id,
           apiKey: hashAgentApiKey(demoAgentKey),
           canCreateTickets: true,
           canRespond: true,
@@ -134,28 +134,28 @@ async function main() {
   // Seed tickets — professional Bridge tone
   const tickets = [
     {
-      title: "[INFO] Resume agency — weekly job matches found",
-      content: `Found 12 new listings this week matching our target criteria:
+      title: "[INFO] Demo project — weekly dependency updates found",
+      content: `Found 12 dependency updates this week matching our target criteria:
 
-- 4 Senior Frontend roles (React/TypeScript, remote, $150K+)
-- 3 Full-Stack positions (Next.js preferred, startup stage)
-- 2 DevRel/Developer Advocate roles (writing + coding)
-- 3 Contract/Freelance gigs (1-3 month, web dev focus)
+- 4 Frontend package updates (React/TypeScript)
+- 3 Full-stack dependency updates (Next.js preferred, startup stage)
+- 2 Documentation updates (writing + coding)
+- 3 Maintenance tasks (test and build pipeline focus)
 
-All sourced from LinkedIn, AngelList, and HN Who's Hiring.
+All sourced from profile, package registries, and security advisories.
 
-Next steps: Colin reviews the frontend roles, flags any worth applying to. I'll handle the full-stack and freelance ones.`,
+Next steps: Reviewer Two reviews the frontend updates, flags any worth reviewing. I'll handle the full-stack and maintenance ones.`,
       type: "INFO" as const,
       visibility: "PRIVATE" as const,
-      tags: JSON.stringify(["jobs", "weekly-update", "resume-agency"]),
+      tags: JSON.stringify(["dependencies", "weekly-update", "widget-agency"]),
       bridgeId: bridge.id,
-      authorId: ryan.id,
+      authorId: owner.id,
     },
     {
       title: "Should we use Next.js or Remix for the dashboard?",
-      content: `Evaluating frameworks for the resume agency dashboard. Key requirements:
+      content: `Evaluating frameworks for the demo project dashboard. Key requirements:
 
-1. SSR for SEO on public job listings
+1. SSR for SEO on public dependency notices
 2. API routes for backend logic (no separate server)
 3. Auth integration (GitHub OAuth)
 4. Good DX with TypeScript
@@ -180,7 +180,7 @@ What's your take?`,
       visibility: "PRIVATE" as const,
       tags: JSON.stringify(["architecture", "frontend", "decision"]),
       bridgeId: bridge.id,
-      authorId: ryan.id,
+      authorId: owner.id,
     },
     {
       title: "[INFO] Free API credits you can use right now",
@@ -200,32 +200,32 @@ All of these are production-quality. Combined, they give us a full stack for $0/
       visibility: "PRIVATE" as const,
       tags: JSON.stringify(["resources", "cost-optimization"]),
       bridgeId: bridge.id,
-      authorId: ryan.id,
+      authorId: owner.id,
     },
     {
-      title: "New branch: colin/resume-parser — review when you have 4 mins",
-      content: `Colin pushed a new branch with the resume parser component.
+      title: "New branch: reviewer/widget-parser — review when you have 4 mins",
+      content: `Reviewer Two pushed a new branch with the widget parser component.
 
 **What changed:**
-- \`src/components/resume-parser/\` — new Atomic-structured component
+- \`src/components/widget-parser/\` — new Atomic-structured component
 - Uses React 19 \`use()\` for data fetching (no useEffect!)
-- Parses PDF resumes, extracts skills/experience into structured JSON
+- Parses PDF widgets, extracts skills/experience into structured JSON
 - TypeScript strict mode, full type coverage
 - Unit tests passing (8/8)
 
-**Branch:** \`colin/resume-parser\`
+**Branch:** \`reviewer/widget-parser\`
 **PR:** Not yet — wanted your eyes on the architecture first.
 
 Review when you have a few minutes. No rush — this is async.`,
       type: "STATUS" as const,
       visibility: "PRIVATE" as const,
-      tags: JSON.stringify(["code-review", "branch", "resume-parser"]),
+      tags: JSON.stringify(["code-review", "branch", "widget-parser"]),
       bridgeId: bridge.id,
-      authorId: colin.id,
+      authorId: reviewer.id,
     },
     {
-      title: "Building a platform that matches cofounders by thinking patterns, not resumes",
-      content: `Hot take: LinkedIn-style matching is fundamentally broken for finding cofounders.
+      title: "Building a platform that matches collaborators by work patterns",
+      content: `Hot take: profile-based matching is weak for finding collaborators.
 
 Skills + industry + location tells you NOTHING about how someone thinks, what they're obsessed with, or whether they'll grind on a problem at 2am because they can't stop thinking about it.
 
@@ -239,11 +239,11 @@ Working on something that does exactly this. Dev-first, async, agent-assisted.
 
 If you've ever felt like the person who connects ideas across 5 different fields and can't find someone who gets it — this is for you.
 
-What would you want in a cofounder matching tool?`,
+What would you want in a collaborator matching tool?`,
       type: "PUBLIC" as const,
       visibility: "PUBLIC" as const,
       tags: JSON.stringify(["cofounders", "matching", "building-in-public"]),
-      authorId: ryan.id,
+      authorId: owner.id,
     },
     {
       title: "[PUBLIC] What's your most underrated dev tool right now?",
@@ -253,7 +253,7 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
       type: "PUBLIC" as const,
       visibility: "PUBLIC" as const,
       tags: JSON.stringify(["dev-tools", "discussion", "community"]),
-      authorId: ryan.id,
+      authorId: owner.id,
     },
   ];
 
@@ -275,10 +275,10 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
     ticket.title.includes("Next.js or Remix")
   );
   const branchReviewTicket = seededTickets.find((ticket) =>
-    ticket.title.includes("resume-parser")
+    ticket.title.includes("widget-parser")
   );
   const weeklyJobsTicket = seededTickets.find((ticket) =>
-    ticket.title.includes("weekly job matches")
+    ticket.title.includes("weekly dependency updates")
   );
 
   if (dashboardDecisionTicket) {
@@ -286,14 +286,14 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
       where: { id: "seed-artifact-contextclaw-dashboard-manifest" },
       update: {
         ticketId: dashboardDecisionTicket.id,
-        createdById: ryan.id,
+        createdById: owner.id,
         title: "ContextClaw manifest — dashboard framework decision",
-        summary: "Selected the minimum context for the Next.js vs Remix decision: requirements, deployment constraints, prior framework familiarity, and Colin's response.",
+        summary: "Selected the minimum context for the Next.js vs Remix decision: requirements, deployment constraints, prior framework familiarity, and Reviewer Two's response.",
         metadata: JSON.stringify({
           missionId: "seed-mission-dashboard-framework",
           passId: "pass-001",
           contextManifestId: "manifest-dashboard-framework-001",
-          includedArtifactIds: ["ticket:framework-options", "response:colin-agree"],
+          includedArtifactIds: ["ticket:framework-options", "response:reviewer-agree"],
           excludedArtifactIds: ["full-chat-history", "unrelated-cofounder-notes"],
           budgetDecision: "send-summary-only",
           qualityRiskNote: "Low risk: decision criteria are explicit in ticket body.",
@@ -306,12 +306,12 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
         id: "seed-artifact-contextclaw-dashboard-manifest",
         kind: "CONTEXTCLAW_MANIFEST",
         title: "ContextClaw manifest — dashboard framework decision",
-        summary: "Selected the minimum context for the Next.js vs Remix decision: requirements, deployment constraints, prior framework familiarity, and Colin's response.",
+        summary: "Selected the minimum context for the Next.js vs Remix decision: requirements, deployment constraints, prior framework familiarity, and Reviewer Two's response.",
         metadata: JSON.stringify({
           missionId: "seed-mission-dashboard-framework",
           passId: "pass-001",
           contextManifestId: "manifest-dashboard-framework-001",
-          includedArtifactIds: ["ticket:framework-options", "response:colin-agree"],
+          includedArtifactIds: ["ticket:framework-options", "response:reviewer-agree"],
           excludedArtifactIds: ["full-chat-history", "unrelated-cofounder-notes"],
           budgetDecision: "send-summary-only",
           qualityRiskNote: "Low risk: decision criteria are explicit in ticket body.",
@@ -320,7 +320,7 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
         outputTokens: 900,
         costUsd: 0.021,
         ticketId: dashboardDecisionTicket.id,
-        createdById: ryan.id,
+        createdById: owner.id,
       },
     });
 
@@ -328,7 +328,7 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
       where: { id: "seed-artifact-contextclaw-dashboard-receipt" },
       update: {
         ticketId: dashboardDecisionTicket.id,
-        createdById: ryan.id,
+        createdById: owner.id,
         title: "ContextClaw receipt — dashboard framework decision",
         summary: "Model pass reviewed the framework decision using the manifest instead of replaying the full project chat.",
         metadata: JSON.stringify({
@@ -372,7 +372,7 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
         contextSavedTokens: 28500,
         costUsd: 0.0224,
         ticketId: dashboardDecisionTicket.id,
-        createdById: ryan.id,
+        createdById: owner.id,
       },
     });
   }
@@ -382,52 +382,52 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
       where: { id: "seed-artifact-openclaw-branch-handoff" },
       update: {
         ticketId: branchReviewTicket.id,
-        createdById: colin.id,
-        title: "OpenClaw handoff — resume parser review",
-        uri: "artifact://openclaw/session/resume-parser/pass-002",
+        createdById: reviewer.id,
+        title: "OpenClaw handoff — widget parser review",
+        uri: "artifact://openclaw/session/widget-parser/pass-002",
         summary: "Terminal manager captured the branch, files touched, test result, and requested review state.",
         metadata: JSON.stringify({
           source: "openclaw",
-          missionId: "seed-mission-resume-parser",
+          missionId: "seed-mission-widget-parser",
           passId: "pass-002",
-          terminalSessionId: "terminal-resume-parser-002",
-          files: ["src/components/resume-parser", "tests/resume-parser.test.ts"],
+          terminalSessionId: "terminal-widget-parser-002",
+          files: ["src/components/widget-parser", "tests/widget-parser.test.ts"],
         }),
       },
       create: {
         id: "seed-artifact-openclaw-branch-handoff",
         kind: "LINK",
-        title: "OpenClaw handoff — resume parser review",
-        uri: "artifact://openclaw/session/resume-parser/pass-002",
+        title: "OpenClaw handoff — widget parser review",
+        uri: "artifact://openclaw/session/widget-parser/pass-002",
         summary: "Terminal manager captured the branch, files touched, test result, and requested review state.",
         metadata: JSON.stringify({
           source: "openclaw",
-          missionId: "seed-mission-resume-parser",
+          missionId: "seed-mission-widget-parser",
           passId: "pass-002",
-          terminalSessionId: "terminal-resume-parser-002",
-          files: ["src/components/resume-parser", "tests/resume-parser.test.ts"],
+          terminalSessionId: "terminal-widget-parser-002",
+          files: ["src/components/widget-parser", "tests/widget-parser.test.ts"],
         }),
         ticketId: branchReviewTicket.id,
-        createdById: colin.id,
+        createdById: reviewer.id,
       },
     });
   }
 
   if (weeklyJobsTicket) {
     await prisma.ticketArtifact.upsert({
-      where: { id: "seed-artifact-contextclaw-job-scan-receipt" },
+      where: { id: "seed-artifact-contextclaw-dependency-scan-receipt" },
       update: {
         ticketId: weeklyJobsTicket.id,
-        createdById: ryan.id,
-        title: "ContextClaw receipt — weekly job scan",
-        summary: "Routed a cheap extraction pass over job listings and saved the larger raw listing set as external artifact context.",
+        createdById: owner.id,
+        title: "ContextClaw receipt — weekly dependency scan",
+        summary: "Routed a cheap extraction pass over dependency notices and saved the larger raw listing set as external artifact context.",
         metadata: JSON.stringify({
-          missionId: "seed-mission-weekly-job-scan",
+          missionId: "seed-mission-weekly-dependency-scan",
           passId: "pass-003",
-          receiptId: "receipt-weekly-job-scan-003",
+          receiptId: "receipt-weekly-dependency-scan-003",
           budgetDecision: "approved-cheap-route",
-          includedArtifactIds: ["artifact:job-listing-summary"],
-          excludedArtifactIds: ["raw-listing-html", "duplicated-linkedin-cache"],
+          includedArtifactIds: ["artifact:dependency-summary"],
+          excludedArtifactIds: ["raw-dependency-html", "duplicated-source-cache"],
         }),
         provider: "groq",
         model: "llama-demo-fast",
@@ -437,17 +437,17 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
         costUsd: 0.0038,
       },
       create: {
-        id: "seed-artifact-contextclaw-job-scan-receipt",
+        id: "seed-artifact-contextclaw-dependency-scan-receipt",
         kind: "CONTEXTCLAW_RECEIPT",
-        title: "ContextClaw receipt — weekly job scan",
-        summary: "Routed a cheap extraction pass over job listings and saved the larger raw listing set as external artifact context.",
+        title: "ContextClaw receipt — weekly dependency scan",
+        summary: "Routed a cheap extraction pass over dependency notices and saved the larger raw listing set as external artifact context.",
         metadata: JSON.stringify({
-          missionId: "seed-mission-weekly-job-scan",
+          missionId: "seed-mission-weekly-dependency-scan",
           passId: "pass-003",
-          receiptId: "receipt-weekly-job-scan-003",
+          receiptId: "receipt-weekly-dependency-scan-003",
           budgetDecision: "approved-cheap-route",
-          includedArtifactIds: ["artifact:job-listing-summary"],
-          excludedArtifactIds: ["raw-listing-html", "duplicated-linkedin-cache"],
+          includedArtifactIds: ["artifact:dependency-summary"],
+          excludedArtifactIds: ["raw-dependency-html", "duplicated-source-cache"],
         }),
         provider: "groq",
         model: "llama-demo-fast",
@@ -456,14 +456,14 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
         contextSavedTokens: 44100,
         costUsd: 0.0038,
         ticketId: weeklyJobsTicket.id,
-        createdById: ryan.id,
+        createdById: owner.id,
       },
     });
   }
 
   console.log("  ✅ ContextClaw/OpenClaw demo artifacts created");
 
-  // Add a response from Colin
+  // Add a response from Reviewer Two
   const decisionTicket = await prisma.ticket.findFirst({
     where: { title: { contains: "Next.js or Remix" } },
   });
@@ -472,7 +472,7 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
     const existingResponse = await prisma.response.findFirst({
       where: {
         ticketId: decisionTicket.id,
-        authorId: colin.id,
+        authorId: reviewer.id,
         deletedAt: null,
       },
     });
@@ -486,20 +486,20 @@ The App Router has matured significantly. Server Components + Server Actions giv
 
 Additional points:
 1. shadcn/ui integration is seamless with Next.js
-2. Vercel's Image Optimization is free and useful for job listing thumbnails
+2. Vercel's Image Optimization is free and useful for dependency notice thumbnails
 3. The middleware API handles auth redirects cleanly
 
 One thing to watch: the App Router caching behavior can be surprising. I'd suggest we set \`revalidate: 0\` on dynamic pages initially and optimize later.
 
 Let's go with Next.js 15. I can scaffold the Atomic component structure this weekend.`,
           position: "AGREE",
-          authorId: colin.id,
+          authorId: reviewer.id,
           ticketId: decisionTicket.id,
         },
       });
     }
 
-    console.log("  ✅ Response from Colin added");
+    console.log("  ✅ Response from Reviewer Two added");
   }
 
   // Add an agent-created action (pending approval)
@@ -510,7 +510,7 @@ Let's go with Next.js 15. I can scaffold the Atomic component structure this wee
     visibility: "PRIVATE",
     tags: ["ci", "github-actions", "devops"],
     bridgeId: bridge.id,
-    _kairos: { idempotencyKey: "seed-ci-pipeline-ticket" },
+    _proofticket: { idempotencyKey: "seed-ci-pipeline-ticket" },
   };
   let pendingAction = await prisma.agentAction.findFirst({
     where: {
@@ -541,7 +541,7 @@ Let's go with Next.js 15. I can scaffold the Atomic component structure this wee
       type: "AGENT_ACTION_PENDING",
       contentId: pendingAction.id,
       preview: "Conductor wants approval for the CI pipeline status ticket.",
-      userId: ryan.id,
+      userId: owner.id,
       scheduledFor: new Date(),
       deliveredAt: new Date(),
     },
@@ -550,7 +550,7 @@ Let's go with Next.js 15. I can scaffold the Atomic component structure this wee
   await prisma.auditLog.upsert({
     where: { id: "seed-demo-audit" },
     update: {
-      actorUserId: ryan.id,
+      actorUserId: owner.id,
       metadata: JSON.stringify({
         tickets: seededTickets.length,
         bridgeId: bridge.id,
@@ -559,13 +559,13 @@ Let's go with Next.js 15. I can scaffold the Atomic component structure this wee
           "seed-artifact-contextclaw-dashboard-manifest",
           "seed-artifact-contextclaw-dashboard-receipt",
           "seed-artifact-openclaw-branch-handoff",
-          "seed-artifact-contextclaw-job-scan-receipt",
+          "seed-artifact-contextclaw-dependency-scan-receipt",
         ],
       }),
     },
     create: {
       id: "seed-demo-audit",
-      actorUserId: ryan.id,
+      actorUserId: owner.id,
       action: "seed.demo",
       entityType: "seed",
       metadata: JSON.stringify({
@@ -576,7 +576,7 @@ Let's go with Next.js 15. I can scaffold the Atomic component structure this wee
           "seed-artifact-contextclaw-dashboard-manifest",
           "seed-artifact-contextclaw-dashboard-receipt",
           "seed-artifact-openclaw-branch-handoff",
-          "seed-artifact-contextclaw-job-scan-receipt",
+          "seed-artifact-contextclaw-dependency-scan-receipt",
         ],
       }),
     },
@@ -584,7 +584,7 @@ Let's go with Next.js 15. I can scaffold the Atomic component structure this wee
 
   console.log("  ✅ Pending agent action created");
   console.log("\n🎉 Seed complete!");
-  console.log(`   Users: ${ryan.name}, ${colin.name}`);
+  console.log(`   Users: ${owner.name}, ${reviewer.name}`);
   console.log(`   Bridge: ${bridge.name}`);
   console.log(`   Agent: ${agent.name} (demo API key: ${demoAgentKey})`);
   console.log(`   Tickets: ${tickets.length}`);

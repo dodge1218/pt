@@ -21,18 +21,18 @@ for (const file of [".env", ".env.local"]) {
 }
 
 const baseUrl =
-  process.env.KAIROS_BASE_URL ||
+  process.env.PROOFTICKET_BASE_URL ||
   process.env.AUTH_URL ||
   process.env.NEXTAUTH_URL ||
   "http://localhost:3000";
-const cronSecret = process.env.KAIROS_CRON_SECRET;
+const cronSecret = process.env.PROOFTICKET_CRON_SECRET;
 
 if (!cronSecret) {
-  console.error("KAIROS_CRON_SECRET is required to process the delivery queue.");
+  console.error("PROOFTICKET_CRON_SECRET is required to process the delivery queue.");
   process.exit(1);
 }
 
-const endpoint = new URL("/api/kairos/queue", baseUrl);
+const endpoint = new URL("/api/proofticket/queue", baseUrl);
 
 try {
   const response = await fetch(endpoint, {

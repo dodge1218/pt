@@ -50,7 +50,7 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const cronSecret = process.env.KAIROS_CRON_SECRET;
+  const cronSecret = process.env.PROOFTICKET_CRON_SECRET;
   const authHeader = req.headers.get("authorization");
   const hasCronAuth = Boolean(
     cronSecret && authHeader === `Bearer ${cronSecret}`

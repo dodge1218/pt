@@ -64,7 +64,7 @@ async function resolveActorUserId(
   req: NextRequest,
   actor: z.infer<typeof actorSchema>
 ): Promise<IngestAuth | NextResponse> {
-  const contextClawSecret = process.env.KAIROS_CONTEXTCLAW_SECRET;
+  const contextClawSecret = process.env.PROOFTICKET_CONTEXTCLAW_SECRET;
   const authHeader = req.headers.get("authorization");
   const hasSecretAuth = Boolean(
     contextClawSecret && authHeader === `Bearer ${contextClawSecret}`

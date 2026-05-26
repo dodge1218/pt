@@ -58,7 +58,7 @@ export default function MatchesPage() {
     <div className="max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-2">Matches</h1>
       <p className="text-sm text-[hsl(var(--muted-foreground))] mb-6">
-        People matched by thinking patterns, not resumes.
+        People matched by thinking patterns, not profile blurbs.
       </p>
 
       {loading ? (

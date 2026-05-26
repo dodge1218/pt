@@ -29,14 +29,14 @@ if (args.help) {
 
 const baseUrl =
   args.url ||
-  process.env.KAIROS_BASE_URL ||
+  process.env.PROOFTICKET_BASE_URL ||
   process.env.AUTH_URL ||
   process.env.NEXTAUTH_URL ||
   "http://localhost:3000";
-const secret = args.secret || process.env.KAIROS_OPENCLAW_SECRET;
+const secret = args.secret || process.env.PROOFTICKET_OPENCLAW_SECRET;
 
 if (!secret) {
-  console.error("KAIROS_OPENCLAW_SECRET is required to create an OpenClaw/Hermes ticket.");
+  console.error("PROOFTICKET_OPENCLAW_SECRET is required to create an OpenClaw/Hermes ticket.");
   process.exit(1);
 }
 
@@ -169,7 +169,7 @@ function compact(value) {
 }
 
 function printHelp() {
-  console.log(`Create a Kairos ticket through the signed OpenClaw/Hermes webhook.
+  console.log(`Create a ProofTicket ticket through the signed OpenClaw/Hermes webhook.
 
 Usage:
   npm run openclaw:ticket -- --idempotency-key session:pass:handoff \\

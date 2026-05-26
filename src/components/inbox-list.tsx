@@ -25,7 +25,7 @@ export function InboxList({ deliveries }: { deliveries: InboxItem[] }) {
   async function markRead(deliveryId: string) {
     setLoadingId(deliveryId);
     try {
-      const res = await fetch("/api/kairos/queue", {
+      const res = await fetch("/api/proofticket/queue", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "mark_read", deliveryId }),

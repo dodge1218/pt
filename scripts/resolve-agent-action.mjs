@@ -21,7 +21,7 @@ for (const file of [".env", ".env.local"]) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-const commandName = process.env.npm_lifecycle_event === "kairos:action" ? "kairos:action" : "openclaw:action";
+const commandName = process.env.npm_lifecycle_event === "proofticket:action" ? "proofticket:action" : "openclaw:action";
 
 if (args.help) {
   printHelp();
@@ -30,13 +30,13 @@ if (args.help) {
 
 const baseUrl =
   args.url ||
-  process.env.KAIROS_BASE_URL ||
+  process.env.PROOFTICKET_BASE_URL ||
   process.env.AUTH_URL ||
   process.env.NEXTAUTH_URL ||
   "http://localhost:3000";
-const secret = args.secret || process.env.KAIROS_AGENT_ACTION_SECRET || process.env.KAIROS_OPENCLAW_SECRET;
+const secret = args.secret || process.env.PROOFTICKET_AGENT_ACTION_SECRET || process.env.PROOFTICKET_OPENCLAW_SECRET;
 if (!secret) {
-  console.error("KAIROS_AGENT_ACTION_SECRET or KAIROS_OPENCLAW_SECRET is required to resolve an agent action.");
+  console.error("PROOFTICKET_AGENT_ACTION_SECRET or PROOFTICKET_OPENCLAW_SECRET is required to resolve an agent action.");
   process.exit(1);
 }
 
@@ -45,8 +45,8 @@ const payload = {
   ...stdinPayload,
   decision: args.decision || stdinPayload.decision,
   actionId: args.actionId || stdinPayload.actionId,
-  actorEmail: args.actorEmail || stdinPayload.actorEmail,
-  actorUserId: args.actorUserId || stdinPayload.actorUserId,
+  actorEmail: args.actorEmail || stdinPayload.actorEmail || process.env.PROOFTICKET_ACTOR_EMAIL,
+  actorUserId: args.actorUserId || stdinPayload.actorUserId || process.env.PROOFTICKET_ACTOR_USER_ID,
   payload: stdinPayload.payload,
 };
 
@@ -148,7 +148,7 @@ function compact(value) {
 }
 
 function printHelp() {
-  console.log(`Approve or reject a pending Kairos agent action through the signed terminal endpoint.
+  console.log(`Approve or reject a pending ProofTicket agent action through the signed terminal endpoint.
 
 Usage:
   npm run ${commandName} -- --decision approve --action-id <id> --actor-email builder@example.com
@@ -159,9 +159,9 @@ Revised approval payload can be supplied on stdin:
     | npm run ${commandName} -- --decision approve --action-id <id> --actor-email builder@example.com
 
 Required env:
-  KAIROS_AGENT_ACTION_SECRET=<shared-secret>
+  PROOFTICKET_AGENT_ACTION_SECRET=<shared-secret>
 
 Fallback env:
-  KAIROS_OPENCLAW_SECRET=<shared-secret>
+  PROOFTICKET_OPENCLAW_SECRET=<shared-secret>
 `);
 }

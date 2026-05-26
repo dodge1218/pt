@@ -31,7 +31,7 @@
 2. **Responses are positioned.** Not just "reply" — you take a position (agree, disagree, propose alternative).
 3. **Agent actions are always attributed.** Every agent-created ticket/response has a `createdByAgent` flag and links to the approving human.
 4. **Public by default, private by choice.** Public tickets are the social layer. Private tickets are the coordination layer.
-5. **Kairos delivery is per-user.** Each user has active windows. System queues delivery for optimal timing.
+5. **ProofTicket delivery is per-user.** Each user has active windows. System queues delivery for optimal timing.
 
 ## API Design
 
@@ -81,9 +81,9 @@ POST   /api/matches/:id/connect    — initiate connection from match
 GET    /api/matches/profile         — your thinking profile
 POST   /api/matches/profile/refresh — re-analyze thinking patterns
 
-# Kairos
-GET    /api/kairos/queue            — your pending deliveries
-PATCH  /api/kairos/preferences      — update delivery windows
+# ProofTicket
+GET    /api/proofticket/queue            — your pending deliveries
+PATCH  /api/proofticket/preferences      — update delivery windows
 ```
 
 ### Webhook Endpoints (incoming)
@@ -96,13 +96,12 @@ POST   /api/webhooks/a2a           — A2A agent discovery
 
 ## Directory Structure
 ```
-kairos/
-├── docs/                     # Business + technical docs
+proofticket/
+├── docs/                     # Product + technical docs
 │   ├── VISION.md
-│   ├── BUSINESS-PLAN.md
-│   ├── GTM.md
-│   ├── COMPETITORS.md
-│   ├── SCALING.md
+│   ├── DOCTRINE.md
+│   ├── MARKET-WEDGE.md
+│   ├── PUBLIC-RELEASE-CHECKLIST.md
 │   └── ARCHITECTURE.md
 ├── prisma/
 │   └── schema.prisma         # Database schema
@@ -140,7 +139,7 @@ kairos/
 │   │       ├── friends/route.ts
 │   │       ├── agent/route.ts
 │   │       ├── matches/route.ts
-│   │       ├── kairos/route.ts
+│   │       ├── proofticket/route.ts
 │   │       └── webhooks/route.ts
 │   ├── components/
 │   │   ├── ui/               # shadcn components
@@ -150,12 +149,12 @@ kairos/
 │   │   ├── profile-card.tsx
 │   │   ├── match-card.tsx
 │   │   ├── agent-queue.tsx
-│   │   ├── kairos-indicator.tsx
+│   │   ├── proofticket-indicator.tsx
 │   │   └── public-board.tsx
 │   ├── lib/
 │   │   ├── prisma.ts         # Prisma client singleton
 │   │   ├── auth.ts           # NextAuth config
-│   │   ├── kairos.ts         # Delivery timing engine
+│   │   ├── proofticket.ts         # Delivery timing engine
 │   │   ├── agent.ts          # Agent proxy logic
 │   │   ├── matching.ts       # Cognitive pattern matching engine
 │   │   └── ai.ts             # AI inference (Groq/Gemini)

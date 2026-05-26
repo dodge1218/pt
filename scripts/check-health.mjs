@@ -29,7 +29,7 @@ if (args.help) {
 
 const baseUrl =
   args.url ||
-  process.env.KAIROS_BASE_URL ||
+  process.env.PROOFTICKET_BASE_URL ||
   process.env.AUTH_URL ||
   process.env.NEXTAUTH_URL ||
   "http://localhost:3000";
@@ -53,7 +53,7 @@ try {
   if (args.json) {
     console.log(JSON.stringify({ ok: true, status: response.status, body }, null, 2));
   } else {
-    console.log(`Kairos health ok: database=${body.database}, latency=${body.latencyMs}ms`);
+    console.log(`ProofTicket health ok: database=${body.database}, latency=${body.latencyMs}ms`);
   }
 } catch (error) {
   console.error(JSON.stringify({
@@ -80,7 +80,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`Check Kairos runtime health.
+  console.log(`Check ProofTicket runtime health.
 
 Usage:
   npm run health
@@ -88,6 +88,6 @@ Usage:
   npm run health -- --url http://localhost:3030 --json
 
 Optional env:
-  KAIROS_BASE_URL=http://localhost:3000
+  PROOFTICKET_BASE_URL=http://localhost:3000
 `);
 }

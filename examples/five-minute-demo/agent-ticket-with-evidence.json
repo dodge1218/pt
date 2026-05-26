@@ -6,6 +6,22 @@
   "tags": ["agent-demo", "review", "migration"],
   "artifacts": [
     {
+      "kind": "CONTEXTCLAW_RECEIPT",
+      "title": "ContextClaw spend receipt",
+      "summary": "Agent used bounded context to identify the migration risk before asking for human review.",
+      "provider": "demo",
+      "model": "demo-agent",
+      "inputTokens": 1840,
+      "outputTokens": 420,
+      "contextSavedTokens": 7600,
+      "costUsd": 0.0032,
+      "metadata": {
+        "source": "five-minute-demo",
+        "risk": "schema-change",
+        "missionId": "demo-migration-review"
+      }
+    },
+    {
       "kind": "NOTE",
       "title": "Evidence summary",
       "summary": "Migration changes a high-risk table and should be reviewed before merge.",

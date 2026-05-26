@@ -10,7 +10,7 @@ export async function GET() {
     await prisma.$queryRaw`SELECT 1`;
     return NextResponse.json({
       ok: true,
-      service: "kairos",
+      service: "proofticket",
       database: "ok",
       checkedAt: new Date().toISOString(),
       latencyMs: Date.now() - startedAt,
@@ -19,7 +19,7 @@ export async function GET() {
     return NextResponse.json(
       {
         ok: false,
-        service: "kairos",
+        service: "proofticket",
         database: "error",
         checkedAt: new Date().toISOString(),
         latencyMs: Date.now() - startedAt,

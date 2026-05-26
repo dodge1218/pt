@@ -29,16 +29,16 @@ if (args.help) {
 
 const baseUrl =
   args.url ||
-  process.env.KAIROS_BASE_URL ||
+  process.env.PROOFTICKET_BASE_URL ||
   process.env.AUTH_URL ||
   process.env.NEXTAUTH_URL ||
   "http://localhost:3000";
-const agentApiKey = args.agentApiKey || process.env.KAIROS_AGENT_API_KEY;
+const agentApiKey = args.agentApiKey || process.env.PROOFTICKET_AGENT_API_KEY;
 const stdinPayload = await readStdinJson();
 const type = args.type || stdinPayload.type;
 
 if (!agentApiKey) {
-  console.error("KAIROS_AGENT_API_KEY is required to create a Kairos agent action.");
+  console.error("PROOFTICKET_AGENT_API_KEY is required to create a ProofTicket agent action.");
   process.exit(1);
 }
 
@@ -204,31 +204,31 @@ function ticketTypeFromPayload(value) {
 }
 
 function printHelp() {
-  console.log(`Create a Kairos agent action with an agent API key.
+  console.log(`Create a ProofTicket agent action with an agent API key.
 
 Usage:
-  npm run kairos:agent -- --type CREATE_TICKET \\
+  npm run proofticket:agent -- --type CREATE_TICKET \\
     --idempotency-key demo-agent:ticket:001 \\
     --title "Review migration risk" \\
     --content "Agent found a risky migration path." \\
     --tags agent,review
 
-  npm run kairos:agent -- --type CREATE_RESPONSE \\
+  npm run proofticket:agent -- --type CREATE_RESPONSE \\
     --ticket-id <ticket-id> \\
     --content "I agree; hold merge until the migration is checked." \\
     --position AGREE
 
 JSON stdin is supported for payloads and ticket artifacts:
   echo '{"artifacts":[{"kind":"NOTE","title":"Evidence","summary":"Relevant trace."}]}' \\
-    | npm run kairos:agent -- --type CREATE_TICKET \\
+    | npm run proofticket:agent -- --type CREATE_TICKET \\
       --idempotency-key demo-agent:ticket:002 \\
       --title "Agent evidence" \\
       --content "Evidence attached."
 
 Required env:
-  KAIROS_AGENT_API_KEY=<kairos_...>
+  PROOFTICKET_AGENT_API_KEY=<proofticket_...>
 
 Optional env:
-  KAIROS_BASE_URL=http://localhost:3000
+  PROOFTICKET_BASE_URL=http://localhost:3000
 `);
 }

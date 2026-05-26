@@ -4,7 +4,7 @@ Status: private architecture doc.
 
 ## Principle
 
-Kairos and ContextClaw should be built, tested, and positioned as separate products first.
+ProofTicket and ContextClaw should be built, tested, and positioned as separate products first.
 
 Reason:
 
@@ -14,9 +14,9 @@ The architecture should still preserve clean integration points so the products 
 
 ## Independent Product Contracts
 
-### Kairos
+### ProofTicket
 
-Kairos is independently useful when:
+ProofTicket is independently useful when:
 
 - a user can run it locally,
 - an agent can create a ticket through CLI/API,
@@ -24,7 +24,7 @@ Kairos is independently useful when:
 - a human can approve or reject an action,
 - the final decision and evidence stay durable.
 
-Kairos should not require ContextClaw, CodeBurn, Caveman, Hermes, or an agent console.
+ProofTicket should not require ContextClaw, CodeBurn, Caveman, Hermes, or an agent console.
 
 ### ContextClaw
 
@@ -36,7 +36,7 @@ ContextClaw is independently useful when:
 - budget gates can warn, block, or require approval,
 - reports summarize spend by project/model/session/subagent.
 
-ContextClaw should not require Kairos.
+ContextClaw should not require ProofTicket.
 
 ## Integration Phases
 
@@ -44,7 +44,7 @@ ContextClaw should not require Kairos.
 
 Goal: each product has a clean reason to exist.
 
-Kairos proof:
+ProofTicket proof:
 
 - local ticket workflow,
 - agent action approval,
@@ -61,7 +61,7 @@ ContextClaw proof:
 
 ### Phase 1: Loose Artifact Linkage
 
-Goal: Kairos can reference ContextClaw output without knowing ContextClaw internals.
+Goal: ProofTicket can reference ContextClaw output without knowing ContextClaw internals.
 
 Contract:
 
@@ -80,27 +80,27 @@ Contract:
 }
 ```
 
-Kairos stores this as a ticket artifact. ContextClaw continues to own receipt schema and validation.
+ProofTicket stores this as a ticket artifact. ContextClaw continues to own receipt schema and validation.
 
 ### Phase 2: Approval Bridge
 
-Goal: ContextClaw can ask Kairos for human approval when a model call exceeds policy.
+Goal: ContextClaw can ask ProofTicket for human approval when a model call exceeds policy.
 
 Flow:
 
 1. ContextClaw prepares a blocked or approval-required pass.
-2. ContextClaw creates a Kairos ticket through API/webhook.
+2. ContextClaw creates a ProofTicket ticket through API/webhook.
 3. Human approves, rejects, or asks for a smaller context plan.
-4. Kairos stores the decision.
+4. ProofTicket stores the decision.
 5. ContextClaw polls or receives webhook callback and proceeds accordingly.
 
-Kairos does not execute the model call. It only stores and delivers the decision.
+ProofTicket does not execute the model call. It only stores and delivers the decision.
 
 ### Phase 3: Shared Dashboard View
 
 Goal: a professional team can inspect agent work and associated spend from one surface.
 
-Kairos shows:
+ProofTicket shows:
 
 - ticket status,
 - approval state,
@@ -131,7 +131,7 @@ This requires org/RBAC, redaction, audit export, and stronger threat modeling. I
 
 ## API Boundary
 
-Kairos should accept stable, generic artifact references:
+ProofTicket should accept stable, generic artifact references:
 
 - `kind`,
 - `title`,
@@ -139,26 +139,26 @@ Kairos should accept stable, generic artifact references:
 - `ref`,
 - `metadata`.
 
-Kairos should avoid importing ContextClaw-specific database models into its core schema until there is real usage proof.
+ProofTicket should avoid importing ContextClaw-specific database models into its core schema until there is real usage proof.
 
 ContextClaw should emit receipts as portable JSON files/events that any system can store.
 
 ## What Not To Do
 
-- Do not make ContextClaw a required dependency for Kairos setup.
-- Do not make Kairos a required dependency for ContextClaw reports.
+- Do not make ContextClaw a required dependency for ProofTicket setup.
+- Do not make ProofTicket a required dependency for ContextClaw reports.
 - Do not merge repos before both products are independently useful.
 - Do not make a shared README that tries to sell both products at once.
-- Do not claim enterprise savings from Kairos alone.
-- Do not let Kairos become a model proxy.
+- Do not claim enterprise savings from ProofTicket alone.
+- Do not let ProofTicket become a model proxy.
 - Do not let ContextClaw become a ticketing app.
 
 ## Near-Term Decision
 
-Keep Kairos private and focused on agent ticketing.
+Keep ProofTicket private and focused on agent ticketing.
 
 Keep ContextClaw focused on context/spend governance, but do not touch its dirty worktree until the active local changes are reviewed.
 
 Once both have clean demos, add a single optional integration demo:
 
-> ContextClaw blocks an expensive pass, opens a Kairos approval ticket, and resumes only after approval.
+> ContextClaw blocks an expensive pass, opens a ProofTicket approval ticket, and continues only after approval.

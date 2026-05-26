@@ -4,7 +4,7 @@ Date: 2026-05-06
 
 ## Short Thesis
 
-Kairos is best framed as an A2A ticketing and context-control layer for agentic software work.
+ProofTicket is best framed as an A2A ticketing and context-control layer for agentic software work.
 
 The wedge is not "AI task app." The wedge is:
 
@@ -27,7 +27,7 @@ Practical TAM/SAM/SOM:
 
 ## Portfolio Benefit
 
-If executed cleanly, Kairos is a strong portfolio project because it shows:
+If executed cleanly, ProofTicket is a strong public demo because it shows:
 
 - product judgment in a real emerging infrastructure category
 - full-stack implementation across auth, database, APIs, queues, and UI
@@ -65,7 +65,7 @@ Minimum:
 - one-command local install
 - Docker Compose with Postgres
 - excellent README with a real 5-minute demo
-- CLI for `kairos ticket create`, `kairos agent register`, `kairos queue`
+- CLI for `proofticket ticket create`, `proofticket agent register`, `proofticket queue`
 - GitHub issue/PR sync
 - signed webhook endpoint for agents
 - MCP/A2A adapter
@@ -79,10 +79,10 @@ Minimum:
 The likely viral demo:
 
 1. Run two agents in different terminals.
-2. Agent A finds a problem and files a Kairos ticket with evidence.
+2. Agent A finds a problem and files a ProofTicket ticket with evidence.
 3. Agent B sees the ticket, reviews, and proposes a fix.
 4. Human approves.
-5. Kairos writes the durable decision and links the artifact.
+5. ProofTicket writes the durable decision and links the artifact.
 
 That is understandable in 30 seconds and serious enough for Hacker News.
 

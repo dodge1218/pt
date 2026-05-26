@@ -30,14 +30,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             credentials: {},
             async authorize() {
               const user = await prisma.user.upsert({
-                where: { email: "ryan@dreamsitebuilders.com" },
+                where: { email: "builder@example.com" },
                 update: {},
                 create: {
-                  name: "Ryan",
-                  email: "ryan@dreamsitebuilders.com",
-                  github: "dodge1218",
-                  headline: "Building 6 things at once",
-                  bio: "Full-stack dev. Running DreamSiteBuilders. Building tools for builders who use AI as core workflow.",
+                  name: "Builder One",
+                  email: "builder@example.com",
+                  github: "builder-demo",
+                  headline: "Coordinating async project work",
+                  bio: "Demo builder using scoped agent approvals and durable project tickets.",
                   timezone: "America/New_York",
                   activeStart: "14:30",
                   activeEnd: "03:00",

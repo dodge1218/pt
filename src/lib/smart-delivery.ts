@@ -23,7 +23,7 @@ interface DeliveryItem {
 /**
  * Queue a delivery for smart timing.
  * If user prefers IMMEDIATE, delivers now.
- * If KAIROS, schedules for next active window.
+ * If SMART, schedules for next active window.
  * If DIGEST, batches for daily digest.
  */
 export async function queueDelivery(item: DeliveryItem) {
@@ -67,7 +67,7 @@ export async function queueDelivery(item: DeliveryItem) {
     });
   }
 
-  // KAIROS mode — schedule for next active window
+  // SMART mode — schedule for next active window
   const smartTime = getNextSmartWindow(
     user.timezone,
     user.activeStart,

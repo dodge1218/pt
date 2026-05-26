@@ -308,7 +308,7 @@ model Comment {
 
 model Bridge {
   id   String @id @default(cuid())
-  name String // e.g. "Ryan + Colin — Resume Agency"
+  name String // e.g. "Builder One + Reviewer Two — Demo Project"
 
   members BridgeMember[]
   tickets Ticket[]
@@ -536,7 +536,7 @@ model CollaborationVoice {
   overrideLength     CommLength?
   overrideStructure  CommStructure?
   overrideFormality  Formality?
-  customInstructions String? // "Colin likes when I include code examples"
+  customInstructions String? // "Include code examples for this collaborator"
 
   // Learned from interaction history
   interactionCount Int       @default(0)

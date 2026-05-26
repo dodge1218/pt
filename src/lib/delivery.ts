@@ -4,7 +4,7 @@
  * Determines the optimal time to deliver notifications/updates to a user
  * based on their activity patterns and preferences.
  * 
- * Named after καιρός — the right, critical, or opportune moment.
+ * Schedules delivery around a user's active window.
  */
 
 import { prisma } from "./prisma";
@@ -34,7 +34,7 @@ export function isInActiveWindow(window: DeliveryWindow): boolean {
 /**
  * Calculate next delivery time for a user
  * - IMMEDIATE: now
- * - KAIROS: next active window start (or now if currently active)
+ * - PROOFTICKET: next active window start (or now if currently active)
  * - DIGEST: next digest time (end of active window)
  */
 export function getNextDeliveryTime(

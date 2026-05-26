@@ -1,5 +1,5 @@
 {
-  "name": "coordinate",
+  "name": "proofticket",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -18,9 +18,12 @@
     "db:seed": "tsx prisma/seed.ts",
     "health": "node scripts/check-health.mjs",
     "queue:process": "node scripts/process-delivery-queue.mjs",
-    "kairos:agent": "node scripts/create-agent-action.mjs",
-    "kairos:actions": "node scripts/list-agent-actions.mjs",
-    "kairos:action": "node scripts/resolve-agent-action.mjs",
+    "proofticket:agent": "node scripts/create-agent-action.mjs",
+    "proofticket:actions": "node scripts/list-agent-actions.mjs",
+    "proofticket:action": "node scripts/resolve-agent-action.mjs",
+    "proofticket:receipt": "node scripts/inspect-agent-action.mjs",
+    "proofticket:evidence": "node scripts/export-ticket-evidence.mjs",
+    "github:webhook:demo": "node examples/github-webhook/send-demo-event.mjs",
     "openclaw:ticket": "node scripts/create-openclaw-ticket.mjs",
     "openclaw:action": "node scripts/resolve-agent-action.mjs"
   },

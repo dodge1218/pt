@@ -36,7 +36,7 @@ export function NavSidebar({ pendingActions = 0, pendingDeliveries = 0 }: NavSid
     <aside className="w-56 border-r border-[hsl(var(--border))] bg-[hsl(var(--card))] flex flex-col min-h-screen">
       <div className="p-4 border-b border-[hsl(var(--border))]">
         <Link href="/" className="text-lg font-bold tracking-tight">
-          kairos
+          proofticket
         </Link>
         <p className="text-[10px] text-[hsl(var(--muted-foreground))] mt-0.5">
           async coordination

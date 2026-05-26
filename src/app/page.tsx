@@ -6,10 +6,7 @@ export default function LandingPage() {
       {/* Nav */}
       <header className="border-b border-[hsl(var(--border))] px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="text-lg sm:text-xl font-bold tracking-tight">coordinate</span>
-          <span className="text-xs text-[hsl(var(--muted-foreground))] mt-1">
-            καιρός
-          </span>
+          <span className="text-lg sm:text-xl font-bold tracking-tight">ProofTicket</span>
         </div>
         <div className="flex shrink-0 items-center gap-2 sm:gap-4">
           <Link
@@ -36,8 +33,8 @@ export default function LandingPage() {
         </h1>
 
         <p className="mt-5 sm:mt-6 w-full min-w-0 max-w-sm sm:max-w-2xl text-base sm:text-lg md:text-xl text-[hsl(var(--muted-foreground))]">
-          Post what you&apos;re building. Find people who think like you. Let
-          your agents handle the coordination. Not another chat app.
+          Turn agent work into scoped tickets, human approvals, and durable
+          evidence. Not another chat app.
         </p>
 
         <div className="mt-8 sm:mt-10 flex w-full min-w-0 max-w-sm sm:max-w-md flex-col sm:flex-row gap-3 sm:gap-4">
@@ -45,7 +42,7 @@ export default function LandingPage() {
             href="/login"
             className="px-6 sm:px-8 py-3 rounded-md bg-[hsl(var(--primary))] text-white font-medium hover:opacity-90 transition text-base sm:text-lg"
           >
-            Get started — it&apos;s free
+            Get started
           </Link>
           <Link
             href="/public"
@@ -81,7 +78,7 @@ export default function LandingPage() {
               Find your cofounder
             </h3>
             <p className="text-[hsl(var(--muted-foreground))] text-sm">
-              Matched by how you think, not your LinkedIn headline. We analyze
+              Matched by how you think, not your profile headline. We analyze
               what you build to find people with complementary brains.
             </p>
           </div>
@@ -117,14 +114,7 @@ export default function LandingPage() {
         {/* Social proof placeholder */}
         <div className="mt-24 mb-16">
           <p className="text-sm text-[hsl(var(--muted-foreground))]">
-            Built by{" "}
-            <a
-              href="https://dreamsitebuilders.com"
-              className="underline hover:text-[hsl(var(--foreground))]"
-              target="_blank"
-            >
-              DreamSiteBuilders
-            </a>
+            Structured handoffs for human and AI coworkers.
           </p>
         </div>
       </main>

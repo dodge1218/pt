@@ -71,7 +71,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`Prepare Kairos for local development.
+  console.log(`Prepare ProofTicket for local development.
 
 Usage:
   npm run setup:local

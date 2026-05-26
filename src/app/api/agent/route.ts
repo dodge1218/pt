@@ -222,7 +222,7 @@ export async function POST(req: NextRequest) {
     }
 
     const payloadToStore = data.idempotencyKey
-      ? { ...validation.payload, _kairos: { idempotencyKey: data.idempotencyKey } }
+      ? { ...validation.payload, _proofticket: { idempotencyKey: data.idempotencyKey } }
       : validation.payload;
     const storedPayload = JSON.stringify(payloadToStore);
 
@@ -336,8 +336,8 @@ export async function POST(req: NextRequest) {
         }
 
         const originalPayload = parsePayload(agentAction.payload);
-        const originalMeta = originalPayload.ok && isRecord(originalPayload.value._kairos)
-          ? { _kairos: originalPayload.value._kairos }
+        const originalMeta = originalPayload.ok && isRecord(originalPayload.value._proofticket)
+          ? { _proofticket: originalPayload.value._proofticket }
           : {};
         await prisma.agentAction.update({
           where: { id: data.actionId },
@@ -427,7 +427,7 @@ async function executeAgentAction(actionId: string, approverId: string) {
 
   switch (action.type) {
     case "CREATE_TICKET": {
-      const ticketPayload = ticketPayloadSchema.parse(stripKairosMeta(payload));
+      const ticketPayload = ticketPayloadSchema.parse(stripProofTicketMeta(payload));
       const ticket = await prisma.ticket.create({
         data: {
           title: ticketPayload.title,
@@ -481,7 +481,7 @@ async function executeAgentAction(actionId: string, approverId: string) {
       break;
     }
     case "CREATE_RESPONSE": {
-      const responsePayload = responsePayloadSchema.parse(stripKairosMeta(payload));
+      const responsePayload = responsePayloadSchema.parse(stripProofTicketMeta(payload));
       const ticket = await prisma.ticket.findUnique({
         where: { id: responsePayload.ticketId, deletedAt: null },
         select: { id: true, title: true, authorId: true, bridgeId: true },
@@ -513,7 +513,7 @@ async function executeAgentAction(actionId: string, approverId: string) {
       break;
     }
     case "CREATE_COMMENT": {
-      const commentPayload = commentPayloadSchema.parse(stripKairosMeta(payload));
+      const commentPayload = commentPayloadSchema.parse(stripProofTicketMeta(payload));
       const comment = await prisma.comment.create({
         data: {
           content: commentPayload.content,
@@ -543,7 +543,7 @@ async function executeAgentAction(actionId: string, approverId: string) {
 }
 
 function generateAgentApiKey() {
-  return `kairos_${randomBytes(32).toString("base64url")}`;
+  return `proofticket_${randomBytes(32).toString("base64url")}`;
 }
 
 function hashAgentApiKey(apiKey: string) {
@@ -582,10 +582,10 @@ function parsePayload(payload: string | Record<string, unknown>):
   }
 }
 
-function stripKairosMeta(payload: unknown) {
+function stripProofTicketMeta(payload: unknown) {
   if (!isRecord(payload)) return payload;
-  const { _kairos, ...rest } = payload;
-  void _kairos;
+  const { _proofticket, ...rest } = payload;
+  void _proofticket;
   return rest;
 }
 

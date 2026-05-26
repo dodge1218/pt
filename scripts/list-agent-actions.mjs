@@ -29,22 +29,22 @@ if (args.help) {
 
 const baseUrl =
   args.url ||
-  process.env.KAIROS_BASE_URL ||
+  process.env.PROOFTICKET_BASE_URL ||
   process.env.AUTH_URL ||
   process.env.NEXTAUTH_URL ||
   "http://localhost:3000";
-const secret = args.secret || process.env.KAIROS_AGENT_ACTION_SECRET || process.env.KAIROS_OPENCLAW_SECRET;
-const actorEmail = args.actorEmail || process.env.KAIROS_ACTOR_EMAIL;
-const actorUserId = args.actorUserId || process.env.KAIROS_ACTOR_USER_ID;
+const secret = args.secret || process.env.PROOFTICKET_AGENT_ACTION_SECRET || process.env.PROOFTICKET_OPENCLAW_SECRET;
+const actorEmail = args.actorEmail || process.env.PROOFTICKET_ACTOR_EMAIL;
+const actorUserId = args.actorUserId || process.env.PROOFTICKET_ACTOR_USER_ID;
 const status = args.status || "PENDING";
 const limit = args.limit || "20";
 
 if (!secret) {
-  console.error("KAIROS_AGENT_ACTION_SECRET or KAIROS_OPENCLAW_SECRET is required to list agent actions.");
+  console.error("PROOFTICKET_AGENT_ACTION_SECRET or PROOFTICKET_OPENCLAW_SECRET is required to list agent actions.");
   process.exit(1);
 }
 if (!actorEmail && !actorUserId) {
-  console.error("--actor-email, --actor-user-id, KAIROS_ACTOR_EMAIL, or KAIROS_ACTOR_USER_ID is required.");
+  console.error("--actor-email, --actor-user-id, PROOFTICKET_ACTOR_EMAIL, or PROOFTICKET_ACTOR_USER_ID is required.");
   process.exit(1);
 }
 
@@ -129,21 +129,21 @@ function isRecord(value) {
 }
 
 function printHelp() {
-  console.log(`List Kairos agent actions through the signed terminal endpoint.
+  console.log(`List ProofTicket agent actions through the signed terminal endpoint.
 
 Usage:
-  npm run kairos:actions -- --actor-email builder@example.com
-  npm run kairos:actions -- --actor-email builder@example.com --status ALL --limit 50
-  npm run kairos:actions -- --actor-email builder@example.com --json
+  npm run proofticket:actions -- --actor-email builder@example.com
+  npm run proofticket:actions -- --actor-email builder@example.com --status ALL --limit 50
+  npm run proofticket:actions -- --actor-email builder@example.com --json
 
 Required env:
-  KAIROS_AGENT_ACTION_SECRET=<shared-secret>
+  PROOFTICKET_AGENT_ACTION_SECRET=<shared-secret>
 
 Fallback env:
-  KAIROS_OPENCLAW_SECRET=<shared-secret>
+  PROOFTICKET_OPENCLAW_SECRET=<shared-secret>
 
 Optional env:
-  KAIROS_BASE_URL=http://localhost:3000
-  KAIROS_ACTOR_EMAIL=builder@example.com
+  PROOFTICKET_BASE_URL=http://localhost:3000
+  PROOFTICKET_ACTOR_EMAIL=builder@example.com
 `);
 }

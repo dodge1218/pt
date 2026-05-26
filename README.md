@@ -1,8 +1,8 @@
-# Kairos
+# ProofTicket
 
-Structured handoffs for human and AI coworkers.
+Structured handoffs and proof-of-work receipts for human and AI coworkers.
 
-Kairos is an experimental A2A ticketing system for teams that already use coding agents, shell agents, background jobs, and review queues. It is not a chatbot, a Jira clone, or another "AI project manager" wrapper. The core primitive is a durable work ticket that can be read by a person, a local agent, or a remote agent without replaying an entire chat transcript.
+ProofTicket is an experimental A2A ticketing system for teams that already use coding agents, shell agents, background jobs, and review queues. It is not a chatbot, a Jira clone, or another "AI project manager" wrapper. The core primitive is a durable work ticket that can be read by a person, a local agent, or a remote agent without replaying an entire chat transcript.
 
 The current app is a local-first Next.js prototype. It is meant to prove the workflow before adding hosted multi-tenant infrastructure.
 
@@ -17,24 +17,27 @@ Most agent workflows break in the same places:
 - cost, approvals, and provenance are afterthoughts
 - "agent collaboration" usually means another unstructured message bus
 
-Kairos treats agent work like operations work: typed tickets, scoped permissions, approvals, delivery windows, and a durable queue.
+ProofTicket treats agent work like operations work: typed tickets, scoped permissions, approvals, delivery windows, durable receipts, and exportable evidence.
 
-## What Kairos Does
+## What ProofTicket Does
 
 - **Tickets**: structured units of work with type, status, visibility, tags, author, bridge, and project context.
 - **Responses**: explicit positions such as agree, disagree, counter-proposal, neutral, or question.
 - **Bridges**: private coordination spaces for a person, another person, and their agents.
 - **Agent proxies**: API-keyed agents can request ticket, response, or comment actions.
 - **Human approval queue**: agent-created work is queued before it becomes durable shared state.
+- **Proof receipts**: agent actions and ticket artifacts can be inspected as evidence.
+- **Evidence bundles**: tickets can be exported as deterministic JSON and Markdown bundles.
 - **Smart delivery**: updates are queued and delivered according to each user's active window.
 - **Public board**: public tickets for discovery and collaboration.
+- **GitHub event ingestion**: signed PR, push, and check-run events can become ProofTicket tickets.
 
 ## The A2A Shape
 
-Kairos is designed around a simple contract:
+ProofTicket is designed around a simple contract:
 
 1. An actor submits a typed action.
-2. Kairos validates scope and payload.
+2. ProofTicket validates scope and payload.
 3. The action becomes a pending ticketed event.
 4. A human or trusted policy approves it.
 5. The result is written as durable project context.
@@ -58,19 +61,23 @@ Implemented:
 - typed agent payload validation
 - idempotency keys for agent action creation
 - delivery queue wiring for tickets, responses, and pending agent actions
-- `/api/kairos/queue` for delivery polling/read/process behavior
+- `/api/proofticket/queue` for delivery polling/read/process behavior
 - delivery inbox and unread badge
 - control-plane audit log
+- ContextClaw receipt and manifest ingestion
+- local agent action receipt inspector
+- deterministic ticket evidence bundle export
 - signed OpenClaw/Hermes webhook ingestion
+- signed GitHub PR/push/check-run webhook ingestion
 - CI for build, Prisma validation, and dependency audit
 
 Still early:
 
 - no hosted multi-tenant deployment yet
 - no production RBAC model yet
-- no GitHub issue/PR bridge yet
+- no GitHub write-back or full issue/PR bridge yet
 - no MCP/A2A protocol adapter yet
-- no billing, orgs, or enterprise admin controls yet
+- no live payout movement, billing, orgs, or enterprise admin controls yet
 
 ## Local Development
 
@@ -98,10 +105,22 @@ Agent ticket submission example:
 
 ```bash
 cat examples/five-minute-demo/agent-ticket-with-evidence.json \
-  | npm run kairos:agent -- --type CREATE_TICKET --idempotency-key demo:agent:evidence:001
+  | npm run proofticket:agent -- --type CREATE_TICKET --idempotency-key demo:agent:evidence:001
 ```
 
 Full walkthrough: `examples/five-minute-demo/README.md`.
+
+Inspect an agent action receipt:
+
+```bash
+npm run proofticket:receipt -- --action-id <agent-action-id>
+```
+
+Export a ticket evidence bundle:
+
+```bash
+npm run proofticket:evidence -- --ticket-id <ticket-id>
+```
 
 Default local database:
 
@@ -123,26 +142,33 @@ GITHUB_CLIENT_SECRET="..."
 Optional for delivery cron:
 
 ```env
-KAIROS_CRON_SECRET="..."
-KAIROS_BASE_URL="http://localhost:3000"
+PROOFTICKET_CRON_SECRET="..."
+PROOFTICKET_BASE_URL="http://localhost:3000"
 ```
 
 Optional for ContextClaw ingestion:
 
 ```env
-KAIROS_CONTEXTCLAW_SECRET="..."
+PROOFTICKET_CONTEXTCLAW_SECRET="..."
 ```
 
 Optional for OpenClaw/Hermes ticket ingestion:
 
 ```env
-KAIROS_OPENCLAW_SECRET="..."
+PROOFTICKET_OPENCLAW_SECRET="..."
+```
+
+Optional for GitHub webhook ingestion:
+
+```env
+PROOFTICKET_GITHUB_WEBHOOK_SECRET="..."
+PROOFTICKET_GITHUB_ACTOR_EMAIL="builder@example.com"
 ```
 
 Optional for terminal agent-action list/approval:
 
 ```env
-KAIROS_AGENT_ACTION_SECRET="..."
+PROOFTICKET_AGENT_ACTION_SECRET="..."
 ```
 
 Optional for local demos:
@@ -159,6 +185,7 @@ Demo auth is for local demos and is rejected by production preflight.
 npm run preflight
 npx prisma validate
 npm run build
+npm audit --audit-level=moderate --omit=dev
 ```
 
 The latest local verification report is in `outputs/TEST_REPORT.md`.
@@ -175,7 +202,7 @@ Content-Type: application/json
 
 {
   "action": "create",
-  "agentApiKey": "kairos_...",
+  "agentApiKey": "proofticket_...",
   "type": "CREATE_TICKET",
   "idempotencyKey": "agent-run-2026-05-06-001",
   "payload": {
@@ -198,9 +225,9 @@ Content-Type: application/json
 Generic agent CLI:
 
 ```bash
-export KAIROS_AGENT_API_KEY="kairos_..."
+export PROOFTICKET_AGENT_API_KEY="proofticket_..."
 
-npm run kairos:agent -- \
+npm run proofticket:agent -- \
   --type CREATE_TICKET \
   --idempotency-key demo-agent:ticket:001 \
   --title "Review branch before merge" \
@@ -213,7 +240,7 @@ For ticket artifacts, pipe JSON on stdin:
 
 ```bash
 echo '{"artifacts":[{"kind":"NOTE","title":"Evidence summary","summary":"The migration touches a high-risk table."}]}' \
-  | npm run kairos:agent -- \
+  | npm run proofticket:agent -- \
     --type CREATE_TICKET \
     --idempotency-key demo-agent:ticket:002 \
     --title "Agent evidence attached" \
@@ -223,40 +250,54 @@ echo '{"artifacts":[{"kind":"NOTE","title":"Evidence summary","summary":"The mig
 List pending agent actions from a terminal:
 
 ```bash
-export KAIROS_AGENT_ACTION_SECRET="..."
+export PROOFTICKET_AGENT_ACTION_SECRET="..."
 
-npm run kairos:actions -- \
+npm run proofticket:actions -- \
   --actor-email builder@example.com
 ```
 
 Approve or reject an action from a terminal:
 
 ```bash
-npm run kairos:action -- \
+npm run proofticket:action -- \
   --decision approve \
   --action-id <agent-action-id> \
   --actor-email builder@example.com
 
-npm run kairos:action -- \
+npm run proofticket:action -- \
   --decision reject \
   --action-id <agent-action-id> \
   --actor-email builder@example.com
+```
+
+Inspect an action as a receipt:
+
+```bash
+npm run proofticket:receipt -- \
+  --action-id <agent-action-id>
+```
+
+Export a ticket evidence bundle:
+
+```bash
+npm run proofticket:evidence -- \
+  --ticket-id <ticket-id>
 ```
 
 Delivery queue:
 
 ```http
 GET /api/health
-GET /api/kairos/queue
-PATCH /api/kairos/queue
-POST /api/kairos/queue
+GET /api/proofticket/queue
+PATCH /api/proofticket/queue
+POST /api/proofticket/queue
 ```
 
 OpenClaw/Hermes ticket webhook:
 
 ```http
 POST /api/webhooks/openclaw
-Authorization: Bearer <KAIROS_OPENCLAW_SECRET>
+Authorization: Bearer <PROOFTICKET_OPENCLAW_SECRET>
 Content-Type: application/json
 
 {
@@ -306,6 +347,14 @@ npm run openclaw:action -- \
   --decision reject \
   --action-id <agent-action-id> \
   --actor-email builder@example.com
+```
+
+GitHub webhook demo:
+
+```bash
+export PROOFTICKET_GITHUB_WEBHOOK_SECRET="local-github-webhook-secret"
+export PROOFTICKET_ACTOR_EMAIL="builder@example.com"
+npm run github:webhook:demo
 ```
 
 ## Design Principles

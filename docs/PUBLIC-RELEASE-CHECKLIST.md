@@ -2,17 +2,17 @@
 
 Status: private repo guardrail.
 
-Kairos can remain private while the implementation matures. Before making it public again, run this checklist so the repository reads like a professional developer-tools project instead of a workspace brain dump.
+ProofTicket can remain private while the implementation matures. Before making it public again, run this checklist so the repository reads like a professional developer-tools project instead of a workspace brain dump.
 
 ## Must Be Clean Before Public
 
-- README describes Kairos only, not the whole local OpenClaw workspace.
+- README describes ProofTicket only, not the whole local OpenClaw workspace.
 - No personal names in seed data, docs, screenshots, examples, or app copy.
 - No private emails, partner names, internal project names, or active business strategy.
-- No "50k stars", job application, portfolio, or hiring-positioning language in public docs.
+- No "50k stars", career-positioning, or public-clout language in public docs.
 - No inflated market-size claims in README.
 - No unpublished competitor/outreach strategy.
-- No local paths like `/home/yin/...`.
+- No absolute local workstation paths.
 - No `.env`, SQLite DB, `.next`, screenshots with private data, or generated logs.
 - `npm audit --omit=dev` reports zero vulnerabilities or documented exceptions.
 - `npm run build` passes.
@@ -22,17 +22,9 @@ Kairos can remain private while the implementation matures. Before making it pub
 
 These are useful private planning docs, but should be reviewed, rewritten, moved, or omitted before a public launch:
 
-- `docs/PRD-AI-COWORKING-CONTEXT-CONTROL-PLANE.md`
 - `docs/MARKET-AND-PORTFOLIO-NOTE.md`
-- `docs/ROADMAP-50K-STARS.md`
 - `docs/MARKET-WEDGE.md`
 - `docs/INTEROPERABILITY-ROADMAP.md`
-- `docs/ECOSYSTEM-ARCHITECTURE.md`
-- `docs/BUSINESS-PLAN.md`
-- `docs/GTM.md`
-- `docs/FEATURES-V2.md`
-- `docs/SILOS.md`
-- `docs/IDEAS-0414-3AM.md`
 - `prisma/seed.ts`
 
 ## Public-Ready Positioning
@@ -52,7 +44,7 @@ Keep the repo focused on:
 
 Avoid:
 
-- claiming every adjacent project is part of Kairos
+- claiming every adjacent project is part of ProofTicket
 - framing the repo as personal productivity archaeology
 - attacking "AI slop" in project copy
 - promising enterprise-scale savings before proof

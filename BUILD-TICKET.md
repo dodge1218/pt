@@ -1,4 +1,4 @@
-# Kairos MVP — Codex Build Ticket
+# ProofTicket MVP — Codex Build Ticket
 
 ## What You're Building
 A dev-first async coordination platform. Part DMs, part public board, part cofounder matching. Not a chat app. Not a project manager.
@@ -12,12 +12,12 @@ A dev-first async coordination platform. Part DMs, part public board, part cofou
 - Vercel deploy target
 
 ## Existing Files
-- `kairos/prisma/schema.prisma` — FULL database schema (Users, Tickets, Responses, Comments, Bridges, Agents, Matching, Voice, Delivery)
-- `kairos/src/app/page.tsx` — Landing page (done)
-- `kairos/src/app/layout.tsx` — Root layout (done)
-- `kairos/src/lib/` — auth.ts, prisma.ts, ai.ts, agent.ts, kairos.ts, matching.ts, voice.ts, prompts.ts (stubs)
-- `kairos/src/app/api/` — Route stubs for tickets, agent, friends, matches
-- `kairos/docs/ARCHITECTURE.md` — Full API design + directory structure
+- `proofticket/prisma/schema.prisma` — FULL database schema (Users, Tickets, Responses, Comments, Bridges, Agents, Matching, Voice, Delivery)
+- `proofticket/src/app/page.tsx` — Landing page (done)
+- `proofticket/src/app/layout.tsx` — Root layout (done)
+- `proofticket/src/lib/` — auth.ts, prisma.ts, ai.ts, agent.ts, proofticket.ts, matching.ts, voice.ts, prompts.ts (stubs)
+- `proofticket/src/app/api/` — Route stubs for tickets, agent, friends, matches
+- `proofticket/docs/ARCHITECTURE.md` — Full API design + directory structure
 
 ## MVP Scope (build these)
 
@@ -51,7 +51,7 @@ A dev-first async coordination platform. Part DMs, part public board, part cofou
 - Approve/reject actions
 - Agent-created content clearly labeled in UI
 
-### 6. Kairos Delivery (v1 — manual windows)
+### 6. ProofTicket Delivery (v1 — manual windows)
 - User sets active hours (activeStart, activeEnd, timezone)
 - Delivery queue model stores pending items
 - Basic scheduling: deliver during active window only
@@ -102,7 +102,7 @@ GEMINI_API_KEY=""
 
 ## Start Commands
 ```bash
-cd kairos
+cd proofticket
 npm install
 npx prisma generate
 npx prisma db push

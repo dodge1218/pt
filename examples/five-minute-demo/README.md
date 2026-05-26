@@ -1,12 +1,13 @@
-# Kairos Five-Minute Demo
+# ProofTicket Five-Minute Demo
 
-This demo shows the core Kairos workflow:
+This demo shows the core ProofTicket workflow:
 
-1. start Kairos locally,
+1. start ProofTicket locally,
 2. submit an agent-created ticket with evidence,
 3. list pending agent actions,
-4. approve the action,
-5. verify the result is durable.
+4. inspect the pending action as a receipt,
+5. approve the action,
+6. export the resulting ticket as an evidence bundle.
 
 It uses generic demo values. Replace secrets, emails, and keys with your own local values.
 
@@ -17,7 +18,7 @@ From the repo root:
 ```bash
 npm install
 npm run setup:local
-export KAIROS_AGENT_ACTION_SECRET="local-agent-action-secret"
+export PROOFTICKET_AGENT_ACTION_SECRET="local-agent-action-secret"
 npm run dev
 ```
 
@@ -30,7 +31,7 @@ npm run health
 Expected result:
 
 ```text
-Kairos health ok: database=ok
+ProofTicket health ok: database=ok
 ```
 
 ## 2. Configure Demo Env
@@ -38,15 +39,15 @@ Kairos health ok: database=ok
 Use a local-only agent key and terminal approval secret.
 
 ```bash
-export KAIROS_BASE_URL="http://localhost:3000"
-export KAIROS_AGENT_API_KEY="kairos_demo_conductor_do_not_use_in_production"
-export KAIROS_AGENT_ACTION_SECRET="local-agent-action-secret"
-export KAIROS_ACTOR_EMAIL="<seeded-owner-email>"
+export PROOFTICKET_BASE_URL="http://localhost:3000"
+export PROOFTICKET_AGENT_API_KEY="proofticket_demo_conductor_do_not_use_in_production"
+export PROOFTICKET_AGENT_ACTION_SECRET="local-agent-action-secret"
+export PROOFTICKET_ACTOR_EMAIL="<seeded-owner-email>"
 ```
 
 For the seeded demo database, replace `<seeded-owner-email>` with the demo user email printed by `npm run db:seed`.
 
-If the server is already running without `KAIROS_AGENT_ACTION_SECRET`, stop it and restart it with that environment variable set.
+If the server is already running without `PROOFTICKET_AGENT_ACTION_SECRET`, stop it and restart it with that environment variable set.
 
 To print the complete command sequence without reading this walkthrough:
 
@@ -58,7 +59,7 @@ bash examples/five-minute-demo/print-demo-commands.sh
 
 ```bash
 cat examples/five-minute-demo/agent-ticket-with-evidence.json \
-  | npm run kairos:agent -- \
+  | npm run proofticket:agent -- \
     --type CREATE_TICKET \
     --idempotency-key demo:agent:evidence:001
 ```
@@ -77,20 +78,29 @@ Expected result:
 ## 4. Human Lists Pending Actions
 
 ```bash
-npm run kairos:actions -- \
-  --actor-email "$KAIROS_ACTOR_EMAIL" \
+npm run proofticket:actions -- \
+  --actor-email "$PROOFTICKET_ACTOR_EMAIL" \
   --status PENDING
 ```
 
 Copy the action id from the output.
 
-## 5. Human Approves Action
+## 5. Human Inspects The Action Receipt
 
 ```bash
-npm run kairos:action -- \
+npm run proofticket:receipt -- \
+  --action-id "<agent-action-id>"
+```
+
+The receipt shows the action status, agent attribution, payload, result id if resolved, and any audit events already attached to the action.
+
+## 6. Human Approves Action
+
+```bash
+npm run proofticket:action -- \
   --decision approve \
   --action-id "<agent-action-id>" \
-  --actor-email "$KAIROS_ACTOR_EMAIL"
+  --actor-email "$PROOFTICKET_ACTOR_EMAIL"
 ```
 
 Expected result:
@@ -113,17 +123,48 @@ http://localhost:3000/tickets/<ticket-id>
 
 The ticket should show agent attribution and the attached evidence artifact.
 
+## 7. Export The Evidence Bundle
+
+```bash
+npm run proofticket:evidence -- \
+  --ticket-id "<ticket-id>"
+```
+
+Expected result:
+
+```text
+wrote /path/to/proofticket/outputs/evidence/<ticket-id>-evidence.json
+wrote /path/to/proofticket/outputs/evidence/<ticket-id>-evidence.md
+```
+
+The bundle includes the ticket, artifacts, related agent actions, responses, comments, and audit events in deterministic order.
+
+## Optional: GitHub PR Event To Ticket
+
+With the app still running:
+
+```bash
+export PROOFTICKET_GITHUB_WEBHOOK_SECRET="local-github-webhook-secret"
+export PROOFTICKET_ACTOR_EMAIL="$PROOFTICKET_ACTOR_EMAIL"
+npm run github:webhook:demo
+```
+
+This sends a signed local fixture for a GitHub pull request event. ProofTicket creates a private review ticket with repository and PR artifacts. It does not write back to GitHub.
+
 ## What This Proves
 
 - Agents can submit structured work without browser access.
 - Agent work can stay pending until a human approves it.
 - Evidence can travel with the ticket.
 - The final ticket becomes durable shared context.
+- Agent work can be inspected as a receipt.
+- Tickets can be exported as proof-oriented evidence bundles.
+- GitHub events can create review tickets through a signed webhook.
 
 ## What This Does Not Prove Yet
 
 - hosted multi-tenant deployment,
-- GitHub PR/CI sync,
+- GitHub write-back or full PR/CI sync,
 - MCP/A2A protocol adapters,
 - org-level RBAC,
 - production billing or compliance.

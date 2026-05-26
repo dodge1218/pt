@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
   });
   if (rateLimit) return rateLimit;
 
-  const webhookSecret = process.env.KAIROS_OPENCLAW_SECRET;
+  const webhookSecret = process.env.PROOFTICKET_OPENCLAW_SECRET;
   const authHeader = req.headers.get("authorization");
   if (!webhookSecret || authHeader !== `Bearer ${webhookSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

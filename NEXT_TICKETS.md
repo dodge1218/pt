@@ -1,10 +1,10 @@
-# Kairos Next Tickets
+# ProofTicket Next Tickets
 
 Status: active private build plan.
 
 ## Current Baseline
 
-Kairos now has:
+ProofTicket now has:
 
 - local setup command,
 - health endpoint,
@@ -30,7 +30,7 @@ Build:
 - a small shell script that prints the exact local demo commands
 - a sample JSON payload for an agent ticket with evidence
 - a sample approval command
-- references to `setup:local`, `kairos:agent`, `kairos:actions`, `kairos:action`, and `health`
+- references to `setup:local`, `proofticket:agent`, `proofticket:actions`, `proofticket:action`, and `health`
 
 Acceptance:
 
@@ -63,7 +63,7 @@ Goal: remove the remaining browser-only setup step for agent demos.
 Build:
 
 - signed or demo-safe terminal registration flow
-- `npm run kairos:agent-register`
+- `npm run proofticket:agent-register`
 - prints one-time API key
 - documents that production registration remains authenticated
 
@@ -109,7 +109,7 @@ Acceptance:
 
 ## Ticket 6: OpenAPI Reference
 
-Goal: make Kairos usable by agents and developers without reading source.
+Goal: make ProofTicket usable by agents and developers without reading source.
 
 Build:
 
@@ -130,13 +130,13 @@ Acceptance:
 
 ## Ticket 7: GitHub Event Ingestion MVP
 
-Goal: make Kairos sit next to real developer work.
+Goal: make ProofTicket sit next to real developer work.
 
 Build:
 
 - signed GitHub webhook endpoint
 - minimal payload support for check failure, PR opened, branch pushed
-- creates Kairos STATUS or PROPOSAL ticket with repo/branch/PR artifacts
+- creates ProofTicket STATUS or PROPOSAL ticket with repo/branch/PR artifacts
 
 Acceptance:
 

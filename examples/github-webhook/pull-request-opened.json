@@ -1,0 +1,24 @@
+{
+  "action": "opened",
+  "repository": {
+    "full_name": "example/acme-app",
+    "html_url": "https://github.com/example/acme-app",
+    "default_branch": "main"
+  },
+  "sender": {
+    "login": "demo-builder",
+    "html_url": "https://github.com/demo-builder"
+  },
+  "pull_request": {
+    "number": 42,
+    "title": "Add receipt export for agent work",
+    "html_url": "https://github.com/example/acme-app/pull/42",
+    "head": {
+      "ref": "feature/receipt-export",
+      "sha": "1111111111111111111111111111111111111111"
+    },
+    "base": {
+      "ref": "main"
+    }
+  }
+}
