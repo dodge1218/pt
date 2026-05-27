@@ -36,16 +36,22 @@ ProofTicket health ok: database=ok
 
 ## 2. Configure Demo Env
 
-Use a local-only agent key and terminal approval secret.
+Register a local-only agent and configure the terminal approval secret.
 
 ```bash
 export PROOFTICKET_BASE_URL="http://localhost:3000"
-export PROOFTICKET_AGENT_API_KEY="proofticket_demo_conductor_do_not_use_in_production"
+export PROOFTICKET_AGENT_API_KEY="$(
+  npm run --silent proofticket:agent-register -- \
+    --owner-email builder@example.com \
+    --name "Five-Minute Demo Agent" \
+    --json \
+  | node -e 'let input=""; process.stdin.on("data", d => input += d); process.stdin.on("end", () => console.log(JSON.parse(input).apiKey));'
+)"
 export PROOFTICKET_AGENT_ACTION_SECRET="local-agent-action-secret"
-export PROOFTICKET_ACTOR_EMAIL="<seeded-owner-email>"
+export PROOFTICKET_ACTOR_EMAIL="builder@example.com"
 ```
 
-For the seeded demo database, replace `<seeded-owner-email>` with the demo user email printed by `npm run db:seed`.
+`proofticket:agent-register` prints the raw API key once and stores only its SHA-256 digest.
 
 If the server is already running without `PROOFTICKET_AGENT_ACTION_SECRET`, stop it and restart it with that environment variable set.
 

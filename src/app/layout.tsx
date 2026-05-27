@@ -5,22 +5,22 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Coordinate — where builders align",
+  title: "ProofTicket — structured handoffs for human and AI coworkers",
   description:
-    "Dev-first social coordination. Post what you're building. Find people who think like you. Let your agents handle the rest.",
+    "Turn agent work into scoped tickets, human approvals, durable receipts, and exportable evidence.",
   openGraph: {
-    title: "Coordinate — where builders align",
+    title: "ProofTicket — structured handoffs for human and AI coworkers",
     description:
-      "Dev-first social coordination. Post what you're building. Find people who think like you.",
-    url: "https://coordinate.dev",
-    siteName: "Coordinate",
+      "Turn agent work into scoped tickets, human approvals, durable receipts, and exportable evidence.",
+    url: "https://proofticket.local",
+    siteName: "ProofTicket",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Coordinate — where builders align",
+    title: "ProofTicket — structured handoffs for human and AI coworkers",
     description:
-      "Dev-first social coordination. Post what you're building. Find people who think like you.",
+      "Turn agent work into scoped tickets, human approvals, durable receipts, and exportable evidence.",
   },
 };
 

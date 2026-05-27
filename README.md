@@ -246,7 +246,13 @@ Content-Type: application/json
 Generic agent CLI:
 
 ```bash
-export PROOFTICKET_AGENT_API_KEY="proofticket_..."
+export PROOFTICKET_AGENT_API_KEY="$(
+  npm run --silent proofticket:agent-register -- \
+    --owner-email builder@example.com \
+    --name "Local Demo Agent" \
+    --json \
+  | node -e 'let input=""; process.stdin.on("data", d => input += d); process.stdin.on("end", () => console.log(JSON.parse(input).apiKey));'
+)"
 
 npm run proofticket:agent -- \
   --type CREATE_TICKET \
@@ -256,6 +262,8 @@ npm run proofticket:agent -- \
   --ticket-type PROPOSAL \
   --tags agent,review
 ```
+
+The registration command is for local/demo setup. Production registration should stay authenticated through the app/API. The raw API key is printed once; only its SHA-256 digest is stored.
 
 For ticket artifacts, pipe JSON on stdin:
 

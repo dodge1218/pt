@@ -11,9 +11,15 @@ npm run dev
 
 # Terminal 2: configure demo environment after the app is running.
 export PROOFTICKET_BASE_URL="http://localhost:3000"
-export PROOFTICKET_AGENT_API_KEY="proofticket_demo_conductor_do_not_use_in_production"
+export PROOFTICKET_AGENT_API_KEY="$(
+  npm run --silent proofticket:agent-register -- \
+    --owner-email builder@example.com \
+    --name "Five-Minute Demo Agent" \
+    --json \
+  | node -e 'let input=""; process.stdin.on("data", d => input += d); process.stdin.on("end", () => console.log(JSON.parse(input).apiKey));'
+)"
 export PROOFTICKET_AGENT_ACTION_SECRET="local-agent-action-secret"
-export PROOFTICKET_ACTOR_EMAIL="<seeded-owner-email>"
+export PROOFTICKET_ACTOR_EMAIL="builder@example.com"
 
 # Confirm the app and database are reachable.
 npm run health

@@ -205,7 +205,7 @@ export default async function SettingsPage() {
                     </span>
                   </div>
                   <div className="text-xs text-[hsl(var(--muted-foreground))] mt-1 font-mono">
-                    API Key: {agent.apiKey.slice(0, 8)}...
+                    Key digest: {agent.apiKey.slice(0, 8)}...
                   </div>
                   <div className="flex gap-2 mt-2 text-xs text-[hsl(var(--muted-foreground))]">
                     {agent.canCreateTickets && <span className="px-2 py-0.5 rounded bg-[hsl(var(--secondary))]">tickets</span>}

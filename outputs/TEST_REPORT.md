@@ -42,6 +42,14 @@ Updated: 2026-05-26
 - Added `npm run setup:postgres` for Postgres generate/db-push/seed/preflight.
 - Updated README, deployment notes, public-release checklist, and next-ticket status with SQLite vs Postgres setup.
 
+## Agent Registration CLI Slice
+
+- Added `npm run proofticket:agent-register`.
+- Added `scripts/register-agent.mjs`.
+- The CLI resolves an existing local owner by email or id, creates an agent, prints the raw `proofticket_...` key once, and stores only the SHA-256 digest.
+- The CLI writes an `agent.register.local_cli` audit entry.
+- Updated the five-minute demo to register a fresh local agent instead of relying on the seeded demo key.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
@@ -60,6 +68,9 @@ Updated: 2026-05-26
 - `npm run setup:postgres -- --skip-seed` pushed the schema to local Postgres and ran preflight.
 - `docker compose stop postgres` stopped the local Postgres container after verification.
 - `npx prisma generate` regenerated the default SQLite Prisma client after Postgres verification.
+- `npm run proofticket:agent-register -- --help` passed.
+- `npm run proofticket:agent-register -- --owner-email builder@example.com --name "Smoke CLI Agent" --json` created a local agent with a one-time key.
+- `npm run proofticket:agent` created a pending action using the newly registered key.
 - `npm run preflight` passed with expected local placeholder warnings for GitHub OAuth/auth/API secrets.
 - `npm run build` passed with Next.js `15.5.18`.
 - `npm audit --audit-level=moderate --omit=dev` passed with `0 vulnerabilities`.

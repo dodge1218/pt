@@ -62,14 +62,16 @@ Acceptance:
 
 ## Ticket 3: Agent Registration CLI
 
+Status: shipped in local CLI slice.
+
 Goal: remove the remaining browser-only setup step for agent demos.
 
 Build:
 
-- signed or demo-safe terminal registration flow
-- `npm run proofticket:agent-register`
-- prints one-time API key
-- documents that production registration remains authenticated
+- [x] demo-safe terminal registration flow
+- [x] `npm run proofticket:agent-register`
+- [x] prints one-time API key
+- [x] documents that production registration remains authenticated
 
 Acceptance:
 

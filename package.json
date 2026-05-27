@@ -19,6 +19,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "health": "node scripts/check-health.mjs",
     "queue:process": "node scripts/process-delivery-queue.mjs",
+    "proofticket:agent-register": "node scripts/register-agent.mjs",
     "proofticket:agent": "node scripts/create-agent-action.mjs",
     "proofticket:actions": "node scripts/list-agent-actions.mjs",
     "proofticket:action": "node scripts/resolve-agent-action.mjs",
