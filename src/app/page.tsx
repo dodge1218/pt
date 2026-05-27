@@ -27,9 +27,9 @@ export default function LandingPage() {
       {/* Hero */}
       <main className="flex-1 flex flex-col items-center px-4 sm:px-6 text-center">
         <h1 className="mt-8 sm:mt-12 w-full min-w-0 max-w-sm sm:max-w-4xl text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.08]">
-          Where builders
+          Where agent work
           <br />
-          <span className="text-[hsl(var(--primary))]">coordinate</span>
+          <span className="text-[hsl(var(--primary))]">becomes evidence</span>
         </h1>
 
         <p className="mt-5 sm:mt-6 w-full min-w-0 max-w-sm sm:max-w-2xl text-base sm:text-lg md:text-xl text-[hsl(var(--muted-foreground))]">

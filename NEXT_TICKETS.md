@@ -22,22 +22,24 @@ The next work should make the project more runnable, more demoable, and more cre
 
 ## Ticket 1: Public-Safe Five-Minute Demo
 
+Status: shipped in public demo slice.
+
 Goal: make the core workflow understandable without reading the whole repo.
 
 Build:
 
-- `examples/five-minute-demo/README.md`
-- a small shell script that prints the exact local demo commands
-- a sample JSON payload for an agent ticket with evidence
-- a sample approval command
-- references to `setup:local`, `proofticket:agent`, `proofticket:actions`, `proofticket:action`, and `health`
+- [x] `examples/five-minute-demo/README.md`
+- [x] a small shell script that prints the exact local demo commands
+- [x] a sample JSON payload for an agent ticket with evidence
+- [x] a sample approval command
+- [x] references to `setup:local`, `proofticket:agent`, `proofticket:actions`, `proofticket:action`, and `health`
 
 Acceptance:
 
-- no private names, emails, local paths, or strategy
-- demo uses generic actors and placeholder secrets
-- demo can be followed from fresh clone after `npm install`
-- `npm run build`, `npx prisma validate`, and audit pass
+- [x] no private names, emails, local paths, or strategy
+- [x] demo uses generic actors and placeholder secrets
+- [x] demo can be followed from fresh clone after `npm install`
+- [x] `npm run build`, `npx prisma validate`, and audit pass
 
 ## Ticket 2: Docker Compose Postgres
 
@@ -81,20 +83,22 @@ Acceptance:
 
 ## Ticket 4: Agent Action Receipts
 
+Status: shipped in receipt/evidence slice.
+
 Goal: make every agent action inspectable as a durable receipt.
 
 Build:
 
-- receipt JSON shape for pending/resolved actions
-- terminal command to inspect one action by id
-- UI display for payload, result id, approver, timestamps, agent, scope
-- optional artifact link to resulting ticket
+- [x] receipt JSON shape for pending/resolved actions
+- [x] terminal command to inspect one action by id
+- [x] UI display for payload, result id, approver, timestamps, agent, scope
+- [x] optional artifact link to resulting ticket
 
 Acceptance:
 
-- action receipt explains who/what/when/result
-- approval/rejection history remains available after resolution
-- no raw secrets displayed in receipt
+- [x] action receipt explains who/what/when/result
+- [x] approval/rejection history remains available after resolution
+- [x] no raw secrets displayed in receipt
 
 ## Ticket 5: Secret Redaction
 
@@ -143,19 +147,21 @@ Acceptance:
 
 ## Ticket 7: GitHub Event Ingestion MVP
 
+Status: shipped in GitHub webhook slice.
+
 Goal: make ProofTicket sit next to real developer work.
 
 Build:
 
-- signed GitHub webhook endpoint
-- minimal payload support for check failure, PR opened, branch pushed
-- creates ProofTicket STATUS or PROPOSAL ticket with repo/branch/PR artifacts
+- [x] signed GitHub webhook endpoint
+- [x] minimal payload support for check failure, PR opened, branch pushed
+- [x] creates ProofTicket STATUS or PROPOSAL ticket with repo/branch/PR artifacts
 
 Acceptance:
 
-- webhook secret required
-- idempotency prevents duplicate event tickets
-- no GitHub write operations yet
+- [x] webhook secret required
+- [x] idempotency prevents duplicate event tickets
+- [x] no GitHub write operations yet
 
 ## Ticket 8: MCP Adapter MVP
 
@@ -180,36 +186,40 @@ Acceptance:
 
 ## Ticket 9: Exportable Evidence Bundle
 
+Status: shipped in receipt/evidence slice.
+
 Goal: support professional review and audit trails.
 
 Build:
 
-- export ticket with responses, comments, artifacts, audit entries, agent actions
-- JSON and markdown output
-- terminal script for local export
+- [x] export ticket with responses, comments, artifacts, audit entries, agent actions
+- [x] JSON and markdown output
+- [x] terminal script for local export
 
 Acceptance:
 
-- export is deterministic
-- redaction applied
-- bundle links result ticket/action ids
+- [x] export is deterministic
+- [x] redaction applied
+- [x] bundle links result ticket/action ids
 
 ## Ticket 10: Hosted Alpha Prep
+
+Status: shipped as hosted alpha prep slice.
 
 Goal: make deployment credible after local proof.
 
 Build:
 
-- Postgres migration deploy docs
-- invite-only access mode
-- export/delete controls plan
-- production env checklist refinement
+- [x] Postgres migration deploy docs
+- [x] invite-only access mode
+- [x] export/delete controls plan
+- [x] production env checklist refinement
 
 Acceptance:
 
-- no public launch claims
-- deployment path is documented
-- private repo guardrails remain clear
+- [x] no public launch claims
+- [x] deployment path is documented
+- [x] private repo guardrails remain clear
 
 ## Build Rule
 

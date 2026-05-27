@@ -68,7 +68,7 @@ Minimum:
 - CLI for `proofticket ticket create`, `proofticket agent register`, `proofticket queue`
 - GitHub issue/PR sync
 - signed webhook endpoint for agents
-- MCP/A2A adapter
+- richer MCP/A2A examples
 - examples for Claude Code, Codex CLI, Cursor, and GitHub Actions
 - clean screenshots or terminal GIFs
 - hosted demo with seeded data

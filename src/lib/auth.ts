@@ -5,6 +5,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
 
 const demoAuthEnabled = process.env.ENABLE_DEMO_AUTH === "true";
+const allowedEmails = parseAllowedEmails(process.env.PROOFTICKET_ALLOWED_EMAILS);
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -56,6 +57,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       : []),
   ],
   callbacks: {
+    async signIn({ user }) {
+      if (allowedEmails.length === 0) return true;
+      const email = user.email?.toLowerCase();
+      return Boolean(email && allowedEmails.includes(email));
+    },
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
@@ -67,3 +73,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/login",
   },
 });
+
+function parseAllowedEmails(value?: string) {
+  return (value || "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+}

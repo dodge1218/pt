@@ -96,6 +96,17 @@ Updated: 2026-05-27
 - Linked the adapter docs from `README.md`.
 - Marked Ticket 8 shipped in `NEXT_TICKETS.md`.
 
+## Hosted Alpha Prep Slice
+
+- Added `docs/ALPHA-DEPLOYMENT.md` as the invite-only hosted alpha runbook.
+- Added `PROOFTICKET_ALLOWED_EMAILS` invite gating to Auth.js sign-in.
+- Updated login copy for invite-only hosted alpha mode.
+- Added `PROOFTICKET_ALLOWED_EMAILS` and GitHub webhook env coverage to examples/preflight.
+- Refined `docs/DEPLOYMENT.md` with hosted alpha env, webhook secret, and Postgres migration guidance.
+- Updated `docs/PUBLIC-RELEASE-CHECKLIST.md` with hosted alpha requirements.
+- Updated README status and roadmap to stop listing shipped MCP/evidence/GitHub work as future work.
+- Marked Tickets 1, 4, 7, 9, and 10 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
@@ -121,8 +132,10 @@ Updated: 2026-05-27
 - `npx tsc --noEmit` passed.
 - Placeholder/stale-claim scan for `docs/API.md` returned no matches.
 - Full private-name/stale-claim scan across public docs, scripts, source, examples, Prisma, package metadata, and outputs returned no matches.
+- Stale shipped-feature scan for old brand labels and completed roadmap items returned no matches.
 - `npm run mcp:smoke` passed and discovered all four MCP tools.
 - `npm run preflight` passed with expected local placeholder warnings for GitHub OAuth/auth/API secrets.
+- `npm run preflight:production` passed with hosted-alpha-shaped env overrides.
 - `DATABASE_URL=postgresql://... npx prisma validate --schema prisma/schema.postgres.prisma` passed after overriding the default SQLite `DATABASE_URL`.
 - `npm run build` passed with Next.js `15.5.18`.
 - `npm audit --audit-level=moderate --omit=dev` passed with `0 vulnerabilities`.

@@ -69,6 +69,8 @@ Implemented:
 - deterministic ticket evidence bundle export
 - signed OpenClaw/Hermes webhook ingestion
 - signed GitHub PR/push/check-run webhook ingestion
+- local MCP adapter for agent runtimes
+- invite-only sign-in gate for hosted alpha
 - CI for build, Prisma validation, and dependency audit
 
 Still early:
@@ -76,7 +78,6 @@ Still early:
 - no hosted multi-tenant deployment yet
 - no production RBAC model yet
 - no GitHub write-back or full issue/PR bridge yet
-- no MCP/A2A protocol adapter yet
 - no live payout movement, billing, orgs, or enterprise admin controls yet
 
 ## Local Development
@@ -220,6 +221,7 @@ npm audit --audit-level=moderate --omit=dev
 The latest local verification report is in `outputs/TEST_REPORT.md`.
 
 Deployment notes are in `docs/DEPLOYMENT.md`.
+Hosted alpha runbook is in `docs/ALPHA-DEPLOYMENT.md`.
 API reference is in `docs/API.md`.
 
 ## API Sketch
@@ -405,14 +407,12 @@ npm run github:webhook:demo
 
 ## Roadmap
 
-- GitHub issue/PR ingestion
+- hosted alpha runbook validation
+- GitHub issue/PR write-back
 - scoped bridge tokens
 - org/team model
-- agent action receipts
-- context manifests
-- MCP/A2A adapter
-- Docker compose deployment
-- Postgres production profile
+- richer MCP/A2A protocol coverage
+- self-serve export/delete controls
 - policy engine for auto-approval
 
 ## License

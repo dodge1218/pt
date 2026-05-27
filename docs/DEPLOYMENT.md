@@ -2,6 +2,8 @@
 
 ProofTicket is currently private and local-first, but the app is prepared for a standard Vercel + Supabase deployment.
 
+For an invited hosted alpha, use `docs/ALPHA-DEPLOYMENT.md` as the runbook. This file covers the general deployment mechanics.
+
 For a production-like local database without Supabase:
 
 ```bash
@@ -23,9 +25,11 @@ NEXTAUTH_URL="https://your-domain.example"
 NEXTAUTH_SECRET="same-or-equivalent-long-random-secret"
 GITHUB_CLIENT_ID="..."
 GITHUB_CLIENT_SECRET="..."
+PROOFTICKET_ALLOWED_EMAILS="builder@example.com,reviewer@example.com"
 ```
 
 `DATABASE_URL` should be a pooled Supabase/Postgres connection string for the app runtime. Do not deploy production on SQLite.
+`PROOFTICKET_ALLOWED_EMAILS` is optional locally. In hosted alpha it should be set to a comma-separated list of invited tester emails.
 
 ## Optional Env
 
@@ -37,6 +41,7 @@ PROOFTICKET_CONTEXTCLAW_SECRET="long-random-token-for-contextclaw-ingest"
 PROOFTICKET_BASE_URL="https://your-domain.example"
 PROOFTICKET_AGENT_ACTION_SECRET="long-random-token-for-agent-action-review"
 PROOFTICKET_OPENCLAW_SECRET="long-random-token-for-openclaw-hermes-webhooks"
+PROOFTICKET_GITHUB_WEBHOOK_SECRET="long-random-token-for-github-webhooks"
 ENABLE_DEMO_AUTH="false"
 ```
 
@@ -45,6 +50,7 @@ ENABLE_DEMO_AUTH="false"
 `PROOFTICKET_CONTEXTCLAW_SECRET` protects machine-to-machine ContextClaw ingestion at `POST /api/contextclaw/receipts`, `POST /api/contextclaw/manifests`, and `POST /api/webhooks/contextclaw`.
 `PROOFTICKET_AGENT_ACTION_SECRET` protects terminal listing and approval at `GET/POST /api/webhooks/openclaw/agent-actions`. If unset, ProofTicket falls back to `PROOFTICKET_OPENCLAW_SECRET` for backward compatibility.
 `PROOFTICKET_OPENCLAW_SECRET` protects `POST /api/webhooks/openclaw` for OpenClaw/Hermes ticket creation.
+`PROOFTICKET_GITHUB_WEBHOOK_SECRET` protects `POST /api/webhooks/github` for GitHub event ingestion.
 `ENABLE_DEMO_AUTH` may be `true` for local demos, but production preflight rejects it.
 
 ## OpenClaw/Hermes Sender
@@ -126,6 +132,12 @@ Before public launch, switch to a migration-based deploy flow:
 
 ```bash
 npx prisma migrate deploy
+```
+
+For hosted alpha with the Postgres schema:
+
+```bash
+DATABASE_URL="postgresql://..." npx prisma migrate deploy --schema prisma/schema.postgres.prisma
 ```
 
 Do not commit `.env`, local SQLite databases, `.next`, screenshots with private data, or generated logs.

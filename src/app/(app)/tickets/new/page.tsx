@@ -9,7 +9,7 @@ export default async function NewTicketPage() {
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
       <header className="border-b border-[hsl(var(--border))] px-6 py-3 flex items-center gap-6">
-        <Link href="/dashboard" className="text-lg font-bold tracking-tight">coordinate</Link>
+        <Link href="/dashboard" className="text-lg font-bold tracking-tight">ProofTicket</Link>
         <span className="text-sm text-[hsl(var(--muted-foreground))]">/ New Ticket</span>
       </header>
 

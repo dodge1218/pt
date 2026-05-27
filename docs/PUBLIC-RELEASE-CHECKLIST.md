@@ -61,6 +61,17 @@ Before public release, add:
 - A minimal CLI or curl-first walkthrough.
 - CI for build, Prisma validate, and audit.
 
+## Hosted Alpha Requirements
+
+Before inviting testers:
+
+- Set `PROOFTICKET_ALLOWED_EMAILS` to named tester emails.
+- Run production preflight with hosted URLs and Postgres `DATABASE_URL`.
+- Disable `ENABLE_DEMO_AUTH`.
+- Use separate secrets for cron, agent action review, ContextClaw, OpenClaw/Hermes, and GitHub webhooks.
+- Run one manual ticket -> agent action -> approval -> evidence export flow on hosted data.
+- Document how deletion requests will be handled manually until self-serve deletion exists.
+
 ## Current Decision
 
 Keep the GitHub repository private until the public-facing surface is intentionally cleaned.

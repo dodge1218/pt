@@ -3,16 +3,17 @@ import Link from "next/link";
 
 export default function LoginPage() {
   const demoAuthEnabled = process.env.ENABLE_DEMO_AUTH === "true";
+  const inviteOnly = Boolean(process.env.PROOFTICKET_ALLOWED_EMAILS?.trim());
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[hsl(var(--background))]">
       <div className="w-full max-w-sm mx-auto p-8">
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-bold tracking-tight">
-            coordinate
+            ProofTicket
           </Link>
           <p className="text-[hsl(var(--muted-foreground))] text-sm mt-2">
-            Sign in to get started
+            {inviteOnly ? "Sign in with an invited account" : "Sign in to get started"}
           </p>
         </div>
 
@@ -59,7 +60,7 @@ export default function LoginPage() {
         )}
 
         <p className="text-center text-xs text-[hsl(var(--muted-foreground))] mt-6">
-          Free. No credit card. Takes 5 seconds.
+          {inviteOnly ? "Hosted alpha access is invite-only." : "Local-first project coordination for humans and agents."}
         </p>
       </div>
     </div>
