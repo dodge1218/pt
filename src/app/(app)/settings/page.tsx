@@ -229,6 +229,50 @@ export default async function SettingsPage() {
           >
             Export account data
           </a>
+          <form id="deletion-request-form" className="mt-6 space-y-3 rounded-lg border border-[hsl(var(--border))] p-4">
+            <div>
+              <h3 className="text-sm font-semibold">Request account deletion</h3>
+              <p className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">
+                This records a manual deletion request for the alpha. It does not immediately remove shared records.
+              </p>
+            </div>
+            <label className="block text-xs font-medium">
+              Confirmation
+              <input
+                name="confirmation"
+                placeholder="delete my account"
+                className="mt-1 w-full rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-3 py-2 text-sm"
+              />
+            </label>
+            <label className="block text-xs font-medium">
+              Reason
+              <textarea
+                name="reason"
+                rows={2}
+                className="mt-1 w-full resize-y rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-3 py-2 text-sm"
+              />
+            </label>
+            <button type="submit" className="rounded-md border border-red-500/50 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-500/10">
+              Record deletion request
+            </button>
+          </form>
+          <script dangerouslySetInnerHTML={{ __html: `
+            document.getElementById('deletion-request-form').addEventListener('submit', async (e) => {
+              e.preventDefault();
+              const f = e.target;
+              const res = await fetch('/api/profile/deletion-request', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                  confirmation: f.confirmation.value,
+                  reason: f.reason.value,
+                })
+              });
+              const body = await res.json().catch(() => ({}));
+              alert(res.ok ? 'Deletion request recorded.' : (body.error || 'Error recording deletion request'));
+              if (res.ok) f.reset();
+            });
+          `}} />
         </section>
       </main>
     </div>

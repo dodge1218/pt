@@ -474,6 +474,21 @@ The export includes:
 
 The export does not include OAuth account tokens, session tokens, or raw agent API keys. Each export writes an `account.export` audit event.
 
+## Account Deletion Request
+
+```http
+POST /api/profile/deletion-request
+Cookie: <authenticated session>
+Content-Type: application/json
+
+{
+  "confirmation": "delete my account",
+  "reason": "Optional reason"
+}
+```
+
+Records an `account.deletion_request` audit event for manual operator processing in the alpha build. This endpoint does not immediately delete or anonymize shared records.
+
 ## Error Shape
 
 Most API errors use:

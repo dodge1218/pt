@@ -72,6 +72,7 @@ Implemented:
 - local MCP adapter for agent runtimes
 - invite-only sign-in gate for hosted alpha
 - authenticated account data export
+- authenticated account deletion request capture
 - CI for build, Prisma validation, and dependency audit
 
 Still early:

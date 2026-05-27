@@ -259,6 +259,25 @@ Acceptance:
 - [x] export does not include raw agent API keys
 - [x] destructive account deletion remains out of scope
 
+## Ticket 13: Deletion Request MVP
+
+Status: shipped as alpha deletion-request slice.
+
+Goal: give alpha users an in-app deletion request path without unsafe destructive deletion.
+
+Build:
+
+- [x] authenticated deletion-request endpoint
+- [x] Settings request form
+- [x] audit event for manual operator processing
+- [x] confirmation phrase guardrail
+
+Acceptance:
+
+- [x] request requires a signed-in user
+- [x] request is rate-limited
+- [x] shared records are not immediately deleted or anonymized
+
 ## Build Rule
 
 Ship one ticket at a time. For each ticket:

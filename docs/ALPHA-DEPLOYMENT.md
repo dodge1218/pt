@@ -109,6 +109,7 @@ This is intentionally simple. Full organization membership, roles, and invite to
 Current controls:
 
 - authenticated account data export at `GET /api/profile/export`,
+- authenticated deletion request capture at `POST /api/profile/deletion-request`,
 - deterministic ticket evidence export through `npm run proofticket:evidence`,
 - soft-delete routes for tickets and responses,
 - stored-input redaction for obvious secrets,
@@ -119,6 +120,7 @@ Alpha policy:
 - treat exported evidence bundles as user data,
 - do not publish screenshots or exports without tester approval,
 - honor deletion requests manually until self-serve account deletion exists,
+- review `account.deletion_request` audit events during alpha operations,
 - rotate integration secrets if an invited tester loses access or a token is exposed.
 
 Known gaps before public launch:

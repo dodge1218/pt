@@ -126,6 +126,15 @@ Updated: 2026-05-27
 - Documented the account export route in `docs/API.md`.
 - Marked Ticket 12 shipped in `NEXT_TICKETS.md`.
 
+## Deletion Request Slice
+
+- Added `POST /api/profile/deletion-request` for authenticated alpha deletion requests.
+- Added Settings form with explicit confirmation phrase.
+- Deletion requests write `account.deletion_request` audit events for manual processing.
+- The endpoint is rate-limited and does not immediately delete or anonymize shared records.
+- Documented the route in `docs/API.md` and alpha operations docs.
+- Marked Ticket 13 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
