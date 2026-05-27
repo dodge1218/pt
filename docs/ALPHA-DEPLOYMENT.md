@@ -123,6 +123,13 @@ Alpha policy:
 - review `account.deletion_request` audit events during alpha operations,
 - rotate integration secrets if an invited tester loses access or a token is exposed.
 
+List pending deletion requests from the operator terminal:
+
+```bash
+npm run proofticket:deletion-requests
+npm run proofticket:deletion-requests -- --json
+```
+
 Known gaps before public launch:
 
 - no self-serve account deletion flow,

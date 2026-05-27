@@ -135,6 +135,15 @@ Updated: 2026-05-27
 - Documented the route in `docs/API.md` and alpha operations docs.
 - Marked Ticket 13 shipped in `NEXT_TICKETS.md`.
 
+## Deletion Request Operator CLI Slice
+
+- Added `npm run proofticket:deletion-requests`.
+- Added `scripts/list-deletion-requests.mjs` to list `account.deletion_request` audit events.
+- Supports human-readable and JSON output.
+- Redacts request metadata before printing.
+- Documented the operator command in API and alpha deployment docs.
+- Marked Ticket 14 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.

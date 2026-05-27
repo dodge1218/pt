@@ -489,6 +489,12 @@ Content-Type: application/json
 
 Records an `account.deletion_request` audit event for manual operator processing in the alpha build. This endpoint does not immediately delete or anonymize shared records.
 
+Local operator review:
+
+```bash
+npm run proofticket:deletion-requests
+```
+
 ## Error Shape
 
 Most API errors use:

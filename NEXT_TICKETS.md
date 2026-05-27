@@ -278,6 +278,25 @@ Acceptance:
 - [x] request is rate-limited
 - [x] shared records are not immediately deleted or anonymized
 
+## Ticket 14: Deletion Request Operator CLI
+
+Status: shipped as alpha operator tooling slice.
+
+Goal: let an alpha operator review account deletion requests without adding admin UI yet.
+
+Build:
+
+- [x] local CLI for `account.deletion_request` audit events
+- [x] human-readable and JSON output
+- [x] redacted request metadata
+- [x] alpha docs reference
+
+Acceptance:
+
+- [x] CLI does not delete data
+- [x] CLI reads existing audit log state
+- [x] no hosted admin privileges are introduced
+
 ## Build Rule
 
 Ship one ticket at a time. For each ticket:
