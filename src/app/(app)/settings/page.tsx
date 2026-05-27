@@ -216,6 +216,20 @@ export default async function SettingsPage() {
             </div>
           )}
         </section>
+
+        {/* Data Controls */}
+        <section>
+          <h2 className="text-lg font-semibold mb-2">Data Controls</h2>
+          <p className="mb-4 text-xs text-[hsl(var(--muted-foreground))]">
+            Export your own profile, tickets, responses, comments, artifacts, agent metadata, deliveries, and audit events as redacted JSON.
+          </p>
+          <a
+            href="/api/profile/export"
+            className="inline-flex rounded-md border border-[hsl(var(--border))] px-4 py-2 text-sm font-medium transition hover:bg-[hsl(var(--secondary))]"
+          >
+            Export account data
+          </a>
+        </section>
       </main>
     </div>
   );

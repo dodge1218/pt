@@ -108,6 +108,7 @@ This is intentionally simple. Full organization membership, roles, and invite to
 
 Current controls:
 
+- authenticated account data export at `GET /api/profile/export`,
 - deterministic ticket evidence export through `npm run proofticket:evidence`,
 - soft-delete routes for tickets and responses,
 - stored-input redaction for obvious secrets,
@@ -122,7 +123,6 @@ Alpha policy:
 
 Known gaps before public launch:
 
-- no self-serve account export for every object owned by a user,
 - no self-serve account deletion flow,
 - no organization-level RBAC,
 - no formal data retention settings,

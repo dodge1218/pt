@@ -71,6 +71,7 @@ Implemented:
 - signed GitHub PR/push/check-run webhook ingestion
 - local MCP adapter for agent runtimes
 - invite-only sign-in gate for hosted alpha
+- authenticated account data export
 - CI for build, Prisma validation, and dependency audit
 
 Still early:
@@ -412,7 +413,7 @@ npm run github:webhook:demo
 - scoped bridge tokens
 - org/team model
 - richer MCP/A2A protocol coverage
-- self-serve export/delete controls
+- self-serve account deletion controls
 - policy engine for auto-approval
 
 ## License

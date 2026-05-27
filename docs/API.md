@@ -453,6 +453,27 @@ npm run proofticket:evidence -- --ticket-id ticket_id --format json --stdout
 
 The export includes ticket, responses, comments, artifacts, related agent actions, and audit events in deterministic order with redaction applied.
 
+## Account Export
+
+```http
+GET /api/profile/export
+Cookie: <authenticated session>
+```
+
+Downloads the signed-in user's account export as redacted JSON.
+
+The export includes:
+
+- profile and communication preferences,
+- authored tickets, responses, comments, and artifacts,
+- bridge memberships and project records,
+- owned agent metadata and agent actions,
+- delivery queue records,
+- account audit events,
+- prompt analysis metadata, interests, and matches.
+
+The export does not include OAuth account tokens, session tokens, or raw agent API keys. Each export writes an `account.export` audit event.
+
 ## Error Shape
 
 Most API errors use:

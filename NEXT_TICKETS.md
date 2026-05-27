@@ -240,6 +240,25 @@ Acceptance:
 - [x] production preflight does not rely on local secrets
 - [x] checks avoid networked database access
 
+## Ticket 12: Account Export MVP
+
+Status: shipped as self-serve export slice.
+
+Goal: give alpha users a non-destructive data control before hosted testing.
+
+Build:
+
+- [x] authenticated account export endpoint
+- [x] Settings export link
+- [x] redacted JSON bundle with profile, authored content, agents, deliveries, and audit events
+- [x] no OAuth/session token export
+
+Acceptance:
+
+- [x] export requires a signed-in user
+- [x] export does not include raw agent API keys
+- [x] destructive account deletion remains out of scope
+
 ## Build Rule
 
 Ship one ticket at a time. For each ticket:

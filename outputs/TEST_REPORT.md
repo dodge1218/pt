@@ -115,6 +115,17 @@ Updated: 2026-05-27
 - Added hosted-alpha-shaped production preflight to CI.
 - Marked Ticket 11 shipped in `NEXT_TICKETS.md`.
 
+## Account Export Slice
+
+- Added `GET /api/profile/export` for authenticated account data export.
+- Added a Settings data-control link to download the export JSON.
+- Added `src/lib/account-export.ts` for redacted account export bundle construction.
+- Export includes profile, authored tickets/responses/comments/artifacts, bridge memberships, owned projects, project contributions, agents/actions, deliveries, audit entries, prompt analysis metadata, interests, and matches.
+- Export omits OAuth accounts, sessions, and raw agent API keys.
+- Account export writes an `account.export` audit event.
+- Documented the account export route in `docs/API.md`.
+- Marked Ticket 12 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
