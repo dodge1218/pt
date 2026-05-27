@@ -221,6 +221,25 @@ Acceptance:
 - [x] deployment path is documented
 - [x] private repo guardrails remain clear
 
+## Ticket 11: CI Alpha Verification
+
+Status: shipped as CI hardening slice.
+
+Goal: make CI prove the same alpha-critical checks used locally.
+
+Build:
+
+- [x] Postgres Prisma schema validation in CI
+- [x] MCP adapter smoke in CI
+- [x] redaction smoke in CI
+- [x] hosted-alpha-shaped production preflight in CI
+
+Acceptance:
+
+- [x] CI still keeps SQLite quickstart validation
+- [x] production preflight does not rely on local secrets
+- [x] checks avoid networked database access
+
 ## Build Rule
 
 Ship one ticket at a time. For each ticket:

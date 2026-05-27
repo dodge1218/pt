@@ -76,6 +76,8 @@ npm run build
 npm audit --audit-level=moderate --omit=dev
 ```
 
+The GitHub Actions workflow runs the same non-secret shape checks for pull requests and pushes to `main`: SQLite schema validation, Postgres schema validation with a placeholder Postgres URL, MCP smoke, redaction smoke, production preflight with throwaway hosted-alpha-shaped env, build, and production dependency audit.
+
 After deploy:
 
 ```bash

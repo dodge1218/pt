@@ -44,6 +44,30 @@ jobs:
       - name: Validate Prisma schema
         run: npx prisma validate
 
+      - name: Validate Postgres Prisma schema
+        env:
+          DATABASE_URL: postgresql://proofticket:proofticket@example.com:5432/proofticket
+        run: npx prisma validate --schema prisma/schema.postgres.prisma
+
+      - name: MCP adapter smoke
+        run: npm run mcp:smoke
+
+      - name: Redaction smoke
+        run: npm run smoke:redaction
+
+      - name: Production preflight
+        env:
+          DATABASE_URL: postgresql://proofticket:proofticket@example.com:5432/proofticket
+          AUTH_URL: https://alpha.example.com
+          NEXTAUTH_URL: https://alpha.example.com
+          AUTH_SECRET: ci-production-preflight-secret
+          NEXTAUTH_SECRET: ci-production-preflight-secret
+          GITHUB_CLIENT_ID: ci-github-client-id
+          GITHUB_CLIENT_SECRET: ci-github-client-secret
+          ENABLE_DEMO_AUTH: "false"
+          PROOFTICKET_ALLOWED_EMAILS: builder@example.com
+        run: npm run preflight:production
+
       - name: Build
         run: npm run build
 

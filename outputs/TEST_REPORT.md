@@ -107,6 +107,14 @@ Updated: 2026-05-27
 - Updated README status and roadmap to stop listing shipped MCP/evidence/GitHub work as future work.
 - Marked Tickets 1, 4, 7, 9, and 10 shipped in `NEXT_TICKETS.md`.
 
+## CI Alpha Verification Slice
+
+- Added Postgres Prisma schema validation to CI.
+- Added MCP adapter smoke coverage to CI.
+- Added redaction smoke coverage to CI.
+- Added hosted-alpha-shaped production preflight to CI.
+- Marked Ticket 11 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
