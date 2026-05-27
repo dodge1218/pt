@@ -64,6 +64,22 @@ Updated: 2026-05-27
   - ContextClaw receipt and manifest artifact content/metadata.
 - This is prospective only; it does not mutate existing database rows.
 
+## API Reference Slice
+
+- Added `docs/API.md`.
+- Documented current local API routes and CLI-only flows for:
+  - health,
+  - agent registration/action creation,
+  - terminal action list/approve/reject,
+  - OpenClaw/Hermes ticket webhook,
+  - GitHub webhook,
+  - ContextClaw receipt/manifest ingest,
+  - ticket artifacts,
+  - delivery queue,
+  - evidence export CLI.
+- Linked the API reference from `README.md`.
+- Marked Ticket 6 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
@@ -87,6 +103,7 @@ Updated: 2026-05-27
 - `npm run proofticket:agent` created a pending action using the newly registered key.
 - `npm run smoke:redaction` passed.
 - `npx tsc --noEmit` passed.
+- Placeholder/stale-claim scan for `docs/API.md` returned no matches.
 - `npm run preflight` passed with expected local placeholder warnings for GitHub OAuth/auth/API secrets.
 - `npm run build` passed with Next.js `15.5.18`.
 - `npm audit --audit-level=moderate --omit=dev` passed with `0 vulnerabilities`.

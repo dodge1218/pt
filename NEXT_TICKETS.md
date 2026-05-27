@@ -117,18 +117,23 @@ Acceptance:
 
 ## Ticket 6: OpenAPI Reference
 
+Status: shipped as `docs/API.md` API reference.
+
 Goal: make ProofTicket usable by agents and developers without reading source.
 
 Build:
 
-- `docs/API.md`
-- request/response examples for:
+- [x] `docs/API.md`
+- [x] request/response examples for:
   - health
   - agent create action
   - terminal list/approve/reject
   - OpenClaw/Hermes ticket webhook
+  - GitHub webhook
   - ContextClaw receipt/manifest ingest
   - ticket artifacts
+  - delivery queue
+  - evidence export CLI
 
 Acceptance:
 

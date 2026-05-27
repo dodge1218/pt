@@ -212,6 +212,7 @@ npm audit --audit-level=moderate --omit=dev
 The latest local verification report is in `outputs/TEST_REPORT.md`.
 
 Deployment notes are in `docs/DEPLOYMENT.md`.
+API reference is in `docs/API.md`.
 
 ## API Sketch
 
