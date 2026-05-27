@@ -159,22 +159,24 @@ Acceptance:
 
 ## Ticket 8: MCP Adapter MVP
 
+Status: shipped as local stdio adapter.
+
 Goal: expose the existing API as tools for agent runtimes.
 
 Build:
 
-- local MCP server wrapper
+- [x] local MCP server wrapper
 - tools:
-  - create ticket/action
-  - list pending actions
-  - approve/reject action
-  - attach artifact
+  - [x] create ticket/action
+  - [x] list pending actions
+  - [x] approve/reject action
+  - [x] attach artifact
 
 Acceptance:
 
-- wrapper is thin over existing API
-- no direct DB writes
-- works with local server URL and secrets
+- [x] wrapper is thin over existing API
+- [x] no direct DB writes
+- [x] works with local server URL and secrets
 
 ## Ticket 9: Exportable Evidence Bundle
 

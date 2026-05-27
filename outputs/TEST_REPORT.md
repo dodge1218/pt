@@ -80,6 +80,22 @@ Updated: 2026-05-27
 - Linked the API reference from `README.md`.
 - Marked Ticket 6 shipped in `NEXT_TICKETS.md`.
 
+## MCP Adapter Slice
+
+- Added `scripts/mcp-server.mjs` as a local stdio MCP adapter.
+- Added `scripts/smoke-mcp-server.mjs` for MCP framing and tool discovery smoke coverage.
+- Added package scripts:
+  - `npm run mcp:server`
+  - `npm run mcp:smoke`
+- Added `docs/MCP.md`.
+- Exposed thin wrappers over existing HTTP API routes for:
+  - creating agent actions,
+  - listing pending/resolved actions,
+  - approving or rejecting actions,
+  - attaching ticket artifacts with a session cookie.
+- Linked the adapter docs from `README.md`.
+- Marked Ticket 8 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
@@ -104,7 +120,10 @@ Updated: 2026-05-27
 - `npm run smoke:redaction` passed.
 - `npx tsc --noEmit` passed.
 - Placeholder/stale-claim scan for `docs/API.md` returned no matches.
+- Full private-name/stale-claim scan across public docs, scripts, source, examples, Prisma, package metadata, and outputs returned no matches.
+- `npm run mcp:smoke` passed and discovered all four MCP tools.
 - `npm run preflight` passed with expected local placeholder warnings for GitHub OAuth/auth/API secrets.
+- `DATABASE_URL=postgresql://... npx prisma validate --schema prisma/schema.postgres.prisma` passed after overriding the default SQLite `DATABASE_URL`.
 - `npm run build` passed with Next.js `15.5.18`.
 - `npm audit --audit-level=moderate --omit=dev` passed with `0 vulnerabilities`.
 - `git diff --check` passed.

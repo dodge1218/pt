@@ -137,6 +137,14 @@ Export a ticket evidence bundle:
 npm run proofticket:evidence -- --ticket-id <ticket-id>
 ```
 
+Run the local MCP adapter for agent runtimes:
+
+```bash
+npm run mcp:server
+```
+
+Adapter docs: `docs/MCP.md`.
+
 Default local database:
 
 ```env

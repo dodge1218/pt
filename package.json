@@ -26,6 +26,8 @@
     "proofticket:action": "node scripts/resolve-agent-action.mjs",
     "proofticket:receipt": "node scripts/inspect-agent-action.mjs",
     "proofticket:evidence": "node scripts/export-ticket-evidence.mjs",
+    "mcp:server": "node scripts/mcp-server.mjs",
+    "mcp:smoke": "node scripts/smoke-mcp-server.mjs --input | node scripts/mcp-server.mjs | node scripts/smoke-mcp-server.mjs",
     "github:webhook:demo": "node examples/github-webhook/send-demo-event.mjs",
     "openclaw:ticket": "node scripts/create-openclaw-ticket.mjs",
     "openclaw:action": "node scripts/resolve-agent-action.mjs"
