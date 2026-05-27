@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { queueTicketCreatedDeliveries } from "@/lib/ticket-delivery";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { redactRecord } from "@/lib/redact";
 import { z } from "zod";
 
 // ============================================
@@ -104,6 +105,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const data = createTicketSchema.parse(body);
+    const safeData = redactRecord(data);
 
     // If bridgeId provided, verify membership
     if (data.bridgeId) {
@@ -138,11 +140,11 @@ export async function POST(req: NextRequest) {
 
     const ticket = await prisma.ticket.create({
       data: {
-        title: data.title,
-        content: data.content,
+        title: safeData.title,
+        content: safeData.content,
         type: data.type,
         visibility,
-        tags: JSON.stringify(data.tags || []),
+        tags: JSON.stringify(safeData.tags || []),
         bridgeId: data.bridgeId,
         projectId: data.projectId,
         businessValue: data.businessValue,

@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { queueResponseCreatedDeliveries } from "@/lib/ticket-delivery";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { redactRecord } from "@/lib/redact";
 import { z } from "zod";
 
 // ============================================
@@ -62,10 +63,11 @@ export async function POST(
   try {
     const body = await req.json();
     const data = createResponseSchema.parse(body);
+    const safeData = redactRecord(data);
 
     const response = await prisma.response.create({
       data: {
-        content: data.content,
+        content: safeData.content,
         position: data.position,
         authorId: session.user.id,
         ticketId,

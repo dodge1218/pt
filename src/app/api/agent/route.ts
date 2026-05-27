@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { writeAuditLog } from "@/lib/audit";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { redactRecord } from "@/lib/redact";
 import {
   queueAgentActionPendingDelivery,
   queueResponseCreatedDeliveries,
@@ -221,9 +222,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: validation.error }, { status: validation.status });
     }
 
+    const safePayload = redactRecord(validation.payload);
     const payloadToStore = data.idempotencyKey
-      ? { ...validation.payload, _proofticket: { idempotencyKey: data.idempotencyKey } }
-      : validation.payload;
+      ? { ...safePayload, _proofticket: { idempotencyKey: data.idempotencyKey } }
+      : safePayload;
     const storedPayload = JSON.stringify(payloadToStore);
 
     if (data.idempotencyKey) {
@@ -339,9 +341,10 @@ export async function POST(req: NextRequest) {
         const originalMeta = originalPayload.ok && isRecord(originalPayload.value._proofticket)
           ? { _proofticket: originalPayload.value._proofticket }
           : {};
+        const safePayload = redactRecord(validation.payload);
         await prisma.agentAction.update({
           where: { id: data.actionId },
-          data: { payload: JSON.stringify({ ...validation.payload, ...originalMeta }) },
+          data: { payload: JSON.stringify({ ...safePayload, ...originalMeta }) },
         });
         revisedPayload = true;
       }
@@ -430,8 +433,8 @@ async function executeAgentAction(actionId: string, approverId: string) {
       const ticketPayload = ticketPayloadSchema.parse(stripProofTicketMeta(payload));
       const ticket = await prisma.ticket.create({
         data: {
-          title: ticketPayload.title,
-          content: ticketPayload.content,
+          title: redactRecord({ title: ticketPayload.title }).title as string,
+          content: redactRecord({ content: ticketPayload.content }).content as string,
           type: ticketPayload.type,
           visibility: ticketPayload.type === "PUBLIC" ? "PUBLIC" : ticketPayload.visibility,
           businessValue: ticketPayload.businessValue,
@@ -450,15 +453,15 @@ async function executeAgentAction(actionId: string, approverId: string) {
         await prisma.ticketArtifact.createMany({
           data: ticketPayload.artifacts.map((artifact) => ({
             kind: artifact.kind,
-            title: artifact.title,
-            uri: artifact.uri || null,
-            summary: artifact.summary || null,
-            metadata: JSON.stringify({
+            title: redactRecord({ title: artifact.title }).title as string,
+            uri: artifact.uri ? redactRecord({ uri: artifact.uri }).uri as string : null,
+            summary: artifact.summary ? redactRecord({ summary: artifact.summary }).summary as string : null,
+            metadata: JSON.stringify(redactRecord({
               ...artifact.metadata,
               source: artifact.metadata?.source || "agent_action",
               agentActionId: action.id,
               agentProxyId: action.agentProxyId,
-            }),
+            })),
             provider: artifact.provider || null,
             model: artifact.model || null,
             inputTokens: artifact.inputTokens,
@@ -490,7 +493,7 @@ async function executeAgentAction(actionId: string, approverId: string) {
 
       const response = await prisma.response.create({
         data: {
-          content: responsePayload.content,
+          content: redactRecord({ content: responsePayload.content }).content as string,
           position: responsePayload.position,
           ticketId: responsePayload.ticketId,
           createdByAgent: true,
@@ -516,7 +519,7 @@ async function executeAgentAction(actionId: string, approverId: string) {
       const commentPayload = commentPayloadSchema.parse(stripProofTicketMeta(payload));
       const comment = await prisma.comment.create({
         data: {
-          content: commentPayload.content,
+          content: redactRecord({ content: commentPayload.content }).content as string,
           responseId: commentPayload.responseId,
           authorId: action.agentProxy.ownerId,
           createdByAgent: true,

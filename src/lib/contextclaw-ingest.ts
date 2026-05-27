@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { writeAuditLog } from "@/lib/audit";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { redactRecord } from "@/lib/redact";
 import { z } from "zod";
 
 const actorSchema = z.object({
@@ -137,7 +138,8 @@ export async function ingestContextClawReceipt(req: NextRequest) {
     const ticket = await assertTicketWritable(data.ticketId, authResult.actorUserId);
     if (isNextResponse(ticket)) return ticket;
 
-    const metadata = {
+    const safeData = redactRecord(data);
+    const metadata = redactRecord({
       ...data.metadata,
       missionId: data.missionId,
       passId: data.passId,
@@ -150,14 +152,14 @@ export async function ingestContextClawReceipt(req: NextRequest) {
       excludedArtifactIds: data.excludedArtifactIds,
       budgetDecision: data.budgetDecision,
       qualityRiskNote: data.qualityRiskNote,
-    };
+    });
 
     const artifact = await prisma.ticketArtifact.create({
       data: {
         kind: "CONTEXTCLAW_RECEIPT",
-        title: data.title || `ContextClaw receipt ${data.receiptId || data.passId || data.missionId}`,
-        uri: data.uri || null,
-        summary: data.summary || null,
+        title: safeData.title || `ContextClaw receipt ${safeData.receiptId || safeData.passId || safeData.missionId}`,
+        uri: safeData.uri || null,
+        summary: safeData.summary || null,
         metadata: JSON.stringify(metadata),
         provider: data.provider || null,
         model: data.model || null,
@@ -204,7 +206,8 @@ export async function ingestContextClawManifest(req: NextRequest) {
     const ticket = await assertTicketWritable(data.ticketId, authResult.actorUserId);
     if (isNextResponse(ticket)) return ticket;
 
-    const metadata = {
+    const safeData = redactRecord(data);
+    const metadata = redactRecord({
       ...data.metadata,
       missionId: data.missionId,
       passId: data.passId,
@@ -216,14 +219,14 @@ export async function ingestContextClawManifest(req: NextRequest) {
       excludedArtifactIds: data.excludedArtifactIds,
       budgetDecision: data.budgetDecision,
       qualityRiskNote: data.qualityRiskNote,
-    };
+    });
 
     const artifact = await prisma.ticketArtifact.create({
       data: {
         kind: "CONTEXTCLAW_MANIFEST",
-        title: data.title || `ContextClaw manifest ${data.contextManifestId}`,
-        uri: data.uri || null,
-        summary: data.summary || null,
+        title: safeData.title || `ContextClaw manifest ${safeData.contextManifestId}`,
+        uri: safeData.uri || null,
+        summary: safeData.summary || null,
         metadata: JSON.stringify(metadata),
         inputTokens: data.estimatedInputTokens,
         outputTokens: data.estimatedOutputTokens,

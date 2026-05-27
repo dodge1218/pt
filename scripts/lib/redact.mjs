@@ -4,7 +4,7 @@ const SECRET_VALUE_PATTERNS = [
   /\bproofticket_[A-Za-z0-9._:-]{8,}/g,
   /\bgh[pousr]_[A-Za-z0-9_]{20,}/g,
   /\bsk-[A-Za-z0-9_-]{20,}/g,
-  /\b[A-Za-z0-9+/]{32,}={0,2}\b/g,
+  /\b(?=[A-Za-z0-9+/=]{32,}\b)(?=[A-Za-z0-9+/=]*[+/=])[A-Za-z0-9+/]{32,}={0,2}\b/g,
 ];
 
 export function redact(value) {

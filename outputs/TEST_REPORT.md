@@ -1,6 +1,6 @@
 # ProofTicket Test Report
 
-Updated: 2026-05-26
+Updated: 2026-05-27
 
 ## ProofTicket Finish Slice
 
@@ -50,6 +50,20 @@ Updated: 2026-05-26
 - The CLI writes an `agent.register.local_cli` audit entry.
 - Updated the five-minute demo to register a fresh local agent instead of relying on the seeded demo key.
 
+## Stored-Input Redaction Slice
+
+- Added `src/lib/redact.ts` for server-side stored-input redaction.
+- Added `npm run smoke:redaction` and `scripts/smoke-redaction.ts`.
+- Applied redaction before storage for:
+  - authenticated ticket, response, comment, and artifact creation,
+  - agent-submitted action payloads,
+  - agent approval payload revisions,
+  - OpenClaw/Hermes ticket webhook input,
+  - OpenClaw/Hermes terminal approval revisions,
+  - GitHub webhook mapped ticket/artifact content,
+  - ContextClaw receipt and manifest artifact content/metadata.
+- This is prospective only; it does not mutate existing database rows.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
@@ -71,6 +85,8 @@ Updated: 2026-05-26
 - `npm run proofticket:agent-register -- --help` passed.
 - `npm run proofticket:agent-register -- --owner-email builder@example.com --name "Smoke CLI Agent" --json` created a local agent with a one-time key.
 - `npm run proofticket:agent` created a pending action using the newly registered key.
+- `npm run smoke:redaction` passed.
+- `npx tsc --noEmit` passed.
 - `npm run preflight` passed with expected local placeholder warnings for GitHub OAuth/auth/API secrets.
 - `npm run build` passed with Next.js `15.5.18`.
 - `npm audit --audit-level=moderate --omit=dev` passed with `0 vulnerabilities`.

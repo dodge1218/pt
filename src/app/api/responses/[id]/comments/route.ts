@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { queueCommentCreatedDeliveries } from "@/lib/ticket-delivery";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { redactRecord } from "@/lib/redact";
 import { z } from "zod";
 
 const createCommentSchema = z.object({
@@ -69,9 +70,10 @@ export async function POST(
 
   try {
     const data = createCommentSchema.parse(await req.json());
+    const safeData = redactRecord(data);
     const comment = await prisma.comment.create({
       data: {
-        content: data.content,
+        content: safeData.content,
         responseId,
         authorId: session.user.id,
       },

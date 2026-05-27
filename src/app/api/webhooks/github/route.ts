@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { writeAuditLog } from "@/lib/audit";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { queueTicketCreatedDeliveries } from "@/lib/ticket-delivery";
+import { redactRecord } from "@/lib/redact";
 
 type GitHubPayload = {
   action?: string;
@@ -86,6 +87,7 @@ export async function POST(req: NextRequest) {
   if (!mapped) {
     return NextResponse.json({ status: "ignored", event });
   }
+  const safeMapped = redactRecord(mapped);
 
   const idempotencyKey = `github:${delivery}`;
   const existing = await prisma.auditLog.findFirst({
@@ -106,11 +108,11 @@ export async function POST(req: NextRequest) {
 
   const ticket = await prisma.ticket.create({
     data: {
-      title: mapped.title,
-      content: mapped.content,
-      type: mapped.type,
+      title: safeMapped.title,
+      content: safeMapped.content,
+      type: safeMapped.type,
       visibility: "PRIVATE",
-      tags: JSON.stringify(["github", event, mapped.kind]),
+      tags: JSON.stringify(["github", event, safeMapped.kind]),
       createdByAgent: true,
       approvedBy: actor.id,
       approvedAt: new Date(),
@@ -119,7 +121,7 @@ export async function POST(req: NextRequest) {
   });
 
   await prisma.ticketArtifact.createMany({
-    data: mapped.artifacts.filter(isArtifact).map((artifact) => ({
+    data: safeMapped.artifacts.filter(isArtifact).map((artifact) => ({
       kind: "LINK",
       title: artifact.title,
       uri: artifact.uri,
@@ -154,7 +156,7 @@ export async function POST(req: NextRequest) {
       delivery,
       repository: payload.repository?.full_name,
       action: payload.action,
-      kind: mapped.kind,
+      kind: safeMapped.kind,
     },
     req,
   });

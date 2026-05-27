@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { writeAuditLog } from "@/lib/audit";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { redactRecord } from "@/lib/redact";
 import { z } from "zod";
 
 const artifactSchema = z.object({
@@ -108,13 +109,14 @@ export async function POST(
   try {
     const body = await req.json();
     const data = artifactSchema.parse(body);
+    const safeData = redactRecord(data);
     const artifact = await prisma.ticketArtifact.create({
       data: {
-        kind: data.kind,
-        title: data.title,
-        uri: data.uri || null,
-        summary: data.summary || null,
-        metadata: JSON.stringify(data.metadata || {}),
+        kind: safeData.kind,
+        title: safeData.title,
+        uri: safeData.uri || null,
+        summary: safeData.summary || null,
+        metadata: JSON.stringify(safeData.metadata || {}),
         provider: data.provider || null,
         model: data.model || null,
         inputTokens: data.inputTokens,

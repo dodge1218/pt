@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { writeAuditLog } from "@/lib/audit";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { redactRecord } from "@/lib/redact";
 import { queueTicketCreatedDeliveries } from "@/lib/ticket-delivery";
 import { z } from "zod";
 
@@ -84,10 +85,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: scopeCheck.error }, { status: scopeCheck.status });
     }
 
+    const safeData = redactRecord(data);
     const ticket = await prisma.ticket.create({
       data: {
-        title: data.title,
-        content: data.content,
+        title: safeData.title,
+        content: safeData.content,
         type: data.type,
         visibility: data.type === "PUBLIC" ? "PUBLIC" : data.visibility,
         tags: JSON.stringify(data.tags || []),
@@ -102,20 +104,20 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    if (data.artifacts?.length) {
+    if (safeData.artifacts?.length) {
       await prisma.ticketArtifact.createMany({
-        data: data.artifacts.map((artifact) => ({
+        data: safeData.artifacts.map((artifact) => ({
           kind: artifact.kind,
           title: artifact.title,
           uri: artifact.uri || null,
           summary: artifact.summary || null,
-          metadata: JSON.stringify({
+          metadata: JSON.stringify(redactRecord({
             ...artifact.metadata,
-            source: data.source,
-            missionId: data.missionId,
-            passId: data.passId,
-            terminalSessionId: data.terminalSessionId,
-          }),
+            source: safeData.source,
+            missionId: safeData.missionId,
+            passId: safeData.passId,
+            terminalSessionId: safeData.terminalSessionId,
+          })),
           provider: artifact.provider || null,
           model: artifact.model || null,
           inputTokens: artifact.inputTokens,

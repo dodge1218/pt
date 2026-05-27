@@ -98,14 +98,16 @@ Acceptance:
 
 ## Ticket 5: Secret Redaction
 
+Status: shipped in stored-input redaction slice.
+
 Goal: reduce accidental leakage in tickets/artifacts before broader demos.
 
 Build:
 
-- shared redaction helper
-- apply to terminal-submitted ticket content/artifact summaries
-- apply to webhook-created content where feasible
-- tests or smoke fixtures for common API keys/tokens
+- [x] shared redaction helper
+- [x] apply to terminal-submitted ticket content/artifact summaries
+- [x] apply to webhook-created content where feasible
+- [x] tests or smoke fixtures for common API keys/tokens
 
 Acceptance:
 
