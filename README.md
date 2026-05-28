@@ -225,6 +225,7 @@ The latest local verification report is in `outputs/TEST_REPORT.md`.
 Deployment notes are in `docs/DEPLOYMENT.md`.
 Hosted alpha runbook is in `docs/ALPHA-DEPLOYMENT.md`.
 API reference is in `docs/API.md`.
+Submission packet is in `docs/SUBMISSION-PACKET.md`.
 
 ## API Sketch
 

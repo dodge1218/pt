@@ -153,6 +153,14 @@ Updated: 2026-05-27
 - Added demo readiness to CI.
 - Marked Ticket 15 shipped in `NEXT_TICKETS.md`.
 
+## Submission Packet Slice
+
+- Added `docs/SUBMISSION-PACKET.md`.
+- The packet includes one-liner, short description, demo story, built-feature list, claims boundary, judge-relevant differentiators, asset checklist, and verification commands.
+- Added the packet to `README.md`.
+- Added the packet to the demo readiness gate.
+- Marked Ticket 16 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.

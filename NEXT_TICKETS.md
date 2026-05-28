@@ -317,6 +317,27 @@ Acceptance:
 - [x] command fails on missing demo-critical files
 - [x] command fails on forbidden private/stale strings
 
+## Ticket 16: Submission Packet
+
+Status: shipped as submission handoff slice.
+
+Goal: make the project easy to present without inventing claims during submission.
+
+Build:
+
+- [x] one-liner and short description
+- [x] five-minute demo story
+- [x] built-feature list
+- [x] claims boundary
+- [x] asset checklist
+- [x] verification command set
+
+Acceptance:
+
+- [x] no public launch overclaim
+- [x] no private names or local paths
+- [x] included in demo readiness gate
+
 ## Build Rule
 
 Ship one ticket at a time. For each ticket:

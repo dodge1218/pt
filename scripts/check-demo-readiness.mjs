@@ -15,6 +15,7 @@ const requiredFiles = [
   "docs/PUBLIC-RELEASE-CHECKLIST.md",
   "docs/DOCTRINE.md",
   "docs/AGENT-HANDOFF-PROOFTICKET.md",
+  "docs/SUBMISSION-PACKET.md",
   "examples/five-minute-demo/README.md",
   "examples/five-minute-demo/agent-ticket-with-evidence.json",
   "examples/five-minute-demo/print-demo-commands.sh",
