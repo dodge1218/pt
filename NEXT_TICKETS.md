@@ -357,6 +357,27 @@ Acceptance:
 - [x] no external-hosting requirement
 - [x] missing baseline screenshots fail readiness
 
+## Ticket 18: Devpost Draft
+
+Status: shipped as submission-copy slice.
+
+Goal: make external submission copy ready without inventing claims under time pressure.
+
+Build:
+
+- [x] Devpost-style project name and tagline
+- [x] inspiration/problem copy
+- [x] what-it-does section
+- [x] how-it-was-built section
+- [x] challenges, accomplishments, lessons, next steps
+- [x] built-with list and demo commands
+
+Acceptance:
+
+- [x] no deadline or prize claims
+- [x] no public launch overclaim
+- [x] included in demo readiness gate
+
 ## Build Rule
 
 Ship one ticket at a time. For each ticket:

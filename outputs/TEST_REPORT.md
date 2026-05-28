@@ -169,6 +169,14 @@ Updated: 2026-05-27
 - Added baseline screenshot files to `npm run demo:readiness`.
 - Marked Ticket 17 shipped in `NEXT_TICKETS.md`.
 
+## Devpost Draft Slice
+
+- Added `docs/DEVPOST-DRAFT.md`.
+- Draft includes project name, tagline, inspiration, what it does, how it was built, challenges, accomplishments, lessons, next steps, built-with list, and demo commands.
+- Linked the draft from README and the submission packet.
+- Added the draft to `npm run demo:readiness`.
+- Marked Ticket 18 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.

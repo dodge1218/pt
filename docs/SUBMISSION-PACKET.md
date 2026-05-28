@@ -85,6 +85,7 @@ Required before external submission:
 
 - README link.
 - Five-minute demo commands.
+- Devpost draft: `docs/DEVPOST-DRAFT.md`.
 - Current asset inventory: `docs/DEMO-ASSETS.md`.
 - One screenshot of dashboard or ticket detail.
 - One screenshot of agent queue or receipt.
