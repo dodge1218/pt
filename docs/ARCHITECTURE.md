@@ -98,9 +98,9 @@ POST   /api/webhooks/a2a           — A2A agent discovery
 ```
 proofticket/
 ├── docs/                     # Product + technical docs
-│   ├── VISION.md
 │   ├── DOCTRINE.md
-│   ├── MARKET-WEDGE.md
+│   ├── ARTICLE.md
+│   ├── DEVPOST-DRAFT.md
 │   ├── PUBLIC-RELEASE-CHECKLIST.md
 │   └── ARCHITECTURE.md
 ├── prisma/

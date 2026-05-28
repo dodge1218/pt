@@ -67,7 +67,7 @@ Implemented:
 - ContextClaw receipt and manifest ingestion
 - local agent action receipt inspector
 - deterministic ticket evidence bundle export
-- signed OpenClaw/Hermes webhook ingestion
+- signed machine-webhook ingestion
 - signed GitHub PR/push/check-run webhook ingestion
 - local MCP adapter for agent runtimes
 - invite-only sign-in gate for hosted alpha
@@ -184,7 +184,7 @@ Optional for ContextClaw ingestion:
 PROOFTICKET_CONTEXTCLAW_SECRET="..."
 ```
 
-Optional for OpenClaw/Hermes ticket ingestion:
+Optional for signed machine-webhook ticket ingestion:
 
 ```env
 PROOFTICKET_OPENCLAW_SECRET="..."
@@ -213,9 +213,15 @@ Demo auth is for local demos and is rejected by production preflight.
 
 ## Verification
 
+ProofTicket is tested like a small DevOps tool, not just clicked through once. The repo has local readiness checks, schema validation for SQLite and Postgres, redaction smoke coverage, MCP adapter smoke coverage, production-shaped preflight, dependency audit, and a production build gate.
+
 ```bash
+npm run demo:readiness
 npm run preflight
 npx prisma validate
+DATABASE_URL="postgresql://proofticket:proofticket@example.com:5432/proofticket" npx prisma validate --schema prisma/schema.postgres.prisma
+npm run mcp:smoke
+npm run smoke:redaction
 npm run build
 npm audit --audit-level=moderate --omit=dev
 ```
@@ -227,6 +233,7 @@ Hosted alpha runbook is in `docs/ALPHA-DEPLOYMENT.md`.
 API reference is in `docs/API.md`.
 Submission packet is in `docs/SUBMISSION-PACKET.md`.
 Devpost draft is in `docs/DEVPOST-DRAFT.md`.
+Public article draft is in `docs/ARTICLE.md`.
 Demo asset inventory is in `docs/DEMO-ASSETS.md`.
 
 ## API Sketch
@@ -338,7 +345,7 @@ PATCH /api/proofticket/queue
 POST /api/proofticket/queue
 ```
 
-OpenClaw/Hermes ticket webhook:
+Machine ticket webhook:
 
 ```http
 POST /api/webhooks/openclaw
@@ -356,7 +363,7 @@ Content-Type: application/json
 }
 ```
 
-OpenClaw/Hermes local sender:
+Machine webhook local sender:
 
 ```bash
 npm run openclaw:ticket -- \
@@ -380,7 +387,7 @@ echo '{"artifacts":[{"kind":"NOTE","title":"Terminal trace","summary":"Stopped b
     --content "Trace is attached."
 ```
 
-OpenClaw/Hermes agent action approval also works through the compatibility alias:
+Agent action approval also works through the compatibility alias:
 
 ```bash
 npm run openclaw:action -- \

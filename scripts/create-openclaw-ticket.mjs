@@ -36,7 +36,7 @@ const baseUrl =
 const secret = args.secret || process.env.PROOFTICKET_OPENCLAW_SECRET;
 
 if (!secret) {
-  console.error("PROOFTICKET_OPENCLAW_SECRET is required to create an OpenClaw/Hermes ticket.");
+  console.error("PROOFTICKET_OPENCLAW_SECRET is required to create a machine-webhook ticket.");
   process.exit(1);
 }
 
@@ -169,7 +169,7 @@ function compact(value) {
 }
 
 function printHelp() {
-  console.log(`Create a ProofTicket ticket through the signed OpenClaw/Hermes webhook.
+  console.log(`Create a ProofTicket ticket through the signed machine webhook.
 
 Usage:
   npm run openclaw:ticket -- --idempotency-key session:pass:handoff \\

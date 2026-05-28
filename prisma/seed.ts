@@ -383,7 +383,7 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
       update: {
         ticketId: branchReviewTicket.id,
         createdById: reviewer.id,
-        title: "OpenClaw handoff — widget parser review",
+        title: "Agent handoff - widget parser review",
         uri: "artifact://openclaw/session/widget-parser/pass-002",
         summary: "Terminal manager captured the branch, files touched, test result, and requested review state.",
         metadata: JSON.stringify({
@@ -397,7 +397,7 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
       create: {
         id: "seed-artifact-openclaw-branch-handoff",
         kind: "LINK",
-        title: "OpenClaw handoff — widget parser review",
+        title: "Agent handoff - widget parser review",
         uri: "artifact://openclaw/session/widget-parser/pass-002",
         summary: "Terminal manager captured the branch, files touched, test result, and requested review state.",
         metadata: JSON.stringify({
@@ -461,7 +461,7 @@ What's yours? Bonus points if it's free or has a generous free tier.`,
     });
   }
 
-  console.log("  ✅ ContextClaw/OpenClaw demo artifacts created");
+  console.log("  Context and agent demo artifacts created");
 
   // Add a response from Reviewer Two
   const decisionTicket = await prisma.ticket.findFirst({

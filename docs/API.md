@@ -221,7 +221,7 @@ npm run proofticket:action -- --decision approve --action-id agent_action_id --a
 npm run proofticket:action -- --decision reject --action-id agent_action_id --actor-email builder@example.com
 ```
 
-## OpenClaw/Hermes Ticket Webhook
+## Machine Ticket Webhook
 
 ```http
 POST /api/webhooks/openclaw

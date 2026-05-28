@@ -13,7 +13,7 @@ ProofTicket now has:
 - bridge/project scoping,
 - first-class ticket artifacts,
 - ContextClaw receipt ingestion/display,
-- OpenClaw/Hermes ticket webhook,
+- signed machine-webhook ingestion,
 - generic agent action CLI,
 - terminal list/approve/reject commands,
 - delivery queue worker.
@@ -132,7 +132,7 @@ Build:
   - health
   - agent create action
   - terminal list/approve/reject
-  - OpenClaw/Hermes ticket webhook
+  - signed machine-webhook ingestion
   - GitHub webhook
   - ContextClaw receipt/manifest ingest
   - ticket artifacts
@@ -377,6 +377,27 @@ Acceptance:
 - [x] no deadline or prize claims
 - [x] no public launch overclaim
 - [x] included in demo readiness gate
+
+## Ticket 19: Public GitHub and Article Prep
+
+Status: shipped as public-surface prep.
+
+Goal: make the repository and article draft credible without leaking private planning material or overclaiming readiness.
+
+Build:
+
+- [x] public article draft
+- [x] README verification copy with DevOps-level command set
+- [x] public release checklist refresh
+- [x] public-facing machine-webhook wording
+- [x] old strategy/planning docs removed from the public tree
+
+Acceptance:
+
+- [x] article is linked from README
+- [x] included in demo readiness gate
+- [x] no public launch overclaim
+- [x] repo visibility remains private until repository rename/public flip is explicit
 
 ## Build Rule
 

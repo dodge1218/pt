@@ -40,7 +40,7 @@ PROOFTICKET_CRON_SECRET="long-random-token-for-delivery-processing"
 PROOFTICKET_CONTEXTCLAW_SECRET="long-random-token-for-contextclaw-ingest"
 PROOFTICKET_BASE_URL="https://your-domain.example"
 PROOFTICKET_AGENT_ACTION_SECRET="long-random-token-for-agent-action-review"
-PROOFTICKET_OPENCLAW_SECRET="long-random-token-for-openclaw-hermes-webhooks"
+PROOFTICKET_OPENCLAW_SECRET="long-random-token-for-machine-webhooks"
 PROOFTICKET_GITHUB_WEBHOOK_SECRET="long-random-token-for-github-webhooks"
 ENABLE_DEMO_AUTH="false"
 ```
@@ -49,11 +49,11 @@ ENABLE_DEMO_AUTH="false"
 `PROOFTICKET_BASE_URL` is used by `npm run queue:process` when cron runs from a shell.
 `PROOFTICKET_CONTEXTCLAW_SECRET` protects machine-to-machine ContextClaw ingestion at `POST /api/contextclaw/receipts`, `POST /api/contextclaw/manifests`, and `POST /api/webhooks/contextclaw`.
 `PROOFTICKET_AGENT_ACTION_SECRET` protects terminal listing and approval at `GET/POST /api/webhooks/openclaw/agent-actions`. If unset, ProofTicket falls back to `PROOFTICKET_OPENCLAW_SECRET` for backward compatibility.
-`PROOFTICKET_OPENCLAW_SECRET` protects `POST /api/webhooks/openclaw` for OpenClaw/Hermes ticket creation.
+`PROOFTICKET_OPENCLAW_SECRET` protects `POST /api/webhooks/openclaw` for signed machine-webhook ticket creation.
 `PROOFTICKET_GITHUB_WEBHOOK_SECRET` protects `POST /api/webhooks/github` for GitHub event ingestion.
 `ENABLE_DEMO_AUTH` may be `true` for local demos, but production preflight rejects it.
 
-## OpenClaw/Hermes Sender
+## Machine Webhook Sender
 
 Run this from a terminal manager or proceed loop when a pass should become a durable ProofTicket handoff:
 

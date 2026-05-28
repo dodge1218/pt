@@ -43,7 +43,7 @@ bash examples/five-minute-demo/print-demo-commands.sh
 - Deterministic ticket evidence export as JSON/Markdown.
 - Authenticated account data export.
 - Account deletion request capture for alpha operations.
-- Signed OpenClaw/Hermes webhook ingestion.
+- Signed machine-webhook ingestion.
 - Signed GitHub PR/push/check-run webhook ingestion.
 - Local MCP stdio adapter for agent runtimes.
 - Local Postgres Docker Compose profile.
@@ -86,6 +86,7 @@ Required before external submission:
 - README link.
 - Five-minute demo commands.
 - Devpost draft: `docs/DEVPOST-DRAFT.md`.
+- Public article draft: `docs/ARTICLE.md`.
 - Current asset inventory: `docs/DEMO-ASSETS.md`.
 - One screenshot of dashboard or ticket detail.
 - One screenshot of agent queue or receipt.

@@ -383,7 +383,7 @@ model UserInterest {
 
 model AgentProxy {
   id          String  @id @default(cuid())
-  name        String // e.g. "Conductor", "Hermes"
+  name        String // e.g. "Conductor", "Review Agent"
   description String?
 
   // Auth

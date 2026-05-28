@@ -58,8 +58,8 @@ Updated: 2026-05-27
   - authenticated ticket, response, comment, and artifact creation,
   - agent-submitted action payloads,
   - agent approval payload revisions,
-  - OpenClaw/Hermes ticket webhook input,
-  - OpenClaw/Hermes terminal approval revisions,
+  - machine ticket webhook input,
+  - terminal approval revisions,
   - GitHub webhook mapped ticket/artifact content,
   - ContextClaw receipt and manifest artifact content/metadata.
 - This is prospective only; it does not mutate existing database rows.
@@ -71,7 +71,7 @@ Updated: 2026-05-27
   - health,
   - agent registration/action creation,
   - terminal action list/approve/reject,
-  - OpenClaw/Hermes ticket webhook,
+  - machine ticket webhook,
   - GitHub webhook,
   - ContextClaw receipt/manifest ingest,
   - ticket artifacts,
@@ -176,6 +176,16 @@ Updated: 2026-05-27
 - Linked the draft from README and the submission packet.
 - Added the draft to `npm run demo:readiness`.
 - Marked Ticket 18 shipped in `NEXT_TICKETS.md`.
+
+## Public GitHub and Article Prep Slice
+
+- Added `docs/ARTICLE.md` as a public article draft.
+- Linked the article from README and the submission packet.
+- Expanded README verification copy with the full local proof command set.
+- Added the article to `npm run demo:readiness`.
+- Removed old planning docs from the public tree.
+- Reworded public-facing webhook copy as signed machine-webhook ingestion.
+- Marked Ticket 19 shipped in `NEXT_TICKETS.md`.
 
 ## Verification
 

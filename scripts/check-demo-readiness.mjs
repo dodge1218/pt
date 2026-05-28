@@ -17,6 +17,7 @@ const requiredFiles = [
   "docs/AGENT-HANDOFF-PROOFTICKET.md",
   "docs/SUBMISSION-PACKET.md",
   "docs/DEVPOST-DRAFT.md",
+  "docs/ARTICLE.md",
   "docs/DEMO-ASSETS.md",
   "examples/five-minute-demo/README.md",
   "examples/five-minute-demo/agent-ticket-with-evidence.json",

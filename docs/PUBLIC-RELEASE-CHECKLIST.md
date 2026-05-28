@@ -6,7 +6,7 @@ ProofTicket can remain private while the implementation matures. Before making i
 
 ## Must Be Clean Before Public
 
-- README describes ProofTicket only, not the whole local OpenClaw workspace.
+- README describes ProofTicket only, not the whole local workspace.
 - No personal names in seed data, docs, screenshots, examples, or app copy.
 - No private emails, partner names, internal project names, or active business strategy.
 - No "50k stars", career-positioning, or public-clout language in public docs.
@@ -21,11 +21,8 @@ ProofTicket can remain private while the implementation matures. Before making i
 
 ## Docs To Review Before Public
 
-These are useful private planning docs, but should be reviewed, rewritten, moved, or omitted before a public launch:
+These are useful private planning surfaces, but should be reviewed, rewritten, moved, or omitted before a public launch:
 
-- `docs/MARKET-AND-PORTFOLIO-NOTE.md`
-- `docs/MARKET-WEDGE.md`
-- `docs/INTEROPERABILITY-ROADMAP.md`
 - `prisma/seed.ts`
 
 ## Public-Ready Positioning
@@ -69,7 +66,7 @@ Before inviting testers:
 - Set `PROOFTICKET_ALLOWED_EMAILS` to named tester emails.
 - Run production preflight with hosted URLs and Postgres `DATABASE_URL`.
 - Disable `ENABLE_DEMO_AUTH`.
-- Use separate secrets for cron, agent action review, ContextClaw, OpenClaw/Hermes, and GitHub webhooks.
+- Use separate secrets for cron, agent action review, ContextClaw, machine webhooks, and GitHub webhooks.
 - Run one manual ticket -> agent action -> approval -> evidence export flow on hosted data.
 - Document how deletion requests will be handled manually until self-serve deletion exists.
 
