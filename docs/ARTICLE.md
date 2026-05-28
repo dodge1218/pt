@@ -4,6 +4,8 @@ AI agents are getting better at doing pieces of developer work, but the surround
 
 ProofTicket is a local-first ticketing surface for human and AI coworking. The core idea is simple: agent work should become structured project state before it becomes trusted project state.
 
+The public repo is here: https://github.com/dodge1218/proofticket
+
 Instead of treating an agent like another chat participant, ProofTicket treats the agent like an operational actor. It can submit a typed action. The action is validated. A human can approve or reject it. If approved, the result becomes a durable ticket, response, comment, artifact, audit entry, or evidence bundle that can be inspected later.
 
 ## Why Tickets, Not Chat
