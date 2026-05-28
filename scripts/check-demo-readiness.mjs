@@ -16,6 +16,7 @@ const requiredFiles = [
   "docs/DOCTRINE.md",
   "docs/AGENT-HANDOFF-PROOFTICKET.md",
   "docs/SUBMISSION-PACKET.md",
+  "docs/DEMO-ASSETS.md",
   "examples/five-minute-demo/README.md",
   "examples/five-minute-demo/agent-ticket-with-evidence.json",
   "examples/five-minute-demo/print-demo-commands.sh",
@@ -29,6 +30,9 @@ const requiredFiles = [
   "scripts/inspect-agent-action.mjs",
   "scripts/export-ticket-evidence.mjs",
   "scripts/list-deletion-requests.mjs",
+  "outputs/ui-screenshots/home.png",
+  "outputs/ui-screenshots/home-mobile.png",
+  "outputs/ui-screenshots/login.png",
 ];
 
 const requiredScripts = [

@@ -226,6 +226,7 @@ Deployment notes are in `docs/DEPLOYMENT.md`.
 Hosted alpha runbook is in `docs/ALPHA-DEPLOYMENT.md`.
 API reference is in `docs/API.md`.
 Submission packet is in `docs/SUBMISSION-PACKET.md`.
+Demo asset inventory is in `docs/DEMO-ASSETS.md`.
 
 ## API Sketch
 

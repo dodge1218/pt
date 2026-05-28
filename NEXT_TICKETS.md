@@ -338,6 +338,25 @@ Acceptance:
 - [x] no private names or local paths
 - [x] included in demo readiness gate
 
+## Ticket 17: Demo Asset Manifest
+
+Status: shipped as asset inventory slice.
+
+Goal: make current visual assets explicit and catch missing baseline screenshots.
+
+Build:
+
+- [x] `docs/DEMO-ASSETS.md`
+- [x] list current screenshot files and purpose
+- [x] note missing workflow screenshots before external submission
+- [x] include existing screenshots in demo readiness gate
+
+Acceptance:
+
+- [x] no private screenshot claims
+- [x] no external-hosting requirement
+- [x] missing baseline screenshots fail readiness
+
 ## Build Rule
 
 Ship one ticket at a time. For each ticket:

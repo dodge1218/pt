@@ -85,6 +85,7 @@ Required before external submission:
 
 - README link.
 - Five-minute demo commands.
+- Current asset inventory: `docs/DEMO-ASSETS.md`.
 - One screenshot of dashboard or ticket detail.
 - One screenshot of agent queue or receipt.
 - One exported evidence bundle sample with private data removed.

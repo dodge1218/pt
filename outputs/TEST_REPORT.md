@@ -161,6 +161,14 @@ Updated: 2026-05-27
 - Added the packet to the demo readiness gate.
 - Marked Ticket 16 shipped in `NEXT_TICKETS.md`.
 
+## Demo Asset Manifest Slice
+
+- Added `docs/DEMO-ASSETS.md`.
+- Documented existing desktop, mobile, and login screenshots.
+- Listed remaining workflow screenshots useful before external submission.
+- Added baseline screenshot files to `npm run demo:readiness`.
+- Marked Ticket 17 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
