@@ -17,6 +17,7 @@ ProofTicket can remain private while the implementation matures. Before making i
 - `npm audit --omit=dev` reports zero vulnerabilities or documented exceptions.
 - `npm run build` passes.
 - `npx prisma validate` passes.
+- `npm run demo:readiness` passes.
 
 ## Docs To Review Before Public
 

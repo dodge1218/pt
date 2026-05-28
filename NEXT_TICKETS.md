@@ -297,6 +297,26 @@ Acceptance:
 - [x] CLI reads existing audit log state
 - [x] no hosted admin privileges are introduced
 
+## Ticket 15: Demo Readiness Gate
+
+Status: shipped as local readiness gate slice.
+
+Goal: make public demo/submission drift easy to catch.
+
+Build:
+
+- [x] `npm run demo:readiness`
+- [x] required docs/examples/scripts presence check
+- [x] required package-script check
+- [x] private/stale string scan
+- [x] CI coverage
+
+Acceptance:
+
+- [x] no app server required
+- [x] command fails on missing demo-critical files
+- [x] command fails on forbidden private/stale strings
+
 ## Build Rule
 
 Ship one ticket at a time. For each ticket:

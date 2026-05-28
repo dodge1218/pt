@@ -174,5 +174,6 @@ Ship one ticket at a time:
 3. Keep local demo runnable.
 4. Add or update docs with every workflow change.
 5. Run `npm run preflight`, `npx prisma validate`, `npm run build`, and audit.
-6. Update `outputs/TEST_REPORT.md`.
-7. Do not introduce private names, secrets, or local-only strategy into public demo artifacts.
+6. Run `npm run demo:readiness` before any public demo or submission.
+7. Update `outputs/TEST_REPORT.md`.
+8. Do not introduce private names, secrets, or local-only strategy into public demo artifacts.

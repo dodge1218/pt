@@ -68,6 +68,9 @@ jobs:
           PROOFTICKET_ALLOWED_EMAILS: builder@example.com
         run: npm run preflight:production
 
+      - name: Demo readiness
+        run: npm run demo:readiness
+
       - name: Build
         run: npm run build
 

@@ -6,6 +6,7 @@
     "prebuild": "node scripts/preflight.mjs",
     "preflight": "node scripts/preflight.mjs",
     "preflight:production": "NODE_ENV=production node scripts/preflight.mjs --production",
+    "demo:readiness": "node scripts/check-demo-readiness.mjs",
     "smoke:redaction": "tsx scripts/smoke-redaction.ts",
     "setup:local": "node scripts/setup-local.mjs",
     "setup:postgres": "node scripts/setup-postgres-local.mjs",

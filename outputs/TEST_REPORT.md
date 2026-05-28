@@ -144,6 +144,15 @@ Updated: 2026-05-27
 - Documented the operator command in API and alpha deployment docs.
 - Marked Ticket 14 shipped in `NEXT_TICKETS.md`.
 
+## Demo Readiness Gate Slice
+
+- Added `npm run demo:readiness`.
+- Added `scripts/check-demo-readiness.mjs`.
+- The readiness gate checks required public demo docs, examples, scripts, and package scripts.
+- The readiness gate runs the private/stale string scan used during local verification.
+- Added demo readiness to CI.
+- Marked Ticket 15 shipped in `NEXT_TICKETS.md`.
+
 ## Verification
 
 - `npm run proofticket:receipt -- --help` passed.
