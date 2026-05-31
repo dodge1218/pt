@@ -113,7 +113,7 @@ export function TicketForm({ projectId }: TicketFormProps) {
         <button type="submit" disabled={loading}
           className="px-6 py-2 rounded-md bg-[hsl(var(--primary))] text-white text-sm font-medium hover:opacity-90 transition disabled:opacity-50"
         >
-          {loading ? "Creating..." : "Create Ticket"}
+          {loading ? "Sending..." : "Send ticket"}
         </button>
       </div>
     </form>

@@ -133,7 +133,7 @@ export default async function DashboardPage() {
             href="/tickets/new"
             className="px-4 py-2 rounded-md bg-[hsl(var(--primary))] text-white text-sm font-medium hover:opacity-90 transition"
           >
-            + New Ticket
+            Send ticket
           </Link>
         </div>
 

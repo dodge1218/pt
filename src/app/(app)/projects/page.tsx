@@ -32,12 +32,12 @@ export default async function ProjectsPage() {
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Projects</h1>
-        <button
+        <Link
+          href="/projects/new"
           className="px-4 py-2 rounded-md bg-[hsl(var(--primary))] text-white text-sm font-medium hover:opacity-90 transition"
-          onClick={() => {}}
         >
-          + New Project
-        </button>
+          New project
+        </Link>
       </div>
 
       {projects.length === 0 ? (
