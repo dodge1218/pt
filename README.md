@@ -2,89 +2,60 @@
 
 Structured handoffs and proof-of-work receipts for human and AI coworkers.
 
-ProofTicket is an experimental A2A ticketing system for teams that already use coding agents, shell agents, background jobs, and review queues. It is not a chatbot, a Jira clone, or another "AI project manager" wrapper. The core primitive is a durable work ticket that can be read by a person, a local agent, or a remote agent without replaying an entire chat transcript.
+ProofTicket is a local-first ticketing surface for teams that use coding agents, shell agents, background jobs, review queues, or other machine actors. It turns agent work into scoped tickets, human approvals, durable receipts, artifacts, and exportable evidence bundles.
 
-The current app is a local-first Next.js prototype. It is meant to prove the workflow before adding hosted multi-tenant infrastructure.
+It is not a chatbot, a Jira clone, or an "AI project manager" wrapper. The core primitive is a work ticket that can be reviewed later without replaying an entire chat transcript or terminal session.
 
-## Why This Exists
+## Status
 
-Most agent workflows break in the same places:
+ProofTicket is a finished prototype and hosted-alpha candidate. It is ready for local demos and review, but it is not presented as a public SaaS, compliance product, or enterprise RBAC system.
 
-- context lives in a terminal scrollback or chat session
-- decisions are mixed with brainstorming
-- agents can act, but humans cannot audit intent quickly
-- handoffs require pasting large context blobs into another model
-- cost, approvals, and provenance are afterthoughts
-- "agent collaboration" usually means another unstructured message bus
+Built:
 
-ProofTicket treats agent work like operations work: typed tickets, scoped permissions, approvals, delivery windows, durable receipts, and exportable evidence.
+- Next.js 15 app with Prisma models for users, tickets, bridges, projects, agents, deliveries, audit logs, and artifacts.
+- GitHub OAuth through Auth.js / NextAuth.
+- Structured ticket, response, comment, project, bridge, and public-board flows.
+- Agent registration with one-time API keys and SHA-256 key digests at rest.
+- Agent action queue with approve/reject flow.
+- Agent action receipts and deterministic ticket evidence exports.
+- Signed machine-webhook and GitHub PR/push/check-run ingestion.
+- Local MCP stdio adapter for agent runtimes.
+- SQLite quickstart plus local Postgres Docker Compose profile.
+- Hosted-alpha invite gate, account export, and deletion-request capture.
+- CI/local checks for build, Prisma, audit, redaction smoke, MCP smoke, production preflight, and demo readiness.
 
-## What ProofTicket Does
+Not built yet:
 
-- **Tickets**: structured units of work with type, status, visibility, tags, author, bridge, and project context.
-- **Responses**: explicit positions such as agree, disagree, counter-proposal, neutral, or question.
-- **Bridges**: private coordination spaces for a person, another person, and their agents.
-- **Agent proxies**: API-keyed agents can request ticket, response, or comment actions.
-- **Human approval queue**: agent-created work is queued before it becomes durable shared state.
-- **Proof receipts**: agent actions and ticket artifacts can be inspected as evidence.
-- **Evidence bundles**: tickets can be exported as deterministic JSON and Markdown bundles.
-- **Smart delivery**: updates are queued and delivered according to each user's active window.
-- **Public board**: public tickets for discovery and collaboration.
-- **GitHub event ingestion**: signed PR, push, and check-run events can become ProofTicket tickets.
+- hosted multi-tenant launch
+- org-level RBAC and admin controls
+- GitHub issue/PR write-back
+- billing, payouts, or compliance certification
+- production zero-knowledge proofs
 
-## The A2A Shape
+## Why It Exists
 
-ProofTicket is designed around a simple contract:
+Agent workflows usually fail at the handoff layer:
+
+- context lives in terminal scrollback or chat history,
+- decisions are mixed with brainstorming,
+- humans cannot quickly audit what was requested or approved,
+- evidence is scattered across logs, screenshots, files, and branches,
+- agents can act, but their authority boundaries are unclear.
+
+ProofTicket treats agent work like operations work: typed requests, scoped permissions, explicit approval, delivery windows, durable receipts, and exportable evidence.
+
+## Core Workflow
 
 1. An actor submits a typed action.
 2. ProofTicket validates scope and payload.
 3. The action becomes a pending ticketed event.
-4. A human or trusted policy approves it.
-5. The result is written as durable project context.
-6. Other humans or agents consume the ticket later with minimal context replay.
+4. A human or trusted policy approves or rejects it.
+5. Approved work becomes durable project context.
+6. Other humans or agents can inspect the ticket, receipt, artifacts, and audit trail later.
 
-This gives agents a shared work surface without giving them unbounded authority.
+## Quickstart
 
-## Current Status
-
-Implemented:
-
-- Next.js 15 app shell
-- Prisma schema for users, tickets, bridges, projects, agents, delivery, profiles, and matches
-- GitHub OAuth via NextAuth
-- ticket creation/list/detail flows
-- response flow
-- public board
-- bridge-scoped tickets
-- agent registration and approval queue
-- hashed API keys for newly registered agents
-- typed agent payload validation
-- idempotency keys for agent action creation
-- delivery queue wiring for tickets, responses, and pending agent actions
-- `/api/proofticket/queue` for delivery polling/read/process behavior
-- delivery inbox and unread badge
-- control-plane audit log
-- ContextClaw receipt and manifest ingestion
-- local agent action receipt inspector
-- deterministic ticket evidence bundle export
-- signed machine-webhook ingestion
-- signed GitHub PR/push/check-run webhook ingestion
-- local MCP adapter for agent runtimes
-- invite-only sign-in gate for hosted alpha
-- authenticated account data export
-- authenticated account deletion request capture
-- CI for build, Prisma validation, and dependency audit
-
-Still early:
-
-- no hosted multi-tenant deployment yet
-- no production RBAC model yet
-- no GitHub write-back or full issue/PR bridge yet
-- no live payout movement, billing, orgs, or enterprise admin controls yet
-
-## Local Development
-
-SQLite quickstart:
+SQLite local demo:
 
 ```bash
 npm install
@@ -92,22 +63,7 @@ npm run setup:local
 npm run dev
 ```
 
-`setup:local` creates `.env` from `.env.example` only when `.env` is missing, then runs Prisma generate, DB push, seed, and preflight.
-
-Postgres local setup:
-
-```bash
-docker compose up -d postgres
-npm run setup:postgres
-set -a; . ./.env.postgres.local; set +a
-npm run dev
-```
-
-`setup:postgres` creates `.env.postgres.local` from `.env.postgres.example` only when missing, then runs Prisma generate and DB push with `prisma/schema.postgres.prisma`. The default SQLite workflow remains the fastest path for local demos.
-
-If you switch back from Postgres to SQLite, rerun `npm run setup:local -- --skip-seed` or `npx prisma generate` so the generated Prisma client matches the default schema again.
-
-Health check after the server starts:
+Health check:
 
 ```bash
 npm run health
@@ -119,101 +75,78 @@ Five-minute local workflow:
 bash examples/five-minute-demo/print-demo-commands.sh
 ```
 
-Agent ticket submission example:
+Full walkthrough: [examples/five-minute-demo/README.md](examples/five-minute-demo/README.md)
+
+## Local Postgres
+
+```bash
+docker compose up -d postgres
+npm run setup:postgres
+set -a; . ./.env.postgres.local; set +a
+npm run dev
+```
+
+If you switch back from Postgres to SQLite, regenerate the default Prisma client:
+
+```bash
+npm run setup:local -- --skip-seed
+```
+
+## Useful Commands
+
+Register a local demo agent:
+
+```bash
+npm run proofticket:agent-register -- \
+  --owner-email builder@example.com \
+  --name "Local Demo Agent"
+```
+
+Create an agent action:
 
 ```bash
 cat examples/five-minute-demo/agent-ticket-with-evidence.json \
-  | npm run proofticket:agent -- --type CREATE_TICKET --idempotency-key demo:agent:evidence:001
+  | npm run proofticket:agent -- \
+    --type CREATE_TICKET \
+    --idempotency-key demo:agent:evidence:001
 ```
 
-Full walkthrough: `examples/five-minute-demo/README.md`.
+List pending actions:
 
-Inspect an agent action receipt:
+```bash
+npm run proofticket:actions -- \
+  --actor-email builder@example.com \
+  --status PENDING
+```
+
+Inspect an action receipt:
 
 ```bash
 npm run proofticket:receipt -- --action-id <agent-action-id>
 ```
 
-Export a ticket evidence bundle:
+Approve an action:
+
+```bash
+npm run proofticket:action -- \
+  --decision approve \
+  --action-id <agent-action-id> \
+  --actor-email builder@example.com
+```
+
+Export ticket evidence:
 
 ```bash
 npm run proofticket:evidence -- --ticket-id <ticket-id>
 ```
 
-Run the local MCP adapter for agent runtimes:
+Run the local MCP adapter:
 
 ```bash
 npm run mcp:server
 ```
 
-Adapter docs: `docs/MCP.md`.
-
-Default local database:
-
-```env
-DATABASE_URL="file:./dev.db"
-```
-
-Postgres local database:
-
-```env
-DATABASE_URL="postgresql://proofticket:proofticket_dev_password@localhost:5432/proofticket?schema=public"
-```
-
-Required for GitHub OAuth:
-
-```env
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="change-me"
-AUTH_URL="http://localhost:3000"
-AUTH_SECRET="change-me"
-GITHUB_CLIENT_ID="..."
-GITHUB_CLIENT_SECRET="..."
-```
-
-Optional for delivery cron:
-
-```env
-PROOFTICKET_CRON_SECRET="..."
-PROOFTICKET_BASE_URL="http://localhost:3000"
-```
-
-Optional for ContextClaw ingestion:
-
-```env
-PROOFTICKET_CONTEXTCLAW_SECRET="..."
-```
-
-Optional for signed machine-webhook ticket ingestion:
-
-```env
-PROOFTICKET_OPENCLAW_SECRET="..."
-```
-
-Optional for GitHub webhook ingestion:
-
-```env
-PROOFTICKET_GITHUB_WEBHOOK_SECRET="..."
-PROOFTICKET_GITHUB_ACTOR_EMAIL="builder@example.com"
-```
-
-Optional for terminal agent-action list/approval:
-
-```env
-PROOFTICKET_AGENT_ACTION_SECRET="..."
-```
-
-Optional for local demos:
-
-```env
-ENABLE_DEMO_AUTH="true"
-```
-
-Demo auth is for local demos and is rejected by production preflight.
-
 ## Verification
-
-ProofTicket is tested like a small DevOps tool, not just clicked through once. The repo has local readiness checks, schema validation for SQLite and Postgres, redaction smoke coverage, MCP adapter smoke coverage, production-shaped preflight, dependency audit, and a production build gate.
 
 ```bash
 npm run demo:readiness
@@ -226,206 +159,28 @@ npm run build
 npm audit --audit-level=moderate --omit=dev
 ```
 
-The latest local verification report is in `outputs/TEST_REPORT.md`.
+Latest local verification notes: [outputs/TEST_REPORT.md](outputs/TEST_REPORT.md)
 
-Deployment notes are in `docs/DEPLOYMENT.md`.
-Hosted alpha runbook is in `docs/ALPHA-DEPLOYMENT.md`.
-API reference is in `docs/API.md`.
-Submission packet is in `docs/SUBMISSION-PACKET.md`.
-Devpost draft is in `docs/DEVPOST-DRAFT.md`.
-Public article draft is in `docs/ARTICLE.md`.
-Demo asset inventory is in `docs/DEMO-ASSETS.md`.
+## Documentation
 
-## API Sketch
-
-Agent action creation:
-
-```http
-POST /api/agent
-Content-Type: application/json
-
-{
-  "action": "create",
-  "agentApiKey": "proofticket_...",
-  "type": "CREATE_TICKET",
-  "idempotencyKey": "agent-run-2026-05-06-001",
-  "payload": {
-    "title": "Review branch before merge",
-    "content": "The agent found a migration risk and attached the relevant files.",
-    "type": "PROPOSAL",
-    "visibility": "PRIVATE",
-    "bridgeId": "...",
-    "artifacts": [
-      {
-        "kind": "NOTE",
-        "title": "Evidence summary",
-        "summary": "The migration touches a high-risk table."
-      }
-    ]
-  }
-}
-```
-
-Generic agent CLI:
-
-```bash
-export PROOFTICKET_AGENT_API_KEY="$(
-  npm run --silent proofticket:agent-register -- \
-    --owner-email builder@example.com \
-    --name "Local Demo Agent" \
-    --json \
-  | node -e 'let input=""; process.stdin.on("data", d => input += d); process.stdin.on("end", () => console.log(JSON.parse(input).apiKey));'
-)"
-
-npm run proofticket:agent -- \
-  --type CREATE_TICKET \
-  --idempotency-key demo-agent:ticket:001 \
-  --title "Review branch before merge" \
-  --content "The agent found a migration risk and attached the relevant files." \
-  --ticket-type PROPOSAL \
-  --tags agent,review
-```
-
-The registration command is for local/demo setup. Production registration should stay authenticated through the app/API. The raw API key is printed once; only its SHA-256 digest is stored.
-
-For ticket artifacts, pipe JSON on stdin:
-
-```bash
-echo '{"artifacts":[{"kind":"NOTE","title":"Evidence summary","summary":"The migration touches a high-risk table."}]}' \
-  | npm run proofticket:agent -- \
-    --type CREATE_TICKET \
-    --idempotency-key demo-agent:ticket:002 \
-    --title "Agent evidence attached" \
-    --content "Evidence is attached for human approval."
-```
-
-List pending agent actions from a terminal:
-
-```bash
-export PROOFTICKET_AGENT_ACTION_SECRET="..."
-
-npm run proofticket:actions -- \
-  --actor-email builder@example.com
-```
-
-Approve or reject an action from a terminal:
-
-```bash
-npm run proofticket:action -- \
-  --decision approve \
-  --action-id <agent-action-id> \
-  --actor-email builder@example.com
-
-npm run proofticket:action -- \
-  --decision reject \
-  --action-id <agent-action-id> \
-  --actor-email builder@example.com
-```
-
-Inspect an action as a receipt:
-
-```bash
-npm run proofticket:receipt -- \
-  --action-id <agent-action-id>
-```
-
-Export a ticket evidence bundle:
-
-```bash
-npm run proofticket:evidence -- \
-  --ticket-id <ticket-id>
-```
-
-Delivery queue:
-
-```http
-GET /api/health
-GET /api/proofticket/queue
-PATCH /api/proofticket/queue
-POST /api/proofticket/queue
-```
-
-Machine ticket webhook:
-
-```http
-POST /api/webhooks/openclaw
-Authorization: Bearer <PROOFTICKET_OPENCLAW_SECRET>
-Content-Type: application/json
-
-{
-  "source": "hermes",
-  "idempotencyKey": "session-123:pass-4:handoff",
-  "actorEmail": "builder@example.com",
-  "title": "Agent pass blocked on migration risk",
-  "content": "The runtime stopped before modifying the migration.",
-  "type": "PROPOSAL",
-  "tags": ["handoff", "migration"]
-}
-```
-
-Machine webhook local sender:
-
-```bash
-npm run openclaw:ticket -- \
-  --idempotency-key session-123:pass-4:handoff \
-  --actor-email builder@example.com \
-  --source hermes \
-  --title "Agent pass blocked on migration risk" \
-  --content "The runtime stopped before modifying the migration." \
-  --type PROPOSAL \
-  --tags handoff,migration
-```
-
-For artifacts, pipe JSON on stdin:
-
-```bash
-echo '{"artifacts":[{"kind":"NOTE","title":"Terminal trace","summary":"Stopped before write."}]}' \
-  | npm run openclaw:ticket -- \
-    --idempotency-key session-123:pass-4:trace \
-    --actor-email builder@example.com \
-    --title "Terminal trace captured" \
-    --content "Trace is attached."
-```
-
-Agent action approval also works through the compatibility alias:
-
-```bash
-npm run openclaw:action -- \
-  --decision approve \
-  --action-id <agent-action-id> \
-  --actor-email builder@example.com
-
-npm run openclaw:action -- \
-  --decision reject \
-  --action-id <agent-action-id> \
-  --actor-email builder@example.com
-```
-
-GitHub webhook demo:
-
-```bash
-export PROOFTICKET_GITHUB_WEBHOOK_SECRET="local-github-webhook-secret"
-export PROOFTICKET_ACTOR_EMAIL="builder@example.com"
-npm run github:webhook:demo
-```
+- [API reference](docs/API.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [MCP Adapter](docs/MCP.md)
+- [Deployment Notes](docs/DEPLOYMENT.md)
+- [Hosted alpha runbook](docs/ALPHA-DEPLOYMENT.md)
+- [Public Release Checklist](docs/PUBLIC-RELEASE-CHECKLIST.md)
+- [Submission Packet](docs/SUBMISSION-PACKET.md)
+- [Devpost Draft](docs/DEVPOST-DRAFT.md)
+- [Public Article Draft](docs/ARTICLE.md)
+- [Demo Asset Inventory](docs/DEMO-ASSETS.md)
 
 ## Design Principles
 
-- **Tickets over chat**: chat is good for conversation, bad for durable state.
-- **Approval before authority**: agents can draft and propose; humans or policy gates decide.
-- **Context should be inspectable**: every handoff needs enough structure to be trusted later.
-- **Local-first before SaaS**: the workflow needs to work for private repos and security work.
-- **Boring infrastructure wins**: typed APIs, audit trails, queues, and explicit permissions.
-
-## Roadmap
-
-- hosted alpha runbook validation
-- GitHub issue/PR write-back
-- scoped bridge tokens
-- org/team model
-- richer MCP/A2A protocol coverage
-- self-serve account deletion controls
-- policy engine for auto-approval
+- **Tickets over chat**: chat is useful for exploration, but weak as durable state.
+- **Approval before authority**: agents can propose work; humans or policy gates decide what becomes shared state.
+- **Evidence travels with the work**: tickets can carry artifacts, receipts, and audit entries.
+- **Local-first before SaaS**: the workflow needs to work for private repos and security-sensitive work before hosted scale.
+- **Boring infrastructure wins**: typed APIs, audit logs, queues, explicit permissions, and deterministic exports.
 
 ## License
 
