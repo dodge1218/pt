@@ -16,6 +16,7 @@ const redacted = redactRecord({
   content: `Token ${rawToken}`,
   metadata: {
     apiKey: rawToken,
+    inputTokens: 1840,
     nested: {
       note: `Use ${rawBearer}`,
     },
@@ -31,6 +32,7 @@ const redacted = redactRecord({
 assert.equal(redacted.title, "Deploy check");
 assert.equal(redacted.content, "Token [REDACTED]");
 assert.equal(redacted.metadata.apiKey, "[REDACTED]");
+assert.equal(redacted.metadata.inputTokens, 1840);
 assert.equal(redacted.metadata.nested.note, "Use [REDACTED]");
 assert.equal(redacted.artifacts[0].summary, "OpenAI key [REDACTED]");
 

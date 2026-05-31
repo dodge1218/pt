@@ -1,4 +1,5 @@
-const SECRET_KEY_PATTERN = /(secret|token|api[_-]?key|apikey|authorization|password|credential|client[_-]?secret|private[_-]?key|session)/i;
+const SECRET_KEY_PATTERN = /(secret|api[_-]?key|apikey|authorization|password|credential|client[_-]?secret|private[_-]?key|session)/i;
+const TOKEN_KEY_PATTERN = /(^token$|^tokens$|[_-]token$|[_-]tokens$|^token[_-]|^tokens[_-]|auth[_-]?token|access[_-]?token|refresh[_-]?token)/i;
 const SECRET_VALUE_PATTERNS = [
   /\bBearer\s+[A-Za-z0-9._~+/=-]{12,}/g,
   /\bproofticket_[A-Za-z0-9._:-]{8,}/g,
@@ -14,7 +15,7 @@ export function redact(value) {
     return Object.fromEntries(
       Object.entries(value).map(([key, entry]) => [
         key,
-        SECRET_KEY_PATTERN.test(key) ? "[REDACTED]" : redact(entry),
+        isSecretKey(key) ? "[REDACTED]" : redact(entry),
       ])
     );
   }
@@ -35,4 +36,8 @@ export function parseJsonField(value, fallback = {}) {
   } catch {
     return fallback;
   }
+}
+
+function isSecretKey(key) {
+  return SECRET_KEY_PATTERN.test(key) || TOKEN_KEY_PATTERN.test(key);
 }

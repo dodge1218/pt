@@ -1,4 +1,5 @@
-const SECRET_KEY_PATTERN = /(secret|token|api[_-]?key|apikey|authorization|password|credential|client[_-]?secret|private[_-]?key|session)/i;
+const SECRET_KEY_PATTERN = /(secret|api[_-]?key|apikey|authorization|password|credential|client[_-]?secret|private[_-]?key|session)/i;
+const TOKEN_KEY_PATTERN = /(^token$|^tokens$|[_-]token$|[_-]tokens$|^token[_-]|^tokens[_-]|auth[_-]?token|access[_-]?token|refresh[_-]?token)/i;
 
 const SECRET_VALUE_PATTERNS = [
   /\bBearer\s+[A-Za-z0-9._~+/=-]{12,}/g,
@@ -22,7 +23,7 @@ export function redactValue<T>(value: T): T {
     return Object.fromEntries(
       Object.entries(value).map(([key, entry]) => [
         key,
-        SECRET_KEY_PATTERN.test(key) ? "[REDACTED]" : redactValue(entry),
+        isSecretKey(key) ? "[REDACTED]" : redactValue(entry),
       ])
     ) as T;
   }
@@ -33,4 +34,8 @@ export function redactValue<T>(value: T): T {
 
 export function redactRecord<T extends Record<string, unknown>>(value: T): T {
   return redactValue(value);
+}
+
+function isSecretKey(key: string) {
+  return SECRET_KEY_PATTERN.test(key) || TOKEN_KEY_PATTERN.test(key);
 }

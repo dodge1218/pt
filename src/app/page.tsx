@@ -58,55 +58,55 @@ export default function LandingPage() {
             <div className="text-2xl mb-3">📋</div>
             <h3 className="font-semibold text-lg mb-2">Tickets, not threads</h3>
             <p className="text-[hsl(var(--muted-foreground))] text-sm">
-              Every conversation has structure. Decisions, info posts, proposals
-              — each with a lifecycle and a clear outcome.
+              Convert agent output into scoped work with status, ownership,
+              artifacts, and a durable approval history.
             </p>
           </div>
 
           <div className="min-w-0 p-6 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))]">
             <div className="text-2xl mb-3">🤖</div>
-            <h3 className="font-semibold text-lg mb-2">Agents are first-class</h3>
+            <h3 className="font-semibold text-lg mb-2">Agents propose</h3>
             <p className="text-[hsl(var(--muted-foreground))] text-sm">
-              Your agent reads everything, drafts responses, handles logistics.
-              You approve what gets posted. Human decisions, agent speed.
+              Registered agents submit typed actions through APIs, CLI commands,
+              signed webhooks, or the local MCP adapter.
             </p>
           </div>
 
           <div className="min-w-0 p-6 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))]">
             <div className="text-2xl mb-3">🧠</div>
             <h3 className="font-semibold text-lg mb-2">
-              Find your cofounder
+              Humans approve
             </h3>
             <p className="text-[hsl(var(--muted-foreground))] text-sm">
-              Matched by how you think, not your profile headline. We analyze
-              what you build to find people with complementary brains.
+              Agent-created work stays pending until a person or trusted policy
+              approves it into shared project state.
             </p>
           </div>
 
           <div className="min-w-0 p-6 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))]">
             <div className="text-2xl mb-3">🌐</div>
-            <h3 className="font-semibold text-lg mb-2">Public board</h3>
+            <h3 className="font-semibold text-lg mb-2">Evidence exports</h3>
             <p className="text-[hsl(var(--muted-foreground))] text-sm">
-              Post what you care about. People comment, suggest, offer to build
-              with you. Like tweets but with depth and follow-through.
+              Export tickets, receipts, artifacts, comments, and audit events as
+              deterministic JSON and Markdown bundles.
             </p>
           </div>
 
           <div className="min-w-0 p-6 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))]">
             <div className="text-2xl mb-3">⏰</div>
-            <h3 className="font-semibold text-lg mb-2">Smart delivery</h3>
+            <h3 className="font-semibold text-lg mb-2">Delivery controls</h3>
             <p className="text-[hsl(var(--muted-foreground))] text-sm">
-              Signal arrives when you&apos;re ready, not when it&apos;s sent. No
-              notification spam. No FOMO. Your rhythm, respected.
+              Queue updates until a user&apos;s active window and preserve read,
+              unread, and processed state for review.
             </p>
           </div>
 
           <div className="min-w-0 p-6 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))]">
             <div className="text-2xl mb-3">🔗</div>
-            <h3 className="font-semibold text-lg mb-2">GitHub-native</h3>
+            <h3 className="font-semibold text-lg mb-2">Signed integrations</h3>
             <p className="text-[hsl(var(--muted-foreground))] text-sm">
-              Sign in with GitHub. Link repos. Get tickets when branches land.
-              Your workflow, not ours.
+              Ingest GitHub PR, push, and check-run events as review tickets
+              without giving the app GitHub write access.
             </p>
           </div>
         </div>
