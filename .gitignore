@@ -6,7 +6,6 @@ prisma/prisma/dev.db*
 node_modules/
 .next/
 .next.bak-*/
-outputs/ui-screenshots/
 outputs/evidence/
 outputs/published-article-urls.json
 tsconfig.tsbuildinfo
