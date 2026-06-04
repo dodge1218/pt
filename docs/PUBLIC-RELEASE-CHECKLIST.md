@@ -7,6 +7,8 @@ ProofTicket can remain private while the implementation matures. Before making i
 ## Must Be Clean Before Public
 
 - README describes ProofTicket only, not the whole local workspace.
+- Public docs present ProofTicket as a polished prototype, not a fully launched company or SaaS.
+- Public docs do not use the old internal product name.
 - No personal names in seed data, docs, screenshots, examples, or app copy.
 - No private emails, partner names, internal project names, or active business strategy.
 - No "50k stars", career-positioning, or public-clout language in public docs.
@@ -31,6 +33,14 @@ Use:
 
 > Structured handoffs for human and AI coworkers.
 
+And, when helpful:
+
+> A polished prototype for how agent collaboration should work.
+
+Origin framing is allowed:
+
+> It started as a formal collaboration project, then got cut down into the clearest surviving public-safe product slice.
+
 Keep the repo focused on:
 
 - durable tickets
@@ -42,6 +52,7 @@ Keep the repo focused on:
 
 Avoid:
 
+- implying the full company or full roadmap is already live
 - claiming every adjacent project is part of ProofTicket
 - framing the repo as personal productivity archaeology
 - attacking "AI slop" in project copy
@@ -72,4 +83,4 @@ Before inviting testers:
 
 ## Current Decision
 
-Keep the GitHub repository private until the public-facing surface is intentionally cleaned.
+Keep the GitHub repository private until the public-facing surface is intentionally cleaned, verified, and intentionally flipped.

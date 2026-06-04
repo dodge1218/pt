@@ -10,6 +10,8 @@ ProofTicket turns AI-agent work into scoped tickets, human approvals, durable re
 
 ProofTicket is a local-first ticketing surface for human and AI coworking. Agents can request structured work actions, humans approve or reject them, and the resulting tickets keep the decision, evidence, artifacts, and audit trail in one place.
 
+It started as a formal collaboration project with a friend, then got cut down into a tighter public-safe prototype after we disagreed on direction. What remains is the clearest product slice.
+
 It is not a chatbot or a project-manager wrapper. The core primitive is an auditable work ticket that can be read later by a person, local agent, remote agent, or reviewer without replaying a whole terminal or chat transcript.
 
 ## Demo Story
@@ -55,6 +57,7 @@ bash examples/five-minute-demo/print-demo-commands.sh
 Safe claims:
 
 - Local-first prototype.
+- Public-facing concept slice that demonstrates the workflow clearly.
 - Invite-only hosted alpha ready with documented guardrails.
 - Agent actions are approval-gated unless a registered agent is configured otherwise.
 - Evidence bundles are deterministic and redacted before output.
@@ -64,6 +67,7 @@ Safe claims:
 Do not claim:
 
 - Public SaaS launch readiness.
+- That the full product or company is already live.
 - Enterprise RBAC or org administration.
 - Compliance certification.
 - GitHub write-back.
@@ -99,6 +103,7 @@ Optional:
 - Screenshot of MCP smoke output.
 - Screenshot of GitHub fixture ingestion.
 - Hosted alpha URL if invite-gated and stable.
+- CTA line: "Would love to launch this as a real product. Cofounders, early testers, or curious builders can DM, apply, or create a ticket."
 
 ## Verification Command Set
 

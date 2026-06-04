@@ -2,7 +2,9 @@
 
 AI agents are getting better at doing pieces of developer work, but the surrounding workflow is still messy. A useful agent run often ends as a terminal scrollback, a chat thread, a half-written note, or a branch with no durable explanation of what happened. That is fine for experiments. It is not enough for teams that need to review work, approve changes, refund contributors, or reconstruct why a decision was made.
 
-ProofTicket is a local-first ticketing surface for human and AI coworking. The core idea is simple: agent work should become structured project state before it becomes trusted project state.
+ProofTicket started as a formal way to collaborate on a project with a friend. The collaboration did not last. We disagreed on direction, so I cut the idea down to the smallest public-safe slice that still showed the core workflow clearly.
+
+That matters for how to read this repo. ProofTicket is a local-first ticketing surface for human and AI coworking, but this public version is intentionally a polished prototype. The core idea is simple: agent work should become structured project state before it becomes trusted project state.
 
 The public repo is here: https://github.com/dodge1218/pt
 
@@ -42,6 +44,8 @@ The current ProofTicket prototype includes:
 
 It is still intentionally bounded. ProofTicket is not claiming public SaaS readiness, enterprise RBAC, compliance certification, live payouts, billing, GitHub write-back, or production ZK proofs. Those are future product surfaces. The finished slice proves the workflow: an agent proposes work, a human approves it, evidence is attached, and the result can be audited later.
 
+In other words, this is not "everything is built." It is a credible demonstration of how the system would exist and work.
+
 ## The Five-Minute Demo
 
 The local demo path is designed to be boring in the best way:
@@ -64,3 +68,5 @@ As agent work becomes normal, teams will need more than prompts and screenshots.
 ProofTicket is a step toward that operating model. It gives human and AI coworkers a shared work surface where the work can be reviewed later without replaying the whole session.
 
 The immediate next steps are screenshots, a short demo video, invited hosted-alpha testing, richer MCP examples, and deeper GitHub issue/PR workflows.
+
+Would love to launch this as a real product. Cofounders, early collaborators, or curious operators can DM, apply, or create a ticket.

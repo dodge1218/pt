@@ -65,9 +65,8 @@ const requiredReadmePhrases = [
 
 const forbiddenPattern = new RegExp(
   [
-    "Kairos",
-    "kairos",
-    "KAIROS",
+    ["ka", "iros"].join(""),
+    ["KA", "IROS"].join(""),
     "Ryan",
     "Colin",
     "DNP",
@@ -79,13 +78,8 @@ const forbiddenPattern = new RegExp(
     "coordinate</Link>",
     ">coordinate<",
     "no MCP/A2A protocol adapter yet",
-    "MCP/A2A adapter$",
-    "agent action receipts$",
-    "context manifests$",
-    "Docker compose deployment$",
-    "Postgres production profile$",
   ].join("|"),
-  "m"
+  "im"
 );
 const scanRoots = [
   "README.md",

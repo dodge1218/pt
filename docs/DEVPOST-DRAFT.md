@@ -12,9 +12,11 @@ Structured handoffs and proof-of-work receipts for human and AI coworkers.
 
 ## Inspiration
 
-AI coding agents are useful, but their work often disappears into terminal scrollback, chat history, or private notes. When a human comes back later, it is hard to tell what was proposed, what was approved, what evidence was attached, and whether the work was worth trusting.
+ProofTicket started as a formal way to collaborate on a project with a friend. Very quickly, the operational problem became obvious: useful work was landing in chats, terminal logs, and scattered notes, but there was no clean review surface for what had been proposed, approved, or shipped.
 
-ProofTicket was revived to make agent work auditable. Instead of treating agents like chat participants, it treats their work like operations work: scoped requests, human approval, durable tickets, receipts, artifacts, and exportable evidence.
+The collaboration itself did not last. We disagreed on direction, so I rebuilt the public version around the clearest surviving idea: agent work should be auditable.
+
+Instead of treating agents like chat participants, ProofTicket treats their work like operations work: scoped requests, human approval, durable tickets, receipts, artifacts, and exportable evidence.
 
 ## What It Does
 
@@ -52,7 +54,7 @@ The repo also includes:
 
 The hard part was cutting the old project down into a coherent public-safe product. There were many adjacent ideas: collaboration matching, context manifests, payouts, ZK proofs, GitHub sync, and hosted SaaS controls. The finished slice focuses on the smallest serious workflow: agent proposes work, human approves it, evidence is attached, and the result can be audited later.
 
-Another challenge was avoiding overclaiming. ProofTicket is not presented as enterprise-ready or compliance-ready. It is an invite-ready prototype with clear local setup, data controls, and documented boundaries.
+Another challenge was avoiding overclaiming. ProofTicket is not presented as enterprise-ready or compliance-ready. It is an invite-ready prototype with clear local setup, data controls, and documented boundaries. The goal of this submission is to show how the system works, not pretend the full company is already live.
 
 ## Accomplishments
 
@@ -78,6 +80,7 @@ Near-term:
 - add richer MCP examples,
 - improve GitHub issue/PR write-back,
 - add organization and RBAC models.
+- turn the current prototype into a real product with the right collaborators.
 
 Deferred:
 
@@ -86,6 +89,8 @@ Deferred:
 - production ZK proofs,
 - compliance claims,
 - full self-serve account deletion.
+
+Would love to launch this as a real product. Cofounders, early testers, or builders who want in can DM, apply, or create a ticket.
 
 ## Built With
 

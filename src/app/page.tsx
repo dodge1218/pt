@@ -34,7 +34,8 @@ export default function LandingPage() {
 
         <p className="mt-5 sm:mt-6 w-full min-w-0 max-w-sm sm:max-w-2xl text-base sm:text-lg md:text-xl text-[hsl(var(--muted-foreground))]">
           Turn agent work into scoped tickets, human approvals, and durable
-          evidence. Not another chat app.
+          evidence. A polished prototype for how agent collaboration should work,
+          not another chat app.
         </p>
 
         <div className="mt-8 sm:mt-10 flex w-full min-w-0 max-w-sm sm:max-w-md flex-col sm:flex-row gap-3 sm:gap-4">
@@ -112,9 +113,13 @@ export default function LandingPage() {
         </div>
 
         {/* Social proof placeholder */}
-        <div className="mt-24 mb-16">
+        <div className="mt-24 mb-16 max-w-2xl">
           <p className="text-sm text-[hsl(var(--muted-foreground))]">
             Structured handoffs for human and AI coworkers.
+          </p>
+          <p className="mt-3 text-sm text-[hsl(var(--muted-foreground))]">
+            Would love to launch this as a real product. Cofounders, early testers,
+            or curious builders can DM, apply, or create a ticket.
           </p>
         </div>
       </main>

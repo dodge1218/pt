@@ -8,7 +8,9 @@ It is not a chatbot, a Jira clone, or an "AI project manager" wrapper. The core 
 
 ## Status
 
-ProofTicket is a finished prototype and hosted-alpha candidate. It is ready for local demos and review, but it is not presented as a public SaaS, compliance product, or enterprise RBAC system.
+ProofTicket is a hackathon-ready prototype and hosted-alpha candidate. It is ready for local demos and review, but it is not presented as a launched SaaS, compliance product, or enterprise RBAC system.
+
+This public repo is the cleanest proof-of-concept slice: enough to show how the system works end to end, without pretending every future product surface is already finished.
 
 Built:
 
@@ -31,6 +33,14 @@ Not built yet:
 - GitHub issue/PR write-back
 - billing, payouts, or compliance certification
 - production zero-knowledge proofs
+
+## How It Started
+
+ProofTicket started as a more formal way to collaborate on a project with a friend. The original question was simple: if humans and agents are both doing real work, where does that work live once it needs review, approval, or follow-up?
+
+That collaboration did not last. We disagreed on direction, so I cut the idea down to the smallest public-safe slice that still demonstrated the core workflow.
+
+The result is this repo: a polished concept prototype that shows how the product would work in practice, without overstating what is already production-ready.
 
 ## Why It Exists
 
@@ -161,6 +171,19 @@ npm audit --audit-level=moderate --omit=dev
 
 Latest local verification notes: [outputs/TEST_REPORT.md](outputs/TEST_REPORT.md)
 
+## Why This Repo Exists Publicly
+
+This is not a claim that the full company or product is already live.
+
+It is a credible demo surface for a real workflow:
+
+- agents propose work,
+- humans approve or reject it,
+- evidence stays attached,
+- later reviewers do not need to replay the whole chat or terminal.
+
+If that workflow resonates, the prototype has done its job.
+
 ## Documentation
 
 - [API reference](docs/API.md)
@@ -181,6 +204,10 @@ Latest local verification notes: [outputs/TEST_REPORT.md](outputs/TEST_REPORT.md
 - **Evidence travels with the work**: tickets can carry artifacts, receipts, and audit entries.
 - **Local-first before SaaS**: the workflow needs to work for private repos and security-sensitive work before hosted scale.
 - **Boring infrastructure wins**: typed APIs, audit logs, queues, explicit permissions, and deterministic exports.
+
+## CTA
+
+Would love to launch this as a real product. Cofounders, early design partners, or curious builders can DM, apply, or create a ticket.
 
 ## License
 
