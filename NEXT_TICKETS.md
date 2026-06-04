@@ -399,6 +399,27 @@ Acceptance:
 - [x] no public launch overclaim
 - [x] repo visibility remains private until repository rename/public flip is explicit
 
+## Ticket 20: Finish-Up-A-Thon Packaging
+
+Status: in progress as finish-up-a-thon submission slice.
+
+Goal: make the repo read clearly as a revived, intentionally finished old project without drifting into the wrong hackathon framing.
+
+Build:
+
+- [x] capture the explicit finish-up-a-thon prompt/context inside the repo
+- [x] audit existing submission surfaces against the local repo and public `ProofTicket` naming
+- [ ] add a dedicated finish-up-a-thon packaging brief that consolidates story, claims boundary, asset needs, and next submission steps
+- [ ] refresh README/docs links so this lane is easy to find from the repo root
+- [ ] keep local verification and public naming clean after edits
+
+Acceptance:
+
+- [ ] no wrong-hackathon framing in the active ProofTicket submission path
+- [ ] finish-up-a-thon story is documented in one obvious place
+- [ ] public name stays ProofTicket consistently across public-facing materials
+- [ ] repo docs stay aligned on prototype-not-fully-launched positioning
+
 ## Build Rule
 
 Ship one ticket at a time. For each ticket:

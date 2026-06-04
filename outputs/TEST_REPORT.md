@@ -224,10 +224,11 @@ Updated: 2026-05-27
 ## Verification Refresh - 2026-06-03
 
 - Updated public-facing ProofTicket copy to present the repo as a polished prototype instead of a fully launched product.
+- Added `docs/FINISH-UP-A-THON.md` as the explicit finish-up-a-thon packaging brief for the current submission lane.
 - Added the collaboration-origin framing and explicit cofounder / early tester CTA to the README, article draft, Devpost draft, submission packet, and landing page.
 - Tightened `docs/PUBLIC-RELEASE-CHECKLIST.md` to require prototype framing and removal of the old internal product name.
 - Updated `scripts/check-demo-readiness.mjs` so the stale-name scan still catches the old brand without leaving visible direct references in the public repo.
-- `rg -n "Kairos|kairos|KAIROS" . --glob '!.next/**' --glob '!node_modules/**' --glob '!.git/**'` returned no matches in the public repo tree.
+- direct old-brand grep across the public repo tree returned no matches.
 - `npm run demo:readiness` passed.
 - `npx prisma validate` passed.
 - `npm audit --audit-level=moderate --omit=dev` passed with `0 vulnerabilities`.

@@ -193,6 +193,7 @@ If that workflow resonates, the prototype has done its job.
 - [Hosted alpha runbook](docs/ALPHA-DEPLOYMENT.md)
 - [Public Release Checklist](docs/PUBLIC-RELEASE-CHECKLIST.md)
 - [Submission Packet](docs/SUBMISSION-PACKET.md)
+- [Finish-Up-A-Thon Packaging Brief](docs/FINISH-UP-A-THON.md)
 - [Devpost Draft](docs/DEVPOST-DRAFT.md)
 - [Public Article Draft](docs/ARTICLE.md)
 - [Demo Asset Inventory](docs/DEMO-ASSETS.md)

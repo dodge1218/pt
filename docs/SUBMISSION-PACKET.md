@@ -90,6 +90,7 @@ Required before external submission:
 - README link.
 - Five-minute demo commands.
 - Devpost draft: `docs/DEVPOST-DRAFT.md`.
+- Finish-up-a-thon brief: `docs/FINISH-UP-A-THON.md`.
 - Public article draft: `docs/ARTICLE.md`.
 - Current asset inventory: `docs/DEMO-ASSETS.md`.
 - One screenshot of dashboard or ticket detail.
